@@ -1,27 +1,36 @@
-# SWIFT Business Identifier Code
+"""SWIFT Business Identifier Code"""
 scalar BankBic
 
-# International Bank Account Number
+"""International Bank Account Number"""
 scalar BankIban
 
-# ISO 4217 Currency Code
+"""
+A signed eight-byte integer. The upper big integer values are greater then the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
+"""ISO 4217 Currency Code"""
 scalar CurrencyCode
 
-# A location in a connection that can be used for resuming pagination.
+"""A location in a connection that can be used for resuming pagination."""
 scalar Cursor
 
-# The day, does not include a time.
+"""The day, does not include a time."""
 scalar Date
 
-# A point in time as described by the [ISO
-# 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
 scalar Datetime
 
 type DeliveryNote {
-  documentId: Uuid
+  documentId: UUID
   type: DocumentType
-  categoryId: Uuid
-  workflowStepId: Uuid
+  categoryId: UUID
+  workflowStepId: UUID
   importDate: Datetime
   periodDate: Datetime
   name: String
@@ -30,158 +39,165 @@ type DeliveryNote {
   version: Datetime
   numPages: Int
   numAttachPages: Int
-  partnerCompanyId: Uuid
-  invoiceId: Uuid
+  partnerCompanyId: UUID
+  invoiceId: UUID
   invoiceNumber: String
   deliveryNoteNr: String
   deliveryDate: Datetime
 
-  # Reads and enables pagination through a set of `DeliveryNoteItem`.
+  """Reads and enables pagination through a set of `DeliveryNoteItem`."""
   noteItems(
-    # The method to use when ordering `DeliveryNoteItem`.
-    orderBy: DeliveryNoteNoteItemsOrderBy = NATURAL
-
-    # Read all values in the set before (above) this cursor.
-    before: Cursor
-
-    # Read all values in the set after (below) this cursor.
-    after: Cursor
-
-    # Only read the first `n` values of the set.
+    """Only read the first `n` values of the set."""
     first: Int
 
-    # Only read the last `n` values of the set.
+    """Only read the last `n` values of the set."""
     last: Int
 
-    # Skip the first `n` values from our `after` cursor, an alternative to cursor
-    # based pagination. May not be used with `last`.
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
-  ): DeliveryNoteNoteItemsConnection
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+  ): DeliveryNoteItemsConnection!
 }
 
-# A condition to be used against `DeliveryNote` object types. All fields are
-# tested for equality and combined with a logical ‘and.’
+"""
+A condition to be used against `DeliveryNote` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
 input DeliveryNoteCondition {
-  # Checks for equality with the object’s `documentId` field.
-  documentId: Uuid
+  """Checks for equality with the object’s `documentId` field."""
+  documentId: UUID
 
-  # Checks for equality with the object’s `type` field.
+  """Checks for equality with the object’s `type` field."""
   type: DocumentType
 
-  # Checks for equality with the object’s `categoryId` field.
-  categoryId: Uuid
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: UUID
 
-  # Checks for equality with the object’s `workflowStepId` field.
-  workflowStepId: Uuid
+  """Checks for equality with the object’s `workflowStepId` field."""
+  workflowStepId: UUID
 
-  # Checks for equality with the object’s `importDate` field.
+  """Checks for equality with the object’s `importDate` field."""
   importDate: Datetime
 
-  # Checks for equality with the object’s `periodDate` field.
+  """Checks for equality with the object’s `periodDate` field."""
   periodDate: Datetime
 
-  # Checks for equality with the object’s `name` field.
+  """Checks for equality with the object’s `name` field."""
   name: String
 
-  # Checks for equality with the object’s `title` field.
+  """Checks for equality with the object’s `title` field."""
   title: String
 
-  # Checks for equality with the object’s `language` field.
+  """Checks for equality with the object’s `language` field."""
   language: LanguageCode
 
-  # Checks for equality with the object’s `version` field.
+  """Checks for equality with the object’s `version` field."""
   version: Datetime
 
-  # Checks for equality with the object’s `numPages` field.
+  """Checks for equality with the object’s `numPages` field."""
   numPages: Int
 
-  # Checks for equality with the object’s `numAttachPages` field.
+  """Checks for equality with the object’s `numAttachPages` field."""
   numAttachPages: Int
 
-  # Checks for equality with the object’s `partnerCompanyId` field.
-  partnerCompanyId: Uuid
+  """Checks for equality with the object’s `partnerCompanyId` field."""
+  partnerCompanyId: UUID
 
-  # Checks for equality with the object’s `invoiceId` field.
-  invoiceId: Uuid
+  """Checks for equality with the object’s `invoiceId` field."""
+  invoiceId: UUID
 
-  # Checks for equality with the object’s `invoiceNumber` field.
+  """Checks for equality with the object’s `invoiceNumber` field."""
   invoiceNumber: String
 
-  # Checks for equality with the object’s `deliveryNoteNr` field.
+  """Checks for equality with the object’s `deliveryNoteNr` field."""
   deliveryNoteNr: String
 
-  # Checks for equality with the object’s `deliveryDate` field.
+  """Checks for equality with the object’s `deliveryDate` field."""
   deliveryDate: Datetime
 }
 
 type DeliveryNoteItem {
-  documentId: Uuid
+  documentId: UUID
   deliveryNoteNr: String
   deliveryDate: Datetime
   posNr: String
-  quantity: Int
+  quantity: BigInt
   productNr: String
   eanNr: String
   gtinNr: String
   description: String
 }
 
-# A condition to be used against `DeliveryNoteItem` object types. All fields are
-# tested for equality and combined with a logical ‘and.’
+"""
+A condition to be used against `DeliveryNoteItem` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
 input DeliveryNoteItemCondition {
-  # Checks for equality with the object’s `documentId` field.
-  documentId: Uuid
+  """Checks for equality with the object’s `documentId` field."""
+  documentId: UUID
 
-  # Checks for equality with the object’s `deliveryNoteNr` field.
+  """Checks for equality with the object’s `deliveryNoteNr` field."""
   deliveryNoteNr: String
 
-  # Checks for equality with the object’s `deliveryDate` field.
+  """Checks for equality with the object’s `deliveryDate` field."""
   deliveryDate: Datetime
 
-  # Checks for equality with the object’s `posNr` field.
+  """Checks for equality with the object’s `posNr` field."""
   posNr: String
 
-  # Checks for equality with the object’s `quantity` field.
-  quantity: Int
+  """Checks for equality with the object’s `quantity` field."""
+  quantity: BigInt
 
-  # Checks for equality with the object’s `productNr` field.
+  """Checks for equality with the object’s `productNr` field."""
   productNr: String
 
-  # Checks for equality with the object’s `eanNr` field.
+  """Checks for equality with the object’s `eanNr` field."""
   eanNr: String
 
-  # Checks for equality with the object’s `gtinNr` field.
+  """Checks for equality with the object’s `gtinNr` field."""
   gtinNr: String
 
-  # Checks for equality with the object’s `description` field.
+  """Checks for equality with the object’s `description` field."""
   description: String
 }
 
-# A connection to a list of `DeliveryNoteItem` values.
+"""A connection to a list of `DeliveryNoteItem` values."""
 type DeliveryNoteItemsConnection {
-  # Information to aid in pagination.
+  """A list of `DeliveryNoteItem` objects."""
+  nodes: [DeliveryNoteItem]!
+
+  """
+  A list of edges which contains the `DeliveryNoteItem` and cursor to aid in pagination.
+  """
+  edges: [DeliveryNoteItemsEdge!]!
+
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # The count of *all* `DeliveryNoteItem` you could get from the connection.
+  """
+  The count of *all* `DeliveryNoteItem` you could get from the connection.
+  """
   totalCount: Int
-
-  # A list of edges which contains the `DeliveryNoteItem` and cursor to aid in pagination.
-  edges: [DeliveryNoteItemsEdge]
-
-  # A list of `DeliveryNoteItem` objects.
-  nodes: [DeliveryNoteItem!]
 }
 
-# A `DeliveryNoteItem` edge in the connection.
+"""A `DeliveryNoteItem` edge in the connection."""
 type DeliveryNoteItemsEdge {
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: Cursor
 
-  # The `DeliveryNoteItem` at the end of the edge.
-  node: DeliveryNoteItem!
+  """The `DeliveryNoteItem` at the end of the edge."""
+  node: DeliveryNoteItem
 }
 
-# Methods to use when ordering `DeliveryNoteItem`.
+"""Methods to use when ordering `DeliveryNoteItem`."""
 enum DeliveryNoteItemsOrderBy {
   NATURAL
   DOCUMENT_ID_ASC
@@ -204,60 +220,33 @@ enum DeliveryNoteItemsOrderBy {
   DESCRIPTION_DESC
 }
 
-# A connection to a list of `DeliveryNoteItem` values.
-type DeliveryNoteNoteItemsConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-
-  # The count of *all* `DeliveryNoteItem` you could get from the connection.
-  totalCount: Int
-
-  # A list of edges which contains the `DeliveryNoteItem` and cursor to aid in pagination.
-  edges: [DeliveryNoteNoteItemsEdge]
-
-  # A list of `DeliveryNoteItem` objects.
-  nodes: [DeliveryNoteItem]
-}
-
-# A `DeliveryNoteItem` edge in the connection.
-type DeliveryNoteNoteItemsEdge {
-  # A cursor for use in pagination.
-  cursor: Cursor
-
-  # The `DeliveryNoteItem` at the end of the edge.
-  node: DeliveryNoteItem
-}
-
-# Methods to use when ordering `DeliveryNoteItem`.
-enum DeliveryNoteNoteItemsOrderBy {
-  NATURAL
-}
-
-# A connection to a list of `DeliveryNote` values.
+"""A connection to a list of `DeliveryNote` values."""
 type DeliveryNotesConnection {
-  # Information to aid in pagination.
+  """A list of `DeliveryNote` objects."""
+  nodes: [DeliveryNote]!
+
+  """
+  A list of edges which contains the `DeliveryNote` and cursor to aid in pagination.
+  """
+  edges: [DeliveryNotesEdge!]!
+
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # The count of *all* `DeliveryNote` you could get from the connection.
+  """The count of *all* `DeliveryNote` you could get from the connection."""
   totalCount: Int
-
-  # A list of edges which contains the `DeliveryNote` and cursor to aid in pagination.
-  edges: [DeliveryNotesEdge]
-
-  # A list of `DeliveryNote` objects.
-  nodes: [DeliveryNote!]
 }
 
-# A `DeliveryNote` edge in the connection.
+"""A `DeliveryNote` edge in the connection."""
 type DeliveryNotesEdge {
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: Cursor
 
-  # The `DeliveryNote` at the end of the edge.
-  node: DeliveryNote!
+  """The `DeliveryNote` at the end of the edge."""
+  node: DeliveryNote
 }
 
-# Methods to use when ordering `DeliveryNote`.
+"""Methods to use when ordering `DeliveryNote`."""
 enum DeliveryNotesOrderBy {
   NATURAL
   DOCUMENT_ID_ASC
@@ -297,11 +286,12 @@ enum DeliveryNotesOrderBy {
 }
 
 type Document {
-  id: Uuid
+  id: UUID
   type: DocumentType
-  categoryId: Uuid
-  workflowStepId: Uuid
-  importDate: Datetime
+  categoryId: UUID
+  workflowStepId: UUID
+  importedBy: UUID
+  importedAt: Datetime
   periodDate: Datetime
   name: String
   title: String
@@ -311,71 +301,78 @@ type Document {
   numAttachPages: Int
 }
 
-# A condition to be used against `Document` object types. All fields are tested
-# for equality and combined with a logical ‘and.’
+"""
+A condition to be used against `Document` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
 input DocumentCondition {
-  # Checks for equality with the object’s `id` field.
-  id: Uuid
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
 
-  # Checks for equality with the object’s `type` field.
+  """Checks for equality with the object’s `type` field."""
   type: DocumentType
 
-  # Checks for equality with the object’s `categoryId` field.
-  categoryId: Uuid
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: UUID
 
-  # Checks for equality with the object’s `workflowStepId` field.
-  workflowStepId: Uuid
+  """Checks for equality with the object’s `workflowStepId` field."""
+  workflowStepId: UUID
 
-  # Checks for equality with the object’s `importDate` field.
-  importDate: Datetime
+  """Checks for equality with the object’s `importedBy` field."""
+  importedBy: UUID
 
-  # Checks for equality with the object’s `periodDate` field.
+  """Checks for equality with the object’s `importedAt` field."""
+  importedAt: Datetime
+
+  """Checks for equality with the object’s `periodDate` field."""
   periodDate: Datetime
 
-  # Checks for equality with the object’s `name` field.
+  """Checks for equality with the object’s `name` field."""
   name: String
 
-  # Checks for equality with the object’s `title` field.
+  """Checks for equality with the object’s `title` field."""
   title: String
 
-  # Checks for equality with the object’s `language` field.
+  """Checks for equality with the object’s `language` field."""
   language: LanguageCode
 
-  # Checks for equality with the object’s `version` field.
+  """Checks for equality with the object’s `version` field."""
   version: Datetime
 
-  # Checks for equality with the object’s `numPages` field.
+  """Checks for equality with the object’s `numPages` field."""
   numPages: Int
 
-  # Checks for equality with the object’s `numAttachPages` field.
+  """Checks for equality with the object’s `numAttachPages` field."""
   numAttachPages: Int
 }
 
-# A connection to a list of `Document` values.
+"""A connection to a list of `Document` values."""
 type DocumentsConnection {
-  # Information to aid in pagination.
+  """A list of `Document` objects."""
+  nodes: [Document]!
+
+  """
+  A list of edges which contains the `Document` and cursor to aid in pagination.
+  """
+  edges: [DocumentsEdge!]!
+
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # The count of *all* `Document` you could get from the connection.
+  """The count of *all* `Document` you could get from the connection."""
   totalCount: Int
-
-  # A list of edges which contains the `Document` and cursor to aid in pagination.
-  edges: [DocumentsEdge]
-
-  # A list of `Document` objects.
-  nodes: [Document!]
 }
 
-# A `Document` edge in the connection.
+"""A `Document` edge in the connection."""
 type DocumentsEdge {
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: Cursor
 
-  # The `Document` at the end of the edge.
-  node: Document!
+  """The `Document` at the end of the edge."""
+  node: Document
 }
 
-# Methods to use when ordering `Document`.
+"""Methods to use when ordering `Document`."""
 enum DocumentsOrderBy {
   NATURAL
   ID_ASC
@@ -386,8 +383,10 @@ enum DocumentsOrderBy {
   CATEGORY_ID_DESC
   WORKFLOW_STEP_ID_ASC
   WORKFLOW_STEP_ID_DESC
-  IMPORT_DATE_ASC
-  IMPORT_DATE_DESC
+  IMPORTED_BY_ASC
+  IMPORTED_BY_DESC
+  IMPORTED_AT_ASC
+  IMPORTED_AT_DESC
   PERIOD_DATE_ASC
   PERIOD_DATE_DESC
   NAME_ASC
@@ -404,7 +403,7 @@ enum DocumentsOrderBy {
   NUM_ATTACH_PAGES_DESC
 }
 
-# Document type
+"""Document type"""
 enum DocumentType {
   INCOMING_INVOICE
   OUTGOING_INVOICE
@@ -419,10 +418,10 @@ enum DocumentType {
 }
 
 type Invoice {
-  documentId: Uuid
+  documentId: UUID
   type: DocumentType
-  categoryId: Uuid
-  workflowStepId: Uuid
+  categoryId: UUID
+  workflowStepId: UUID
   importDate: Datetime
   periodDate: Datetime
   name: String
@@ -495,228 +494,258 @@ type Invoice {
   paidDateConfirmedAt: Datetime
 }
 
-# A condition to be used against `Invoice` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+A condition to be used against `Invoice` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
 input InvoiceCondition {
-  # Checks for equality with the object’s `documentId` field.
-  documentId: Uuid
+  """Checks for equality with the object’s `documentId` field."""
+  documentId: UUID
 
-  # Checks for equality with the object’s `type` field.
+  """Checks for equality with the object’s `type` field."""
   type: DocumentType
 
-  # Checks for equality with the object’s `categoryId` field.
-  categoryId: Uuid
+  """Checks for equality with the object’s `categoryId` field."""
+  categoryId: UUID
 
-  # Checks for equality with the object’s `workflowStepId` field.
-  workflowStepId: Uuid
+  """Checks for equality with the object’s `workflowStepId` field."""
+  workflowStepId: UUID
 
-  # Checks for equality with the object’s `importDate` field.
+  """Checks for equality with the object’s `importDate` field."""
   importDate: Datetime
 
-  # Checks for equality with the object’s `periodDate` field.
+  """Checks for equality with the object’s `periodDate` field."""
   periodDate: Datetime
 
-  # Checks for equality with the object’s `name` field.
+  """Checks for equality with the object’s `name` field."""
   name: String
 
-  # Checks for equality with the object’s `title` field.
+  """Checks for equality with the object’s `title` field."""
   title: String
 
-  # Checks for equality with the object’s `language` field.
+  """Checks for equality with the object’s `language` field."""
   language: LanguageCode
 
-  # Checks for equality with the object’s `version` field.
+  """Checks for equality with the object’s `version` field."""
   version: Datetime
 
-  # Checks for equality with the object’s `numPages` field.
+  """Checks for equality with the object’s `numPages` field."""
   numPages: Int
 
-  # Checks for equality with the object’s `numAttachPages` field.
+  """Checks for equality with the object’s `numAttachPages` field."""
   numAttachPages: Int
 
-  # Checks for equality with the object’s `abacusVerified` field.
+  """Checks for equality with the object’s `abacusVerified` field."""
   abacusVerified: Boolean
 
-  # Checks for equality with the object’s `unresolvedIssues` field.
+  """Checks for equality with the object’s `unresolvedIssues` field."""
   unresolvedIssues: Boolean
 
-  # Checks for equality with the object’s `unresolvedIssuesDesc` field.
+  """Checks for equality with the object’s `unresolvedIssuesDesc` field."""
   unresolvedIssuesDesc: [String]
 
-  # Checks for equality with the object’s `accountantLockBy` field.
+  """Checks for equality with the object’s `accountantLockBy` field."""
   accountantLockBy: String
 
-  # Checks for equality with the object’s `accountantLockAt` field.
+  """Checks for equality with the object’s `accountantLockAt` field."""
   accountantLockAt: Datetime
 
-  # Checks for equality with the object’s `bookedBy` field.
+  """Checks for equality with the object’s `bookedBy` field."""
   bookedBy: String
 
-  # Checks for equality with the object’s `bookedAt` field.
+  """Checks for equality with the object’s `bookedAt` field."""
   bookedAt: Datetime
 
-  # Checks for equality with the object’s `partnerName` field.
+  """Checks for equality with the object’s `partnerName` field."""
   partnerName: String
 
-  # Checks for equality with the object’s `invoiceNumber` field.
+  """Checks for equality with the object’s `invoiceNumber` field."""
   invoiceNumber: String
 
-  # Checks for equality with the object’s `invoiceNumberConfirmedBy` field.
+  """
+  Checks for equality with the object’s `invoiceNumberConfirmedBy` field.
+  """
   invoiceNumberConfirmedBy: String
 
-  # Checks for equality with the object’s `invoiceNumberConfirmedAt` field.
+  """
+  Checks for equality with the object’s `invoiceNumberConfirmedAt` field.
+  """
   invoiceNumberConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `invoiceDate` field.
+  """Checks for equality with the object’s `invoiceDate` field."""
   invoiceDate: Date
 
-  # Checks for equality with the object’s `invoiceDateConfirmedBy` field.
+  """Checks for equality with the object’s `invoiceDateConfirmedBy` field."""
   invoiceDateConfirmedBy: String
 
-  # Checks for equality with the object’s `invoiceDateConfirmedAt` field.
+  """Checks for equality with the object’s `invoiceDateConfirmedAt` field."""
   invoiceDateConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `net` field.
+  """Checks for equality with the object’s `net` field."""
   net: Float
 
-  # Checks for equality with the object’s `netConfirmedBy` field.
+  """Checks for equality with the object’s `netConfirmedBy` field."""
   netConfirmedBy: String
 
-  # Checks for equality with the object’s `netConfirmedAt` field.
+  """Checks for equality with the object’s `netConfirmedAt` field."""
   netConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `total` field.
+  """Checks for equality with the object’s `total` field."""
   total: Float
 
-  # Checks for equality with the object’s `totalConfirmedBy` field.
+  """Checks for equality with the object’s `totalConfirmedBy` field."""
   totalConfirmedBy: String
 
-  # Checks for equality with the object’s `totalConfirmedAt` field.
+  """Checks for equality with the object’s `totalConfirmedAt` field."""
   totalConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `vatPercent` field.
+  """Checks for equality with the object’s `vatPercent` field."""
   vatPercent: Float
 
-  # Checks for equality with the object’s `vatPercentConfirmedBy` field.
+  """Checks for equality with the object’s `vatPercentConfirmedBy` field."""
   vatPercentConfirmedBy: String
 
-  # Checks for equality with the object’s `vatPercentConfirmedAt` field.
+  """Checks for equality with the object’s `vatPercentConfirmedAt` field."""
   vatPercentConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `vatId` field.
+  """Checks for equality with the object’s `vatId` field."""
   vatId: String
 
-  # Checks for equality with the object’s `vatIdConfirmedBy` field.
+  """Checks for equality with the object’s `vatIdConfirmedBy` field."""
   vatIdConfirmedBy: String
 
-  # Checks for equality with the object’s `vatIdConfirmedAt` field.
+  """Checks for equality with the object’s `vatIdConfirmedAt` field."""
   vatIdConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `discountPercent` field.
+  """Checks for equality with the object’s `discountPercent` field."""
   discountPercent: Float
 
-  # Checks for equality with the object’s `discountPercentConfirmedBy` field.
+  """
+  Checks for equality with the object’s `discountPercentConfirmedBy` field.
+  """
   discountPercentConfirmedBy: String
 
-  # Checks for equality with the object’s `discountPercentConfirmedAt` field.
+  """
+  Checks for equality with the object’s `discountPercentConfirmedAt` field.
+  """
   discountPercentConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `discountUntil` field.
+  """Checks for equality with the object’s `discountUntil` field."""
   discountUntil: Date
 
-  # Checks for equality with the object’s `discountUntilConfirmedBy` field.
+  """
+  Checks for equality with the object’s `discountUntilConfirmedBy` field.
+  """
   discountUntilConfirmedBy: String
 
-  # Checks for equality with the object’s `discountUntilConfirmedAt` field.
+  """
+  Checks for equality with the object’s `discountUntilConfirmedAt` field.
+  """
   discountUntilConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `currency` field.
+  """Checks for equality with the object’s `currency` field."""
   currency: CurrencyCode
 
-  # Checks for equality with the object’s `currencyConfirmedBy` field.
+  """Checks for equality with the object’s `currencyConfirmedBy` field."""
   currencyConfirmedBy: String
 
-  # Checks for equality with the object’s `currencyConfirmedAt` field.
+  """Checks for equality with the object’s `currencyConfirmedAt` field."""
   currencyConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `currencyInEur` field.
+  """Checks for equality with the object’s `currencyInEur` field."""
   currencyInEur: Float
 
-  # Checks for equality with the object’s `goodsServices` field.
+  """Checks for equality with the object’s `goodsServices` field."""
   goodsServices: String
 
-  # Checks for equality with the object’s `goodsServicesConfirmedBy` field.
+  """
+  Checks for equality with the object’s `goodsServicesConfirmedBy` field.
+  """
   goodsServicesConfirmedBy: String
 
-  # Checks for equality with the object’s `goodsServicesConfirmedAt` field.
+  """
+  Checks for equality with the object’s `goodsServicesConfirmedAt` field.
+  """
   goodsServicesConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `deliveredFrom` field.
+  """Checks for equality with the object’s `deliveredFrom` field."""
   deliveredFrom: Date
 
-  # Checks for equality with the object’s `deliveredFromConfirmedBy` field.
+  """
+  Checks for equality with the object’s `deliveredFromConfirmedBy` field.
+  """
   deliveredFromConfirmedBy: String
 
-  # Checks for equality with the object’s `deliveredFromConfirmedAt` field.
+  """
+  Checks for equality with the object’s `deliveredFromConfirmedAt` field.
+  """
   deliveredFromConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `deliveredUntil` field.
+  """Checks for equality with the object’s `deliveredUntil` field."""
   deliveredUntil: Date
 
-  # Checks for equality with the object’s `deliveredUntilConfirmedBy` field.
+  """
+  Checks for equality with the object’s `deliveredUntilConfirmedBy` field.
+  """
   deliveredUntilConfirmedBy: String
 
-  # Checks for equality with the object’s `deliveredUntilConfirmedAt` field.
+  """
+  Checks for equality with the object’s `deliveredUntilConfirmedAt` field.
+  """
   deliveredUntilConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `iban` field.
+  """Checks for equality with the object’s `iban` field."""
   iban: BankIban
 
-  # Checks for equality with the object’s `ibanConfirmedBy` field.
+  """Checks for equality with the object’s `ibanConfirmedBy` field."""
   ibanConfirmedBy: String
 
-  # Checks for equality with the object’s `ibanConfirmedAt` field.
+  """Checks for equality with the object’s `ibanConfirmedAt` field."""
   ibanConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `ibanCandidates` field.
+  """Checks for equality with the object’s `ibanCandidates` field."""
   ibanCandidates: [String]
 
-  # Checks for equality with the object’s `bic` field.
+  """Checks for equality with the object’s `bic` field."""
   bic: BankBic
 
-  # Checks for equality with the object’s `bicConfirmedBy` field.
+  """Checks for equality with the object’s `bicConfirmedBy` field."""
   bicConfirmedBy: String
 
-  # Checks for equality with the object’s `bicConfirmedAt` field.
+  """Checks for equality with the object’s `bicConfirmedAt` field."""
   bicConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `bicCandidates` field.
+  """Checks for equality with the object’s `bicCandidates` field."""
   bicCandidates: [String]
 
-  # Checks for equality with the object’s `dueDate` field.
+  """Checks for equality with the object’s `dueDate` field."""
   dueDate: Date
 
-  # Checks for equality with the object’s `dueDateConfirmedBy` field.
+  """Checks for equality with the object’s `dueDateConfirmedBy` field."""
   dueDateConfirmedBy: String
 
-  # Checks for equality with the object’s `dueDateConfirmedAt` field.
+  """Checks for equality with the object’s `dueDateConfirmedAt` field."""
   dueDateConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `paymentStatus` field.
+  """Checks for equality with the object’s `paymentStatus` field."""
   paymentStatus: InvoicePaymentStatus
 
-  # Checks for equality with the object’s `paymentStatusConfirmedBy` field.
+  """
+  Checks for equality with the object’s `paymentStatusConfirmedBy` field.
+  """
   paymentStatusConfirmedBy: String
 
-  # Checks for equality with the object’s `paymentStatusConfirmedAt` field.
+  """
+  Checks for equality with the object’s `paymentStatusConfirmedAt` field.
+  """
   paymentStatusConfirmedAt: Datetime
 
-  # Checks for equality with the object’s `paidDate` field.
+  """Checks for equality with the object’s `paidDate` field."""
   paidDate: Date
 
-  # Checks for equality with the object’s `paidDateConfirmedBy` field.
+  """Checks for equality with the object’s `paidDateConfirmedBy` field."""
   paidDateConfirmedBy: String
 
-  # Checks for equality with the object’s `paidDateConfirmedAt` field.
+  """Checks for equality with the object’s `paidDateConfirmedAt` field."""
   paidDateConfirmedAt: Datetime
 }
 
@@ -726,31 +755,33 @@ enum InvoicePaymentStatus {
   CASH
 }
 
-# A connection to a list of `Invoice` values.
+"""A connection to a list of `Invoice` values."""
 type InvoicesConnection {
-  # Information to aid in pagination.
+  """A list of `Invoice` objects."""
+  nodes: [Invoice]!
+
+  """
+  A list of edges which contains the `Invoice` and cursor to aid in pagination.
+  """
+  edges: [InvoicesEdge!]!
+
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # The count of *all* `Invoice` you could get from the connection.
+  """The count of *all* `Invoice` you could get from the connection."""
   totalCount: Int
-
-  # A list of edges which contains the `Invoice` and cursor to aid in pagination.
-  edges: [InvoicesEdge]
-
-  # A list of `Invoice` objects.
-  nodes: [Invoice!]
 }
 
-# A `Invoice` edge in the connection.
+"""A `Invoice` edge in the connection."""
 type InvoicesEdge {
-  # A cursor for use in pagination.
+  """A cursor for use in pagination."""
   cursor: Cursor
 
-  # The `Invoice` at the end of the edge.
-  node: Invoice!
+  """The `Invoice` at the end of the edge."""
+  node: Invoice
 }
 
-# Methods to use when ordering `Invoice`.
+"""Methods to use when ordering `Invoice`."""
 enum InvoicesOrderBy {
   NATURAL
   DOCUMENT_ID_ASC
@@ -903,146 +934,170 @@ enum InvoicesOrderBy {
   PAID_DATE_CONFIRMED_AT_DESC
 }
 
-# Two character lower case language code
+"""Two character lower case language code"""
 scalar LanguageCode
 
-# An object with a globally unique `ID`.
+"""An object with a globally unique `ID`."""
 interface Node {
-  # A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
   nodeId: ID!
 }
 
-# Information about pagination in a connection.
+"""Information about pagination in a connection."""
 type PageInfo {
-  # When paginating forwards, are there more items?
+  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
 
-  # When paginating backwards, are there more items?
+  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  # When paginating backwards, the cursor to continue.
+  """When paginating backwards, the cursor to continue."""
   startCursor: Cursor
 
-  # When paginating forwards, the cursor to continue.
+  """When paginating forwards, the cursor to continue."""
   endCursor: Cursor
 }
 
-# The root query type which gives access points into the data universe.
+"""The root query type which gives access points into the data universe."""
 type Query implements Node {
-  # Fetches an object given its globally unique `ID`.
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  nodeId: ID!
+
+  """Fetches an object given its globally unique `ID`."""
   node(
-    # The globally unique `ID`.
+    """The globally unique `ID`."""
     nodeId: ID!
   ): Node
-  deliveryNoteByDocumentId(id: Uuid): DeliveryNote
 
-  # Reads and enables pagination through a set of `DeliveryNote`.
+  """Reads and enables pagination through a set of `DeliveryNote`."""
   allDeliveryNotes(
-    # The method to use when ordering `DeliveryNote`.
-    orderBy: DeliveryNotesOrderBy = NATURAL
-
-    # Read all values in the set before (above) this cursor.
-    before: Cursor
-
-    # Read all values in the set after (below) this cursor.
-    after: Cursor
-
-    # Only read the first `n` values of the set.
+    """Only read the first `n` values of the set."""
     first: Int
 
-    # Only read the last `n` values of the set.
+    """Only read the last `n` values of the set."""
     last: Int
 
-    # Skip the first `n` values from our `after` cursor, an alternative to cursor
-    # based pagination. May not be used with `last`.
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
 
-    # A condition to be used in determining which values should be returned by the collection.
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `DeliveryNote`."""
+    orderBy: [DeliveryNotesOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
     condition: DeliveryNoteCondition
   ): DeliveryNotesConnection
 
-  # Reads and enables pagination through a set of `DeliveryNoteItem`.
+  """Reads and enables pagination through a set of `DeliveryNoteItem`."""
   allDeliveryNoteItems(
-    # The method to use when ordering `DeliveryNoteItem`.
-    orderBy: DeliveryNoteItemsOrderBy = NATURAL
-
-    # Read all values in the set before (above) this cursor.
-    before: Cursor
-
-    # Read all values in the set after (below) this cursor.
-    after: Cursor
-
-    # Only read the first `n` values of the set.
+    """Only read the first `n` values of the set."""
     first: Int
 
-    # Only read the last `n` values of the set.
+    """Only read the last `n` values of the set."""
     last: Int
 
-    # Skip the first `n` values from our `after` cursor, an alternative to cursor
-    # based pagination. May not be used with `last`.
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
 
-    # A condition to be used in determining which values should be returned by the collection.
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `DeliveryNoteItem`."""
+    orderBy: [DeliveryNoteItemsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
     condition: DeliveryNoteItemCondition
   ): DeliveryNoteItemsConnection
 
-  # Reads and enables pagination through a set of `Document`.
+  """Reads and enables pagination through a set of `Document`."""
   allDocuments(
-    # The method to use when ordering `Document`.
-    orderBy: DocumentsOrderBy = NATURAL
-
-    # Read all values in the set before (above) this cursor.
-    before: Cursor
-
-    # Read all values in the set after (below) this cursor.
-    after: Cursor
-
-    # Only read the first `n` values of the set.
+    """Only read the first `n` values of the set."""
     first: Int
 
-    # Only read the last `n` values of the set.
+    """Only read the last `n` values of the set."""
     last: Int
 
-    # Skip the first `n` values from our `after` cursor, an alternative to cursor
-    # based pagination. May not be used with `last`.
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
 
-    # A condition to be used in determining which values should be returned by the collection.
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Document`."""
+    orderBy: [DocumentsOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
     condition: DocumentCondition
   ): DocumentsConnection
 
-  # Reads and enables pagination through a set of `Invoice`.
+  """Reads and enables pagination through a set of `Invoice`."""
   allInvoices(
-    # The method to use when ordering `Invoice`.
-    orderBy: InvoicesOrderBy = NATURAL
-
-    # Read all values in the set before (above) this cursor.
-    before: Cursor
-
-    # Read all values in the set after (below) this cursor.
-    after: Cursor
-
-    # Only read the first `n` values of the set.
+    """Only read the first `n` values of the set."""
     first: Int
 
-    # Only read the last `n` values of the set.
+    """Only read the last `n` values of the set."""
     last: Int
 
-    # Skip the first `n` values from our `after` cursor, an alternative to cursor
-    # based pagination. May not be used with `last`.
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
     offset: Int
 
-    # A condition to be used in determining which values should be returned by the collection.
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Invoice`."""
+    orderBy: [InvoicesOrderBy!] = [NATURAL]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
     condition: InvoiceCondition
   ): InvoicesConnection
-
-  # Exposes the root query type nested one level down. This is helpful for Relay 1
-  # which can only query top level fields if they are in a particular form.
-  query: Query!
-
-  # The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
-  nodeId: ID!
+  deliveryNoteByDocumentId(id: UUID): DeliveryNote
 }
 
-# A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
-scalar Uuid
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID

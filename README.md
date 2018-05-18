@@ -109,32 +109,3 @@ Quary all delivery note items:
   }
 }
 ```
-
-Query delivery note with note items:
-
-```gql
-{
-  deliveryNoteByDocumentId(id: "00d3d910-d6e8-47eb-b6f4-9aae5daf44b1") {
-    documentId,
-    type,
-    version,
-    partnerCompanyId,
-    invoiceId,
-    invoiceNumber,
-    deliveryNoteNr,
-    deliveryDate,
-    noteItems {
-      nodes {
-        deliveryNoteNr,
-        deliveryDate,
-        posNr,
-        quantity,
-        productNr,
-        eanNr,
-        gtinNr,
-        description,
-      }
-    }
-  }
-}
-```
