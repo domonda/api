@@ -21,6 +21,33 @@ For a full API specification see:
 * [domonda-api.gql](domonda-api.gql)
 * [domonda-api.json](domonda-api.json)
 
+
+## Basic usage
+
+You can find all GraphQL query types in the generated documentation: <https://domonda.github.io/api/doc/schema/query.doc.html>.
+
+Referenced fields always have an extra field for querying the actual data behind it.
+
+If you want to query all documents with the additional information of the import user you can achieve this by using the 
+field `userByImportedBy` which gets you the associated user. 
+
+```gql
+{
+  query{
+    allDocuments{
+      nodes{
+        id
+        userByImportedBy{
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+```
+
+
 ## Example queries
 
 Query all documents:
