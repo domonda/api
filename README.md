@@ -2,7 +2,9 @@
 
 The Domonda API is implemented using the GraphQL protocol: http://graphql.org/
 
-For interactive access and documentation use GraphiQL.app: https://github.com/skevy/graphiql-app
+For interactive access and documentation use web based GraphiQL.app (<https://github.com/skevy/graphiql-app>) or 
+the desktop application Altair (<https://altair.sirmuel.design/>).
+
 
 ## Authentication
 
