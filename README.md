@@ -1,10 +1,12 @@
 # DOMONDA API
 
-The Domonda API is implemented using the GraphQL protocol: http://graphql.org/
+The Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
 
-For interactive access and documentation use the webbased GraphiQL: <https://app.domonda.com/api/public/graphiql>.
+Static documentation is available at: <https://domonda.github.io/api/>
 
-You can provide a authentication token for authenticated access to your Domonda data. 
+For interactive access and documentation use the webbased GraphiQL: <https://app.domonda.com/api/public/graphiql>
+
+You can provide a authentication token for authenticated access to your Domonda data.
 Without a valid token, demo data is provived by the API.
 
 Alternatively you can use the desktop client Altair (<https://altair.sirmuel.design/>).
