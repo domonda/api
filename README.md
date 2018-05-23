@@ -14,7 +14,7 @@ Alternatively you can use the desktop client Altair (<https://altair.sirmuel.des
 
 ## Authentication
 
-Authentication is implemented via Bearer token. Replace `API_KEY` with your companies's API key. If you don't have one, request it from erik@domonda.com
+Authentication is implemented via Bearer token. Replace `API_KEY` with your companies's API key. If you don't have one, request it from api@domonda.com
 
 ```http
 POST https://app.domonda.com/api/public/graphql
