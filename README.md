@@ -2,7 +2,7 @@
 
 The general Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
 
-The only exception are file uploads which are implemented as Multipart MIME HTTP POST requests. 
+The only exception are file uploads which are implemented as Multipart MIME HTTP POST requests.
 
 A static GraphQL documentation is available at: <https://domonda.github.io/api/>
 
@@ -29,13 +29,13 @@ Authorization: Bearer API_KEY
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
 https://app.domonda.com/api/public/upload
 
-The form field `documentCategory` must contain the id of a document category that can be requested by:
+The form field `documentCategory` must contain the id of a document category that can be requested at:
 https://domonda.github.io/api/doc/schema/documentcategory.doc.html
 
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
-The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified by:
+The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html
 
 Example using the CURL command line tool:
@@ -65,7 +65,7 @@ https://domonda.github.io/api/doc/schema/document.doc.html
 In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
 
 
-For a full API specification see:
+## GraphQL API specification
 
 * [domonda-api.gql](domonda-api.gql)
 * [domonda-api.json](domonda-api.json)
