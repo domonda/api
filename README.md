@@ -1,8 +1,10 @@
 # DOMONDA API
 
-The Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
+The general Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
 
-Static documentation is available at: <https://domonda.github.io/api/>
+The only exception are file uploads which are implemented as Multipart MIME HTTP POST requests. 
+
+A static GraphQL documentation is available at: <https://domonda.github.io/api/>
 
 For interactive access and documentation use the webbased GraphiQL: <https://app.domonda.com/api/public/graphiql>
 
@@ -21,6 +23,46 @@ POST https://app.domonda.com/api/public/graphql
 
 Authorization: Bearer API_KEY
 ```
+
+## File uploads
+
+File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
+https://app.domonda.com/api/public/upload
+
+The form field `documentCategory` must contain the id of a document category that can be requested by:
+https://domonda.github.io/api/doc/schema/documentcategory.doc.html
+
+The form field `document` must contain a file that serves as the visual representation of the document
+and must be one of the following formats: PDF, PNG, JPEG, TIFF
+
+The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified by:
+https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html
+
+Example using the CURL command line tool:
+
+```sh
+curl -X POST \
+  -H "Authorization: Bearer API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
+  -F "document=@invoice.pdf" \
+  -F "ebInterface=@invoice.xml" \
+  https://app.domonda.com/api/public/upload
+```
+
+The response will be a HTTP status code 200 message with the created document's UUID in plaintext format:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/plain
+
+ef059fa4-7288-4b77-8017-adce142e29a8
+```
+
+This UUID can be used in the GraphQL document API:
+https://domonda.github.io/api/doc/schema/document.doc.html
+
+In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
 
 
 For a full API specification see:
