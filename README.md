@@ -27,16 +27,36 @@ Authorization: Bearer API_KEY
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
-https://app.domonda.com/api/public/upload
+`https://app.domonda.com/api/public/upload`
 
-The form field `documentCategory` must contain the id of a document category that can be requested at:
-https://domonda.github.io/api/doc/schema/documentcategory.doc.html
+The form field `documentCategory` must contain the id of a document category.
+Document categories can be queried with via GraphQL:
+
+Documentation:
+<https://domonda.github.io/api/doc/schema/documentcategory.doc.html>
+
+Example GraphQL query:
+
+```gql
+{
+  allDocumentCategories{
+    nodes{
+      id,
+      documentType,
+      bookingType,
+      bookingCategory,
+      description,
+      emailAlias
+    }
+  }
+}
+```
 
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
-https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html
+<https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
 
 Example using the CURL command line tool:
 
@@ -52,7 +72,7 @@ curl -X POST \
 
 The response will be a HTTP status code 200 message with the created document's UUID in plaintext format:
 
-```http
+```txt
 HTTP/1.1 200 OK
 Content-Type: text/plain
 
@@ -60,20 +80,15 @@ ef059fa4-7288-4b77-8017-adce142e29a8
 ```
 
 This UUID can be used in the GraphQL document API:
-https://domonda.github.io/api/doc/schema/document.doc.html
+<https://domonda.github.io/api/doc/schema/document.doc.html>
 
 In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
 
 
-## GraphQL API specification
-
-* [domonda-api.gql](domonda-api.gql)
-* [domonda-api.json](domonda-api.json)
-
-
 ## Basic usage
 
-You can find all GraphQL query types in the generated documentation: <https://domonda.github.io/api/doc/schema/query.doc.html>.
+You can find all GraphQL query types in the generated documentation:
+<https://domonda.github.io/api/doc/schema/query.doc.html>
 
 Referenced fields always have an extra field for querying the actual data behind it.
 
@@ -97,7 +112,24 @@ field `userByImportedBy` which gets you the associated user.
 ```
 
 
-## Example queries
+## Example GraphQL queries
+
+Query all document categories:
+
+```gql
+{
+  allDocumentCategories{
+    nodes{
+      id,
+      documentType,
+      bookingType,
+      bookingCategory,
+      description,
+      emailAlias
+    }
+  }
+}
+```
 
 Query all documents:
 
