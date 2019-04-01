@@ -58,6 +58,8 @@ and must be one of the following formats: PDF, PNG, JPEG, TIFF
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
 
+Reference XML files can be created online here: <https://formular.ebinterface.at/>
+
 Example using the CURL command line tool:
 
 ```sh
@@ -92,8 +94,8 @@ You can find all GraphQL query types in the generated documentation:
 
 Referenced fields always have an extra field for querying the actual data behind it.
 
-If you want to query all documents with the additional information of the import user you can achieve this by using the 
-field `userByImportedBy` which gets you the associated user. 
+If you want to query all documents with the additional information of the import user you can achieve this by using the
+field `userByImportedBy` which gets you the associated user.
 
 ```gql
 {
