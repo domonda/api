@@ -24,6 +24,34 @@ POST https://app.domonda.com/api/public/graphql
 Authorization: Bearer API_KEY
 ```
 
+
+## Basic usage
+
+You can find all GraphQL query types in the generated documentation:
+<https://domonda.github.io/api/doc/schema/query.doc.html>
+
+Referenced fields always have an extra field for querying the actual data behind it.
+
+If you want to query all documents with the additional information of the import user you can achieve this by using the
+field `userByImportedBy` which gets you the associated user.
+
+```gql
+{
+  query{
+    allDocuments{
+      nodes{
+        id
+        userByImportedBy{
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+```
+
+
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
@@ -85,33 +113,6 @@ This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
 
 In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
-
-
-## Basic usage
-
-You can find all GraphQL query types in the generated documentation:
-<https://domonda.github.io/api/doc/schema/query.doc.html>
-
-Referenced fields always have an extra field for querying the actual data behind it.
-
-If you want to query all documents with the additional information of the import user you can achieve this by using the
-field `userByImportedBy` which gets you the associated user.
-
-```gql
-{
-  query{
-    allDocuments{
-      nodes{
-        id
-        userByImportedBy{
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-}
-```
 
 
 ## Example GraphQL queries
