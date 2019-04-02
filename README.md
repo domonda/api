@@ -60,9 +60,9 @@ File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the
 Note that currently all document processing is done synchronously.
 OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
 
-To identify the category of the uploaded document, either the form filed `documentCategory`
+To identify the category of the uploaded document, either the form field `documentCategory`
 must be provided or alternatively the form field `documentType` with the additional fields
-`bookingType` and `bookingCategory` if their value for the category is non null.
+`bookingType` and `bookingCategory` if their value for the category is non null/empty.
 A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
 a document category and may be easier to use than querieng document category IDs upfront.
 
