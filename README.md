@@ -57,6 +57,9 @@ field `userByImportedBy` which gets you the associated user.
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
 `https://app.domonda.com/api/public/upload`
 
+Note that currently all document processing is done synchronously.
+OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
+
 To identify the category of the uploaded document, either the form filed `documentCategory`
 must be provided or alternatively the form field `documentType` with the additional fields
 `bookingType` and `bookingCategory` if their value for the category is non null.
@@ -111,6 +114,8 @@ Example GraphQL query:
 
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
+
+Feature coming soon:
 
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
