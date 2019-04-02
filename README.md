@@ -57,10 +57,39 @@ field `userByImportedBy` which gets you the associated user.
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
 `https://app.domonda.com/api/public/upload`
 
-The form field `documentCategory` must contain the id of a document category.
-Document categories can be queried with via GraphQL:
+To identify the category of the uploaded document, either the form filed `documentCategory`
+must be provided or alternatively the form field `documentType` with the additional fields
+`bookingType` and `bookingCategory` if their value for the category is non null.
+A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
+a document category and may be easier to use than querieng document category IDs upfront.
 
-Documentation:
+Valid values for documentType are:
+
+```txt
+INCOMING_INVOICE
+OUTGOING_INVOICE
+INCOMING_DUNNING_LETTER
+OUTGOING_DUNNING_LETTER
+INCOMING_DELIVERY_NOTE
+OUTGOING_DELIVERY_NOTE
+BANK_STATEMENT
+CREDITCARD_STATEMENT
+FACTORING_STATEMENT
+OTHER_DOCUMENT
+```
+
+Valid values for `bookingType` are either an empty string (or not provided at all) or:
+
+```txt
+CASH_BOOK
+CLEARING_ACCOUNT
+```
+
+`bookingCategory` is a generic string that may be empty or not provided at all.
+
+
+
+Document categories can be queried with via GraphQL:
 <https://domonda.github.io/api/doc/schema/documentcategory.doc.html>
 
 Example GraphQL query:
@@ -86,15 +115,41 @@ and must be one of the following formats: PDF, PNG, JPEG, TIFF
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
 
-Reference XML files can be created online here: <https://formular.ebinterface.at/>
+Reference XML files can be created online at: <https://formular.ebinterface.at/>
 
-Example using the CURL command line tool:
+Example using the CURL command line tool with a `documentCategory` ID:
 
 ```sh
 curl -X POST \
   -H "Authorization: Bearer API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
+  -F "document=@invoice.pdf" \
+  -F "ebInterface=@invoice.xml" \
+  https://app.domonda.com/api/public/upload
+```
+
+Example with `documentType`, `bookingType`, `bookingCategory`:
+
+```sh
+curl -X POST \
+  -H "Authorization: Bearer API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "documentType=INCOMING_INVOICE" \
+  -F "bookingType=CLEARING_ACCOUNT" \
+  -F "bookingCategory=VKxx" \
+  -F "document=@invoice.pdf" \
+  -F "ebInterface=@invoice.xml" \
+  https://app.domonda.com/api/public/upload
+```
+
+Example with just `documentType` (`bookingType` and `bookingCategory` would be null in the GraphQL query for the document category):
+
+```sh
+curl -X POST \
+  -H "Authorization: Bearer API_KEY" \
+  -H "Content-Type: multipart/form-data" \
+  -F "documentType=OUTGOING_INVOICE" \
   -F "document=@invoice.pdf" \
   -F "ebInterface=@invoice.xml" \
   https://app.domonda.com/api/public/upload
