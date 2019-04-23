@@ -64,7 +64,7 @@ To identify the category of the uploaded document, either the form field `docume
 must be provided or alternatively the form field `documentType` with the additional fields
 `bookingType` and `bookingCategory` if their value for the category is non null/empty.
 A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
-a document category and may be easier to use than querieng document category IDs upfront.
+a document category and may be easier to use than querying document category IDs upfront.
 
 Valid values for documentType are:
 
