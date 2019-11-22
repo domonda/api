@@ -160,6 +160,40 @@ curl -X POST \
   https://app.domonda.com/api/public/upload
 ```
 
+It's also possible to upload a document metadata together with the document.
+For example, upload `ebinterface.xml` incoming invoice together with `matadata.json`:
+
+```sh
+curl -X POST
+	-H "Authorization: Bearer API_KEY"
+	-H "Content-Type: multipart/form-data"
+	-F "documentType=INCOMING_INVOICE"
+	-F "ebInterface=@ebinterface.xml"
+    -F "documentMetadata=@metadata.json"
+    https://app.domonda.com/api/public/upload
+```
+
+An example of attached `metadata.json` file:
+
+```json
+{
+  "tags": [
+    "tag1",
+    "tag2",
+    "tag3"
+  ],
+  "invoiceTitle": "I'm an awesome invoice title",
+  "costCenter": [
+    {
+      "str": "NEW WAREHOUSE",
+      "name": "New Warehouse",
+      "currency": "EUR",
+      "amount": 25.5
+    }
+  ]
+}
+```
+
 The response will be a HTTP status code 200 message with the created document's UUID in plaintext format:
 
 ```txt
