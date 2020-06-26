@@ -1,3 +1,5 @@
+![image](img/domonda_logo_schriftzug.png)
+
 # DOMONDA API
 
 The general Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
