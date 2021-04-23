@@ -1,0 +1,24 @@
+{
+    "partnerName": "Muster I AG",       // Optional string or null
+    "partnerVatId": "AT34567810",       // Optional string or null
+    "invoiceNumber": "17",              // Optional string or null
+    "internalNumber": null,             // Optional string or null
+    "invoiceDate": "2020-10-07",        // Optional string with format "YYYY-MM-DD" or null
+    "dueDate": "2020-10-21",            // Optional string with format "YYYY-MM-DD" or null
+    "creditMemo": false,                // Optional boolean, false is used when missing
+    "net": 5610,                        // Optional number or null
+    "total": 6732,                      // Optional number or null
+    "vatPercent": 20,                   // Optional number or null
+    "vatPercentages": [20, 20, 20],     // Optional array of numbers or null
+    "vatAmounts": [210, 900, 12],       // Optional array of numbers or null
+    "dicscountPercent": 0,              // Optional number or null
+    "discountUntil": null,              // Optional string with format "YYYY-MM-DD" or null
+    "currency": "EUR",                  // Optional string or null, 3 character ISO 4217 alphabetic code
+    "conversionRate": 1,                // Optional number greater zero or null
+    "conversionRateDate": "2020-10-07", // Optional string with format "YYYY-MM-DD" or null
+    "goodsServices": "Website Design",  // Optional string or null
+    "deliveredFrom": "2020-09-01",      // Optional string with format "YYYY-MM-DD" or null
+    "deliveredUntil": "2020-09-30",     // Optional string with format "YYYY-MM-DD" or null
+    "iban": "DE02120300000000202051",   // Optional string or null
+    "bic": "BYLADEM1001"                // Optional string or null
+}

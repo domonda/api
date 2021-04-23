@@ -117,9 +117,36 @@ Example GraphQL query:
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
-Feature coming soon:
+The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields: 
 
-The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
+```json
+{
+    "partnerName": "Muster I AG",       // Optional string or null
+    "partnerVatId": "AT34567810",       // Optional string or null
+    "invoiceNumber": "17",              // Optional string or null
+    "internalNumber": null,             // Optional string or null
+    "invoiceDate": "2020-10-07",        // Optional string with format "YYYY-MM-DD" or null
+    "dueDate": "2020-10-21",            // Optional string with format "YYYY-MM-DD" or null
+    "creditMemo": false,                // Optional boolean, false is used when missing
+    "net": 5610,                        // Optional number or null
+    "total": 6732,                      // Optional number or null
+    "vatPercent": 20,                   // Optional number or null
+    "vatPercentages": [20, 20, 20],     // Optional array of numbers or null
+    "vatAmounts": [210, 900, 12],       // Optional array of numbers or null
+    "dicscountPercent": 0,              // Optional number or null
+    "discountUntil": null,              // Optional string with format "YYYY-MM-DD" or null
+    "currency": "EUR",                  // Optional string or null, 3 character ISO 4217 alphabetic code
+    "conversionRate": 1,                // Optional number greater zero or null
+    "conversionRateDate": "2020-10-07", // Optional string with format "YYYY-MM-DD" or null
+    "goodsServices": "Website Design",  // Optional string or null
+    "deliveredFrom": "2020-09-01",      // Optional string with format "YYYY-MM-DD" or null
+    "deliveredUntil": "2020-09-30",     // Optional string with format "YYYY-MM-DD" or null
+    "iban": "DE02120300000000202051",   // Optional string or null
+    "bic": "BYLADEM1001"                // Optional string or null
+}
+```
+
+The optional form field `ebInterface` contains a XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
 
 Reference XML files can be created online at: <https://formular.ebinterface.at/>
@@ -131,8 +158,8 @@ curl -X POST \
   -H "Authorization: Bearer API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
-  -F "document=@invoice.pdf" \
-  -F "ebInterface=@invoice.xml" \
+  -F "document=@example/invoice.pdf" \
+  -F "ebInterface=@example/invoice.xml" \
   https://app.domonda.com/api/public/upload
 ```
 
@@ -145,8 +172,8 @@ curl -X POST \
   -F "documentType=INCOMING_INVOICE" \
   -F "bookingType=CLEARING_ACCOUNT" \
   -F "bookingCategory=VKxx" \
-  -F "document=@invoice.pdf" \
-  -F "ebInterface=@invoice.xml" \
+  -F "document=@example/invoice.pdf" \
+  -F "ebInterface=@example/invoice.xml" \
   https://app.domonda.com/api/public/upload
 ```
 
@@ -157,8 +184,8 @@ curl -X POST \
   -H "Authorization: Bearer API_KEY" \
   -H "Content-Type: multipart/form-data" \
   -F "documentType=OUTGOING_INVOICE" \
-  -F "document=@invoice.pdf" \
-  -F "ebInterface=@invoice.xml" \
+  -F "document=@example/invoice.pdf" \
+  -F "ebInterface=@example/invoice.xml" \
   https://app.domonda.com/api/public/upload
 ```
 
