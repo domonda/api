@@ -119,7 +119,7 @@ and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
 The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields: 
 
-```json
+```jsonc
 {
     "partnerName": "Muster I AG",       // Optional string or null
     "partnerVatId": "AT34567810",       // Optional string or null
