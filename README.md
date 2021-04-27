@@ -8,7 +8,7 @@ The only exception are file uploads which are implemented as Multipart MIME HTTP
 
 A static GraphQL documentation is available at: <https://domonda.github.io/api/>
 
-For interactive access and documentation use the webbased GraphiQL: <https://app.domonda.com/api/public/graphiql>
+For interactive access and documentation use the webbased GraphiQL: <https://domonda.app/api/public/graphiql>
 
 You can provide a authentication token for authenticated access to your Domonda data.
 Without a valid token, demo data is provived by the API.
@@ -21,7 +21,7 @@ Alternatively you can use the desktop client Altair (<https://altair.sirmuel.des
 Authentication is implemented via Bearer token. Replace `API_KEY` with your companies's API key. If you don't have one, request it from api@domonda.com
 
 ```http
-POST https://app.domonda.com/api/public/graphql
+POST https://domonda.app/api/public/graphql
 
 Authorization: Bearer API_KEY
 ```
@@ -57,7 +57,7 @@ field `userByImportedBy` which gets you the associated user.
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
-`https://app.domonda.com/api/public/upload`
+`https://domonda.app/api/public/document/upload`
 
 Note that currently all document processing is done synchronously.
 OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
