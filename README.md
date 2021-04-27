@@ -124,7 +124,7 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
 {
     "confirmedBy": "My Custom CRM",     // Optional string or null
     "partnerName": "Muster I AG",       // Optional string or null
-    "partnerVatId": "AT34567810",       // Optional string or null
+    "partnerVatId": "ATU10223006",      // Optional string or null
     "invoiceNumber": "17",              // Optional string or null
     "internalNumber": null,             // Optional string or null
     "invoiceDate": "2020-10-07",        // Optional string with format "YYYY-MM-DD" or null
@@ -135,7 +135,7 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
     "vatPercent": 20,                   // Optional number or null
     "vatPercentages": [20, 20, 20],     // Optional array of numbers or null
     "vatAmounts": [210, 900, 12],       // Optional array of numbers or null
-    "dicscountPercent": 0,              // Optional number or null
+    "discountPercent": 0,               // Optional number or null
     "discountUntil": null,              // Optional string with format "YYYY-MM-DD" or null
     "currency": "EUR",                  // Optional string or null, 3 character ISO 4217 alphabetic code
     "conversionRate": 1,                // Optional number greater zero or null
