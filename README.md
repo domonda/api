@@ -117,10 +117,12 @@ Example GraphQL query:
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
-The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields: 
+The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields
+(the JSONC format variant with comments is supported): 
 
 ```jsonc
 {
+    "confirmedBy": "My Custom CRM",     // Optional string or null
     "partnerName": "Muster I AG",       // Optional string or null
     "partnerVatId": "AT34567810",       // Optional string or null
     "invoiceNumber": "17",              // Optional string or null

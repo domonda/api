@@ -1,4 +1,5 @@
 {
+    "confirmedBy": "My Custom CRM",     // Optional string or null
     "partnerName": "Muster I AG",       // Optional string or null
     "partnerVatId": "AT34567810",       // Optional string or null
     "invoiceNumber": "17",              // Optional string or null
