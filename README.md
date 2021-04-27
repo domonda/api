@@ -92,8 +92,6 @@ CLEARING_ACCOUNT
 
 `bookingCategory` is a generic string that may be empty or not provided at all.
 
-
-
 Document categories can be queried with via GraphQL:
 <https://domonda.github.io/api/doc/schema/documentcategory.doc.html>
 
@@ -113,6 +111,8 @@ Example GraphQL query:
   }
 }
 ```
+
+The form field `tag` can be used multiple times to add multiple tags to the document.
 
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
@@ -160,7 +160,7 @@ The optional form field `ebInterface` contains a XML file in the ebInterface 5.0
 
 Reference XML files can be created online at: <https://formular.ebinterface.at/>
 
-Example using the CURL command line tool with a `documentCategory` ID:
+Example using the CURL command line tool with a `documentCategory` ID and multiple `tag` fields:
 
 ```sh
 curl -X POST \
@@ -168,6 +168,8 @@ curl -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
   -F "document=@example/invoice.pdf" \
+  -F "tag=TagA" \
+  -F "tag=TagB" \
   -F "ebInterface=@example/invoice.xml" \
   https://app.domonda.com/api/public/upload
 ```
