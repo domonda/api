@@ -16,7 +16,7 @@ const (
 	UploadURL = "https://domonda.app/api/public/upload"
 )
 
-func UploadDocument(ctx context.Context, apiKey string, documentCategory uu.ID, documentFile, invoiceFile fs.FileReader, tags ...string) (documentID uu.ID, err error) {
+func UploadDocument(ctx context.Context, apiURL, apiKey string, documentCategory uu.ID, documentFile, invoiceFile fs.FileReader, tags ...string) (documentID uu.ID, err error) {
 	body := bytes.NewBuffer(nil)
 	form := multipart.NewWriter(body)
 
@@ -52,13 +52,18 @@ func UploadDocument(ctx context.Context, apiKey string, documentCategory uu.ID, 
 		}
 	}
 
-	request, err := http.NewRequestWithContext(ctx, "POST", UploadURL, body)
+	err = form.Close()
 	if err != nil {
 		return uu.IDNil, err
 	}
 
+	request, err := http.NewRequestWithContext(ctx, "POST", apiURL, body)
+	if err != nil {
+		return uu.IDNil, err
+	}
+
+	request.Header.Add("Content-Type", form.FormDataContentType())
 	request.Header.Add("Authorization", "Bearer "+apiKey)
-	request.Header.Add("Content-Type", "multipart/form-data")
 
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
