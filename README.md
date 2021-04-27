@@ -57,7 +57,7 @@ field `userByImportedBy` which gets you the associated user.
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
-`https://domonda.app/api/public/document/upload`
+`https://domonda.app/api/public/upload`
 
 Note that currently all document processing is done synchronously.
 OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
@@ -147,6 +147,13 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
     "bic": "BYLADEM1001"                // Optional string or null
 }
 ```
+
+If `confirmedBy` is set to a non-empty string then all values from the JSON
+will be marked as confirmed and not overwritten by values from domonda's automated incoice data extraction.
+The `confirmedBy` string will be shown next to confirmed values in the domonda web app,
+so a representive, human readable string should be chosen.
+Upload API confirmations can be changed by users of the domonda app, if they have sufficient rights.
+
 
 The optional form field `ebInterface` contains a XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
