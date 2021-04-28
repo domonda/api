@@ -99,13 +99,13 @@ Example GraphQL query:
 
 ```gql
 {
-  allDocumentCategories{
-    nodes{
-      id,
-      documentType,
-      bookingType,
-      bookingCategory,
-      description,
+  allDocumentCategories {
+    nodes {
+      rowId
+      documentType
+      bookingType
+      bookingCategory
+      description
       emailAlias
     }
   }
@@ -148,11 +148,55 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
 }
 ```
 
+Using the document UUID returned as plaintext body from the upload request as rowId,
+the uploaded invoice data can be queried like this:
+
+```gql
+{
+  documentByRowId(rowId: "cbd03cbe-5d2f-4f97-bf12-03f1481d6c41") {
+    numPages
+    tags
+    invoiceByDocumentRowId {
+      partnerName
+      invoiceNumber
+      invoiceNumberConfirmedBy
+      invoiceDate
+      invoiceDateConfirmedBy
+      dueDate
+      dueDateConfirmedBy
+      creditMemo
+      net
+      netConfirmedBy
+      total
+      totalConfirmedBy
+      vatPercent
+      vatPercentConfirmedBy
+      vatPercentages
+      discountPercent
+      discountPercentConfirmedBy
+      discountUntil
+      discountUntilConfirmedBy
+      currency
+      currencyConfirmedBy
+      conversionRate
+      conversionRateDate
+      conversionRateSource
+      goodsServices
+      goodsServicesConfirmedBy
+      deliveredFrom
+      deliveredFromConfirmedBy
+      deliveredUntil
+      deliveredUntilConfirmedBy
+      iban
+      bic
+    }
+  }
+}
+```
+
 If `confirmedBy` is set to a non-empty string then all values from the JSON
 will be marked as confirmed and not overwritten by values from domonda's automated incoice data extraction.
-The `confirmedBy` string will be shown next to confirmed values in the domonda web app,
-so a representive, human readable string should be chosen.
-Upload API confirmations can be changed by users of the domonda app, if they have sufficient rights.
+Upload API confirmations can be overwritten by users of the domonda app, if they have sufficient rights.
 
 
 The optional form field `ebInterface` contains a XML file in the ebInterface 5.0 format as specified at:
@@ -171,7 +215,7 @@ curl -X POST \
   -F "tag=TagA" \
   -F "tag=TagB" \
   -F "ebInterface=@example/invoice.xml" \
-  https://app.domonda.com/api/public/upload
+  https://domonda.app/api/public/upload
 ```
 
 Example with `documentType`, `bookingType`, `bookingCategory`:
@@ -185,7 +229,7 @@ curl -X POST \
   -F "bookingCategory=VKxx" \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
-  https://app.domonda.com/api/public/upload
+  https://domonda.app/api/public/upload
 ```
 
 Example with just `documentType` (`bookingType` and `bookingCategory` would be null in the GraphQL query for the document category):
@@ -197,7 +241,7 @@ curl -X POST \
   -F "documentType=OUTGOING_INVOICE" \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
-  https://app.domonda.com/api/public/upload
+  https://domonda.app/api/public/upload
 ```
 
 The response will be a HTTP status code 200 message with the created document's UUID in plaintext format:
@@ -223,7 +267,7 @@ Query all document categories:
 {
   allDocumentCategories{
     nodes{
-      id,
+      rowId,
       documentType,
       bookingType,
       bookingCategory,
@@ -240,7 +284,7 @@ Query all documents:
 {
   allDocuments {
     nodes {
-        id,
+        rowId,
         type,
         categoryId,
         workflowStepId,
@@ -290,14 +334,13 @@ Query all delivery notes:
 {
   allDeliveryNotes {
     nodes {
-      documentId,
-      type,
-      version,
-      partnerCompanyId,
-      invoiceId,
-      invoiceNumber,
-      deliveryNoteNr,
-      deliveryDate,
+      documentRowId
+      partnerCompanyRowId
+      invoiceDocumentRowId
+      invoiceNumber
+      deliveryNoteNumber
+      deliveryDate
+      createdAt
     }
   }
 }
@@ -309,15 +352,13 @@ Quary all delivery note items:
 {
   allDeliveryNoteItems {
     nodes {
-      documentId,
-      deliveryNoteNr,
-      deliveryDate,
-      posNr,
-      quantity,
-      productNr,
-      eanNr,
-      gtinNr,
-      description,
+      deliveryNoteDocumentRowId
+      posNo
+      quantity
+      productNo
+      gtinNo
+      eanNo
+      description
     }
   }
 }
