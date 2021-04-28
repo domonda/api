@@ -26,6 +26,15 @@ POST https://domonda.app/api/public/graphql
 Authorization: Bearer API_KEY
 ```
 
+Minimal example:
+
+```sh
+curl -X POST \
+  -H "Authorization: Bearer API_KEY" \
+  -H "Content-Type: application/json" \
+  --data '{"query": "{ allDocuments { totalCount } }"}' \
+  https://domonda.app/api/public/graphql
+```
 
 ## Basic usage
 
