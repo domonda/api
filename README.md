@@ -31,8 +31,8 @@ Minimal example:
 ```sh
 curl -X POST \
   -H "Authorization: Bearer API_KEY" \
-  -H "Content-Type: application/json" \
-  --data '{"query": "{ allDocuments { totalCount } }"}' \
+  -H "Content-Type: application/graphql" \
+  --data "{ allDocuments{ totalCount } }" \
   https://domonda.app/api/public/graphql
 ```
 
