@@ -18,7 +18,10 @@ Alternatively you can use the desktop client Altair (<https://altair.sirmuel.des
 
 ## Authentication
 
-Authentication is implemented via Bearer token. Replace `API_KEY` with your companies's API key. If you don't have one, request it from api@domonda.com
+Authentication is implemented via Bearer token. In the following examples
+replace `API_KEY` with the API key specific to the client company in domonda.
+If you don't a key, request it from api@domonda.com with information about
+the company in domonda and who authorized the useage of the data.
 
 ```http
 POST https://domonda.app/api/public/graphql
@@ -227,9 +230,9 @@ curl -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
   -F "document=@example/invoice.pdf" \
+  -F "invoice=@example/invoice.jsonc" \
   -F "tag=TagA" \
   -F "tag=TagB" \
-  -F "ebInterface=@example/invoice.xml" \
   https://domonda.app/api/public/upload
 ```
 
