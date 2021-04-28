@@ -42,7 +42,7 @@ field `userByImportedBy` which gets you the associated user.
   query{
     allDocuments{
       nodes{
-        id
+        rowId
         userByImportedBy{
           firstName
           lastName
