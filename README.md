@@ -20,8 +20,8 @@ Alternatively you can use the desktop client Altair (<https://altair.sirmuel.des
 
 Authentication is implemented via Bearer token. In the following examples
 replace `API_KEY` with the API key specific to the client company in domonda.
-If you don't a key, request it from api@domonda.com with information about
-the company in domonda and who authorized the useage of the data.
+API keys can be requested from api@domonda.com, please include information about
+the company that is using domonda and who authorized the usage of the data.
 
 ```http
 POST https://domonda.app/api/public/graphql
