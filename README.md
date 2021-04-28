@@ -265,14 +265,15 @@ Query all document categories:
 
 ```gql
 {
-  allDocumentCategories{
-    nodes{
-      rowId,
-      documentType,
-      bookingType,
-      bookingCategory,
-      description,
+  allDocumentCategories {
+    nodes {
+      rowId
+      documentType
+      bookingType
+      bookingCategory
+      description
       emailAlias
+      createdAt
     }
   }
 }
@@ -284,18 +285,19 @@ Query all documents:
 {
   allDocuments {
     nodes {
-        rowId,
-        type,
-        categoryId,
-        workflowStepId,
-        importDate,
-        periodDate,
-        name,
-        title,
-        language,
-        version,
-        numPages,
-        numAttachPages
+      rowId
+      categoryRowId
+      workflowStepRowId
+      name
+      title
+      language
+      tags
+      numPages
+      numAttachPages
+      version
+      importedBy
+      updatedAt
+      createdAt
     }
   }
 }
@@ -307,22 +309,27 @@ Query all invoices:
 {
   allInvoices {
     nodes {
-      documentId,
-      type,
-      title,
-      version,
-      invoiceNumber,
-      invoiceDate,
-      net,
-      total,
-      vatPercent,
-      vatId,
-      currency,
-      iban,
-      bic,
-      dueDate,
-      paymentStatus,
-      paidDate,
+      documentRowId
+      partnerName
+      invoiceNumber
+      invoiceDate
+      dueDate
+      creditMemo
+      net
+      total
+      vatPercent
+      vatPercentages
+      discountPercent
+      discountUntil
+      currency
+      conversionRate
+      conversionRateDate
+      conversionRateSource
+      goodsServices
+      deliveredFrom
+      deliveredUntil
+      iban
+      bic
     }
   }
 }
