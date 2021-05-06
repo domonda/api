@@ -46,6 +46,21 @@ You can find all GraphQL query types in the generated documentation:
 
 Referenced fields always have an extra field for querying the actual data behind it.
 
+Query own company data:
+
+```gql
+{
+  currentClientCompany {
+    companyRowId
+    companyByCompanyRowId {
+      name
+      brandName
+      alternativeNames
+    }
+  }
+}
+```
+
 If you want to query all documents with the additional information of the import user you can achieve this by using the
 field `userByImportedBy` which gets you the associated user.
 
