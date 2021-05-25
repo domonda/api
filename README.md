@@ -6,8 +6,6 @@ The general Domonda API is implemented using the GraphQL protocol: <http://graph
 
 The only exception are file uploads which are implemented as Multipart MIME HTTP POST requests.
 
-A static GraphQL documentation is available at: <https://domonda.github.io/api/>
-
 For interactive access and documentation use the webbased GraphiQL: <https://domonda.app/api/public/graphiql>
 
 You can provide a authentication token for authenticated access to your Domonda data.
