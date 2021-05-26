@@ -368,6 +368,26 @@ Query all invoices:
 }
 ```
 
+Query invoice booking lines (accounting intems):
+
+```gql
+{
+  invoiceByDocumentRowId(documentRowId: "035bda2e-a5a1-445d-a712-6943e803f108") {
+    invoiceAccountingItemsByInvoiceDocumentRowId {
+      nodes {
+        title
+        amount
+        amountType
+        bookingType
+        generalLedgerAccountRowId
+        valueAddedTaxRowId
+        valueAddedTaxPercentageRowId
+      }
+    }
+  }
+}
+```
+
 Query all delivery notes:
 
 ```gql
@@ -403,3 +423,29 @@ Quary all delivery note items:
   }
 }
 ```
+
+Find money transactions:
+
+```gql
+{
+  filterMoneyTransactions(searchText: "My Transaction Reference") {
+    nodes {
+      rowId
+      accountRowId
+      type
+      partnerName
+      partnerIban
+      partnerCompanyRowId
+      amount
+      foreignCurrency
+      foreignAmount
+      purpose
+      bookingDate
+      valueDate
+      importDocumentRowId
+      moneyCategoryRowId
+      updatedAt
+      createdAt
+    }
+  }
+}
