@@ -9,13 +9,18 @@
   "orderNumber": "Auftrag 2020/1234", // Optional string or null
   "orderDate": "2020-08-15",          // Optional string with format "YYYY-MM-DD" or null
   "creditMemo": false,                // Optional boolean, false is used when missing
-  "net": 5610,                        // Optional number or null
-  "total": 6732,                      // Optional number or null
+  "net": 5610.5,                      // Optional number or null
+  "total": 6732.6,                    // Optional number or null
   "vatPercent": 20,                   // Optional number or null
   "vatPercentages": [20, 20, 20],     // Optional array of numbers or null
-  "vatAmounts": [210, 900, 12],       // Optional array of numbers or null
+  "vatAmounts": [210, 900, 12.1],     // Optional array of numbers or null
   "discountPercent": 0,               // Optional number or null
   "discountUntil": null,              // Optional string with format "YYYY-MM-DD" or null
+  "costCenters": {                    // Optional object or null
+    "1000": 1050,                     // Cost-center "number" as key with net amount as value
+    "2000": 4500,                     // Cost-center "number" as key with net amount as value
+    "9000": 60.5                      // Cost-center "number" as key with net amount as value
+  },
   "currency": "EUR",                  // Optional string or null, 3 character ISO 4217 alphabetic code
   "conversionRate": 1,                // Optional number greater zero or null
   "conversionRateDate": "2020-10-07", // Optional string with format "YYYY-MM-DD" or null
