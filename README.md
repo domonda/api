@@ -173,8 +173,8 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
   "conversionRate": 1,                // Optional number greater zero or null
   "conversionRateDate": "2020-10-07", // Optional string with format "YYYY-MM-DD" or null
   "goodsServices": "Website Design",  // Optional string or null
-  "deliveredFrom": "2020-09-01",      // Optional string with format "YYYY-MM-DD" or null
-  "deliveredUntil": "2020-09-30",     // Optional string with format "YYYY-MM-DD" or null
+  "deliveredFrom": "2020-09-01",      // Optional string with format "YYYY-MM-DD" or null, use for performance period
+  "deliveredUntil": "2020-09-30",     // Optional string with format "YYYY-MM-DD" or null, use as single delivery date
   "iban": "DE02120300000000202051",   // Optional string or null
   "bic": "BYLADEM1001"                // Optional string or null
 }
