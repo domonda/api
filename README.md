@@ -77,6 +77,106 @@ field `userByImportedBy` which gets you the associated user.
 }
 ```
 
+## Load last month invoices in Google Sheets
+
+1. Open Google Sheets
+1. In the app bar, click on Extensions -> Apps Script
+1. Add [Moment](https://momentjs.com)
+   1. Click on plus in Libraries
+   1. Use script ID: `15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo`
+   1. Click on Look up
+   1. Use v9 and `Moment` as identifier
+   1. Click on Add
+1. Use script:
+
+   ```js
+   const DOMONDA_API = "https://domonda.app/api/public/graphql";
+   const API_TOKEN = ""; // your personal access token
+
+   function lastMonthImportedInvoices() {
+     var lastMonth = Moment.moment(new Date()).subtract(1, "months");
+     var options = {
+       method: "POST",
+       headers: { Authorization: "Bearer " + API_TOKEN },
+       contentType: "application/json",
+       payload: JSON.stringify({
+         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
+         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
+            filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
+              nodes {
+                importedAt
+                invoice: invoiceByDocumentRowId {
+                  partnerName
+                  partnerVatID: partnerVatRowIdNo
+                  invoiceDate
+                  invoiceNumber
+                  totalInEur
+                }
+              }
+            }
+          }`,
+         variables: {
+           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
+           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
+         },
+       }),
+     };
+
+     var response = UrlFetchApp.fetch(DOMONDA_API, options);
+
+     var json = JSON.parse(response.getContentText());
+     var invoices = json.data.filterDocuments.nodes.map(
+       ({ invoice }) => invoice
+     );
+
+     var rows = [];
+     for (const invoice of invoices) {
+       const row = [];
+
+       // when rows is empty, start by creating the header
+       if (rows.length === 0) {
+         for (const key of Object.keys(invoice)) {
+           row.push(key);
+         }
+         rows.push(row);
+         continue;
+       }
+
+       // first row is always header
+       const header = rows[0];
+
+       // add data rows following the header
+       for (const key of header) {
+         row.push(invoice[key]);
+       }
+
+       rows.push(row);
+     }
+
+     // set only when there's something to set
+     const active = SpreadsheetApp.getActive();
+
+     // get or create sheet
+     const sheetName = lastMonth.format("YYYY-MM");
+     let sheet = active.getSheetByName(sheetName);
+     if (!sheet) {
+       sheet = active.insertSheet();
+       sheet.setName(sheetName);
+     }
+
+     if (rows.length === 0) {
+       sheet.getRange(1, 1).setValue("No data");
+     } else {
+       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
+     }
+
+     active.setActiveSheet(sheet);
+   }
+   ```
+
+1. Click on Run
+1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
+
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
@@ -291,106 +391,6 @@ This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
 
 In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
-
-## Load last month invoices in Google Sheets
-
-1. Open Google Sheets
-1. In the app bar, click on Extensions -> Apps Script
-1. Add [Moment](https://momentjs.com)
-   1. Click on plus in Libraries
-   1. Use script ID: `15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo`
-   1. Click on Look up
-   1. Use v9 and `Moment` as identifier
-   1. Click on Add
-1. Use script:
-
-   ```js
-   const DOMONDA_API = "https://domonda.app/api/public/graphql";
-   const API_TOKEN = ""; // your personal access token
-
-   function lastMonthImportedInvoices() {
-     var lastMonth = Moment.moment(new Date()).subtract(1, "months");
-     var options = {
-       method: "POST",
-       headers: { Authorization: "Bearer " + API_TOKEN },
-       contentType: "application/json",
-       payload: JSON.stringify({
-         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
-         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
-            filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
-              nodes {
-                importedAt
-                invoice: invoiceByDocumentRowId {
-                  partnerName
-                  partnerVatID: partnerVatRowIdNo
-                  invoiceDate
-                  invoiceNumber
-                  totalInEur
-                }
-              }
-            }
-          }`,
-         variables: {
-           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
-           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
-         },
-       }),
-     };
-
-     var response = UrlFetchApp.fetch(DOMONDA_API, options);
-
-     var json = JSON.parse(response.getContentText());
-     var invoices = json.data.filterDocuments.nodes.map(
-       ({ invoice }) => invoice
-     );
-
-     var rows = [];
-     for (const invoice of invoices) {
-       const row = [];
-
-       // when rows is empty, start by creating the header
-       if (rows.length === 0) {
-         for (const key of Object.keys(invoice)) {
-           row.push(key);
-         }
-         rows.push(row);
-         continue;
-       }
-
-       // first row is always header
-       const header = rows[0];
-
-       // add data rows following the header
-       for (const key of header) {
-         row.push(invoice[key]);
-       }
-
-       rows.push(row);
-     }
-
-     // set only when there's something to set
-     const active = SpreadsheetApp.getActive();
-
-     // get or create sheet
-     const sheetName = lastMonth.format("YYYY-MM");
-     let sheet = active.getSheetByName(sheetName);
-     if (!sheet) {
-       sheet = active.insertSheet();
-       sheet.setName(sheetName);
-     }
-
-     if (rows.length === 0) {
-       sheet.getRange(1, 1).setValue("No data");
-     } else {
-       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
-     }
-
-     active.setActiveSheet(sheet);
-   }
-   ```
-
-1. Click on Run
-1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
 
 ## Example GraphQL queries
 
