@@ -130,6 +130,9 @@ field `userByImportedBy` which gets you the associated user.
 
      var rows = [];
      for (const invoice of invoices) {
+       // skip non-invoices
+       if (!invoice) continue;
+
        const row = [];
 
        // when rows is empty, start by creating the header
