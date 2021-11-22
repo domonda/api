@@ -148,14 +148,12 @@ field `userByImportedBy` which gets you the associated user.
        for (const key of header) {
          row.push(invoice[key]);
        }
-
        rows.push(row);
      }
 
-     // set only when there's something to set
      const active = SpreadsheetApp.getActive();
 
-     // get or create sheet
+     // get or create sheet named YYYY-MM
      const sheetName = lastMonth.format("YYYY-MM");
      let sheet = active.getSheetByName(sheetName);
      if (!sheet) {
