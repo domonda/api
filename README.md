@@ -104,7 +104,6 @@ field `userByImportedBy` which gets you the associated user.
          query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
             filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
               nodes {
-                importedAt
                 invoice: invoiceByDocumentRowId {
                   partnerName
                   partnerVatID: partnerVatRowIdNo
