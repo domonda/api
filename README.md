@@ -240,6 +240,13 @@ The form field `tag` can be used multiple times to add multiple tags to the docu
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
+If there is already another document with an identical content hash than the uploaded file,
+then an error response with the HTTP status code `409: Conflict` is returned.
+By default the content hash conflict check also includes documents that have been marked as deleted.
+To exlude delete documents from the check add the form field `allowDuplicateDeleted` with the value `true`.
+With `allowDuplicateDeleted=true` a duplicate of an already deleted document can be uploaded
+as a new document.
+
 The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields
 (the JSONC format variant with comments is supported):
 
@@ -349,6 +356,7 @@ curl -X POST \
   -F "invoice=@example/invoice.jsonc" \
   -F "tag=TagA" \
   -F "tag=TagB" \
+  -F "allowDuplicateDeleted=true" \
   https://domonda.app/api/public/upload
 ```
 
@@ -363,6 +371,7 @@ curl -X POST \
   -F "bookingCategory=VKxx" \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
+  -F "allowDuplicateDeleted=false" \
   https://domonda.app/api/public/upload
 ```
 
@@ -375,6 +384,7 @@ curl -X POST \
   -F "documentType=OUTGOING_INVOICE" \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
+  -F "allowDuplicateDeleted=false" \
   https://domonda.app/api/public/upload
 ```
 
