@@ -240,8 +240,19 @@ The form field `tag` can be used multiple times to add multiple tags to the docu
 The form field `document` must contain a file that serves as the visual representation of the document
 and must be one of the following formats: PDF, PNG, JPEG, TIFF
 
-If there is already another document with an identical content hash than the uploaded file
+If there is already another document with an identical content hash of the uploaded file
 then an error response with the HTTP status code `409: Conflict` is returned.
+The body of the response will be a JSON object with the following format:
+
+```json
+{
+  "error": "Duplicate document content",
+  "detail": {
+    "duplicateDocumentIDs": ["00000000-0000-0000-0000-000000000000"]
+  }
+}
+```
+
 By default, the content hash conflict check also includes documents that have been marked as deleted.
 To exclude deleted documents from the check add the form field `allowDuplicateDeleted` with the value `true`.
 With `allowDuplicateDeleted=true` a duplicate of an already deleted document can be uploaded
