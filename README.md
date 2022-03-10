@@ -491,7 +491,7 @@ Query all invoices:
 }
 ```
 
-Query invoice booking lines (accounting intems):
+Query invoice booking lines (accounting items):
 
 ```gql
 {
