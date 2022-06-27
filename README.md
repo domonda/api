@@ -4,14 +4,14 @@
 
 The general Domonda API is implemented using the GraphQL protocol: <http://graphql.org/>
 
-The only exception are file uploads which are implemented as Multipart MIME HTTP POST requests.
+The only exceptions are file uploads which are implemented as Multipart MIME HTTP POST requests.
 
-For interactive access and documentation use the webbased GraphiQL: <https://domonda.app/api/public/graphiql>
+For interactive access and documentation use the web-based GraphiQL: <https://domonda.app/api/public/graphiql>
 
-You can provide a authentication token for authenticated access to your Domonda data.
-Without a valid token, demo data is provived by the API.
+You can provide an authentication token for authenticated access to your Domonda data.
+Without a valid token, demo data is provided by the API.
 
-Alternatively you can use the desktop client Altair (<https://altair.sirmuel.design/>).
+Alternatively, you can use the desktop client Altair (<https://altair.sirmuel.design/>).
 
 ## Authentication
 
@@ -77,15 +77,15 @@ field `userByImportedBy` which gets you the associated user.
 }
 ```
 
-## Load last month invoices in Google Sheets
+## Load last month's invoices in Google Sheets
 
 1. Open Google Sheets
 1. In the app bar, click on Extensions -> Apps Script
 1. Add [Moment](https://momentjs.com)
    1. Click on plus in Libraries
    1. Use script ID: `15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo`
-   1. Click on Look up
-   1. Use v9 and `Moment` as identifier
+   1. Click on `Look up`
+   1. Use v9 and `Moment` as an identifier
    1. Click on Add
 1. Use script:
 
@@ -177,6 +177,19 @@ field `userByImportedBy` which gets you the associated user.
 1. Click on Run
 1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
 
+## Document PDF download
+
+To request the PDF file for the document with the ID 00000000-0000-0000-0000-000000000000
+(replace zeros with actual UUID hex-code) make the following GET request:
+
+```sh
+curl \
+  -H "Authorization: Bearer API_KEY" \
+  --fail \
+  --remote-name \
+  https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf
+```
+
 ## File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
@@ -186,8 +199,8 @@ Note that currently all document processing is done synchronously.
 OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
 
 To identify the category of the uploaded document, either the form field `documentCategory`
-must be provided or alternatively the form field `documentType` with the additional fields
-`bookingType` and `bookingCategory` if their value for the category is non null/empty.
+must be provided or the form field `documentType` with the additional fields
+`bookingType` and cooking category` if their value for the category is non null/empty.
 A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
 a document category and may be easier to use than querying document category IDs upfront.
 
@@ -351,12 +364,12 @@ If `confirmedBy` is set to a non-empty string then all values from the JSON
 will be marked as confirmed and not overwritten by values from domonda's automated incoice data extraction.
 Upload API confirmations can be overwritten by users of the domonda app, if they have sufficient rights.
 
-The optional form field `ebInterface` contains a XML file in the ebInterface 5.0 format as specified at:
+The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
 
 Reference XML files can be created online at: <https://formular.ebinterface.at/>
 
-Example using the CURL command line tool with a `documentCategory` ID and multiple `tag` fields:
+Example using the CURL command-line tool with a `documentCategory` ID and multiple `tag` fields:
 
 ```sh
 curl -X POST \
@@ -399,7 +412,7 @@ curl -X POST \
   https://domonda.app/api/public/upload
 ```
 
-The response will be a HTTP status code 200 message with the created document's UUID in plaintext format:
+The response will be an HTTP status code 200 message with the created document's UUID in plaintext format:
 
 ```txt
 HTTP/1.1 200 OK
