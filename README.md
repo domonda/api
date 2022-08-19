@@ -195,8 +195,14 @@ curl \
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
 `https://domonda.app/api/public/upload`
 
-Note that currently all document processing is done synchronously.
-OCR and PDF processing may take up to 5 seconds per page, so adjust timeouts accordingly.
+Note that basic document processing like creating or fixing a PDF file
+and rendering page images is done synchronously and
+may take up to 5 seconds per page, so adjust timeouts accordingly.
+
+Extracting invoice data is done asynchronously by default.
+Set the form field `waitForExtraction` to `true` for synchronous
+extraction where results will be available via GraphQL directly after
+the upload request returns (add another 15 seconds to timeouts).
 
 To identify the category of the uploaded document, either the form field `documentCategory`
 must be provided or the form field `documentType` with the additional fields
@@ -228,7 +234,7 @@ CLEARING_ACCOUNT
 
 `bookingCategory` is a generic string that may be empty or not provided at all.
 
-Document categories can be queried with via GraphQL:
+Document categories can be queried via GraphQL:
 <https://domonda.github.io/api/doc/schema/documentcategory.doc.html>
 
 Example GraphQL query:
@@ -310,7 +316,7 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
 }
 ```
 
-Using the document UUID returned as plaintext body from the upload request as rowId,
+Using the document UUID returned as plaintext body from the upload request as `rowId`,
 the uploaded invoice data can be queried like this:
 
 ```gql
@@ -361,7 +367,7 @@ the uploaded invoice data can be queried like this:
 ```
 
 If `confirmedBy` is set to a non-empty string then all values from the JSON
-will be marked as confirmed and not overwritten by values from domonda's automated incoice data extraction.
+will be marked as confirmed and not overwritten by values from domonda's automated invoice data extraction.
 Upload API confirmations can be overwritten by users of the domonda app, if they have sufficient rights.
 
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
@@ -384,7 +390,7 @@ curl -X POST \
   https://domonda.app/api/public/upload
 ```
 
-Example with `documentType`, `bookingType`, `bookingCategory`:
+Example with `documentType`, `bookingType`, `bookingCategory`, and `waitForExtraction`:
 
 ```sh
 curl -X POST \
@@ -396,10 +402,12 @@ curl -X POST \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
   -F "allowDuplicateDeleted=false" \
+  -F "waitForExtraction=true" \
   https://domonda.app/api/public/upload
 ```
 
-Example with just `documentType` (`bookingType` and `bookingCategory` would be null in the GraphQL query for the document category):
+Example with just `documentType` (`bookingType` and `bookingCategory` would be null in the GraphQL query for the document category)
+and `waitForExtraction`:
 
 ```sh
 curl -X POST \
@@ -409,6 +417,7 @@ curl -X POST \
   -F "document=@example/invoice.pdf" \
   -F "ebInterface=@example/invoice.xml" \
   -F "allowDuplicateDeleted=false" \
+  -F "waitForExtraction=true" \
   https://domonda.app/api/public/upload
 ```
 
@@ -544,7 +553,7 @@ Query all delivery notes:
 }
 ```
 
-Quary all delivery note items:
+Query all delivery note items:
 
 ```gql
 {
