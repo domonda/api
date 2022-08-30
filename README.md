@@ -179,7 +179,7 @@ field `userByImportedBy` which gets you the associated user.
 
 ## Document PDF download
 
-To request the PDF file for the document with the ID 00000000-0000-0000-0000-000000000000
+To request the PDF file for the document with the ID `00000000-0000-0000-0000-000000000000`
 (replace zeros with actual UUID hex-code) make the following GET request:
 
 ```sh
@@ -206,7 +206,7 @@ the upload request returns (add another 15 seconds to timeouts).
 
 To identify the category of the uploaded document, either the form field `documentCategory`
 must be provided or the form field `documentType` with the additional fields
-`bookingType` and cooking category` if their value for the category is non null/empty.
+`bookingType` and `bookingCategory` if their value for the category is non-null/empty.
 A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
 a document category and may be easier to use than querying document category IDs upfront.
 
