@@ -375,12 +375,13 @@ The optional form field `ebInterface` contains an XML file in the ebInterface 5.
 
 Reference XML files can be created online at: <https://formular.ebinterface.at/>
 
-Example using the CURL command-line tool with a `documentCategory` ID and multiple `tag` fields:
+Example using the CURL command-line tool with a `documentCategory` ID and multiple `tag` fields and a user-defined `uuid` for the document that must not exist in domonda yet:
 
 ```sh
 curl -X POST \
   -H "Authorization: Bearer API_KEY" \
   -H "Content-Type: multipart/form-data" \
+  -F "uuid=01505320-42f7-4cff-a930-4669eeb5e999"
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
   -F "document=@example/invoice.pdf" \
   -F "invoice=@example/invoice.jsonc" \
@@ -429,6 +430,9 @@ Content-Type: text/plain
 
 ef059fa4-7288-4b77-8017-adce142e29a8
 ```
+
+The document ID will be a new v4 random UUID, except if a user-defined `uuid` that does not exist yet in domonda is passed as form-field. 
+
 
 This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
