@@ -441,7 +441,7 @@ In case of an error, standard 4xx and 5xx HTTP status code responses will be ret
 
 ## Example GraphQL queries
 
-Query all document categories:
+### Query all document categories:
 
 ```gql
 {
@@ -459,7 +459,7 @@ Query all document categories:
 }
 ```
 
-Query all documents:
+### Query all documents:
 
 ```gql
 {
@@ -483,7 +483,7 @@ Query all documents:
 }
 ```
 
-Query all invoices:
+### Query all invoices:
 
 ```gql
 {
@@ -517,7 +517,65 @@ Query all invoices:
 }
 ```
 
-Query invoice booking lines (accounting items):
+### All incoming invoices of a month including payment status
+
+```gql
+{
+  filterDocuments(dateFilterType: INVOICE_DATE, fromDate: "2022-06-01", untilDate: "2022-07-01", documentTypes: [INCOMING_INVOICE], orderBys: [INVOICE_DATE_ASC]) {
+    nodes {
+      rowId
+      documentCategoryByCategoryRowId {
+        documentType
+      }
+      tags
+      paymentStatus
+      documentMoneyTransactionsByDocumentRowId {
+        nodes {
+          moneyTransactionByMoneyTransactionRowId {
+            bookingDate
+            amount
+          }
+        }
+      }
+      invoiceByDocumentRowId {
+        invoiceDate
+        invoiceNumber
+        net
+        total
+        paymentStatus
+        paidDate
+        invoiceCostCentersByInvoiceDocumentRowId {
+          nodes {
+            clientCompanyCostCenterByClientCompanyCostCenterRowId {
+              number
+              description
+            }
+            amount
+          }
+        }
+        partnerCompanyByPartnerCompanyRowId {
+          name
+          alternativeNames
+          derivedName
+        }
+        companyLocationByPartnerCompanyLocationRowId {
+          main
+          street
+          city
+          zip
+          country
+          email
+          website
+          vatNo
+          registrationNo
+        }
+      }
+    }
+  }
+}
+```
+
+### Query invoice booking lines (accounting items):
 
 ```gql
 {
@@ -539,7 +597,7 @@ Query invoice booking lines (accounting items):
 }
 ```
 
-Query all delivery notes:
+### Query all delivery notes:
 
 ```gql
 {
@@ -557,7 +615,7 @@ Query all delivery notes:
 }
 ```
 
-Query all delivery note items:
+### Query all delivery note items:
 
 ```gql
 {
@@ -575,7 +633,7 @@ Query all delivery note items:
 }
 ```
 
-Find money transactions:
+### Find money transactions:
 
 ```gql
 {
