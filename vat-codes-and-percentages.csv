@@ -1,0 +1,287 @@
+ID,Country,Name,Short Name,Type,Net Only Amount,VATIDRequired,Percents,Codes,Introduced At,Expired At
+43136e14-4334-4ee8-bfe1-080634e631de,AT,Aufwand nicht steuerbar,VST n.sb.,RECLAIMABLE,,,,"BMD: 80r
+DVO: 80r
+RZL: 1/28",,
+e77d686e-92f2-4c96-a5c1-b7c912327e90,AT,Aufwand RC Bauleistung,A RC 19/1a,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 28
+BMD: 29r
+DATEV: 511r 20%
+DATEV: 6511 20%
+DVO: 28
+DVO: 29r
+RZL: 1/15
+RZL: 1/16r",,
+1fcc6bb6-d26a-4082-bf92-0c22bf1bd15f,AT,Aufwand RC Gas & Elektrizität,A RC 19/1c,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 25
+BMD: 26r
+DATEV: 521r 20%
+DATEV: 6521 20%
+DVO: 25
+DVO: 26r
+RZL: 1/05
+RZL: 1/06r",,
+7108da6d-0dd9-4925-8de2-ce2c57c1801e,AT,Aufwand RC Schrott & Altmetall,A RC 19/1d Schrott,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 58
+BMD: 59r
+DATEV: 526r 20%
+DATEV: 6526 20%
+DVO: 58
+DVO: 59r
+RZL: 1/26r
+RZL: 1/27",,
+aa3ea0e0-1ff4-4c13-b580-afc45eb9cc7c,AT,Aufwand RC Sicherungsübereignung,A RC 19/1b,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 22
+BMD: 23r
+DATEV: 516r 20%
+DATEV: 6516 20%
+DVO: 22
+DVO: 23r
+RZL: 1/24r
+RZL: 1/25",,
+a071f63a-f8a4-4d6e-956e-4ad62ed6bcff,AT,Aufwand RC Treibhausgasemissionszertifikate,A RC 19/1e,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 88
+BMD: 89r
+DATEV: 531r 20%
+DATEV: 6531 20%
+DVO: 88
+DVO: 89r
+RZL: 1/05r
+RZL: 1/06",,
+c9515810-78e5-4401-a55b-da76431a829d,AT,Aufwand sonstige Leistungen EU,A SL EU,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 78
+BMD: 79r
+DATEV: 541r 20%
+DATEV: 6541 20%
+DVO: 78
+DVO: 79r
+RZL: 1/05r
+RZL: 1/06",,
+03b3a9fb-12f9-486e-8c2a-0e2fd658f5af,AT,Ausfuhrlieferungen,UST AL,PAYABLE,NET ONLY,,,"BMD: 5r
+DATEV: 1r
+DVO: 5r
+RZL: 2",,
+626772c4-87ee-4d97-9f56-6fb7017753e8,AT,Dienstleisutng iVm Ausfuhr,UST AL DL,PAYABLE,NET ONLY,,,"BMD: 20r
+DATEV: 1r
+DVO: 20r
+RZL: 2/19",,
+898cfd35-2c1f-4733-adc7-c934edd3e8a8,AT,Dreiecksgeschäft,UST DEG1,PAYABLE,NET ONLY,VAT-ID,,"BMD: 6r
+DVO: 6r
+RZL: 2/03",,
+52eb0ebd-f5bf-490b-a495-f1d9279cefbb,AT,Dreiecksgeschäft (2er),VST DEG2,RECLAIMABLE,NET ONLY,VAT-ID,"[5, 10, 13, 20]","BMD: 11r
+DVO: 11r
+RZL: 3",,
+9809d4d0-d2d0-47e0-b342-b6b65ff75582,AT,Dreiecksgeschäft (3er),VST DEG3,RECLAIMABLE,NET ONLY,VAT-ID,"[5, 10, 13, 20]","BMD: 92
+BMD: 93r
+DVO: 92
+DVO: 93r
+RZL: 1/07r
+RZL: 1/08",,
+b46b1b19-82d2-4d25-b777-b202bb6d13b3,AT,Einfuhrumsatzsteuer,EUST,RECLAIMABLE,,,"[5, 10, 13, 20]","BMD: 34r
+DVO: 34r
+RZL: 4",,
+b510fee8-b2a4-48c5-b0b5-1e8310dbaeb8,AT,Einfuhrumsatzsteuer auf Abgabenkonto,EUST AK,RECLAIMABLE,,,"[5, 10, 13, 20]","BMD: 35r
+DVO: 35r
+RZL: 4/23",,
+3226c276-45ca-4af7-a262-df3e03969748,AT,Einfuhrumsatzsteuer gesch. §12/1 Z 2 lit. B,UST §12 l.sb.,RECLAIMABLE,,,"[5, 10, 13, 20]","BMD: 36r
+DVO: 36r
+RZL: 4/23",,
+8cbc9d18-5b44-4ce9-89bd-fce4c6781349,AT,Elektronische Dienstleistungen - MOSS,MOSS,PAYABLE,NET ONLY,,,DATEV: 44r,,
+9e55209b-577a-4f36-b737-2c22449fe81e,AT,Grundstücksumsätze,UST Grund,PAYABLE,NET ONLY,,,"BMD: 15r
+DVO: 15r
+RZL: 2/21",,
+2d369849-9b49-455f-a734-3b55987cab16,AT,innergemeinschaftliche Lieferung,igL,PAYABLE,NET ONLY,VAT-ID,,"BMD: 7r
+DATEV: 11r
+DVO: 7r
+RZL: 2",,
+fe87a34f-ec45-4c96-bbca-8154385b4cb7,AT,innergemeinschaftlicher Erwerb,igE,RECLAIMABLE,NET ONLY,VAT-ID,"[5, 10, 13, 20]","BMD: 8
+BMD: 9r
+DATEV: 16r 13%
+DATEV: 18r 10%
+DATEV: 19r 20%
+DVO: 8
+DVO: 9r
+RZL: 3/04",,
+adeefcff-5e8c-474c-8747-44b0a548ed56,AT,innergemeinschaftlicher Erwerb neuer Fahrzeuge,igE KFZ,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 4r
+DVO: 4r
+RZL: 2/02",,
+373c9d73-ca2e-4653-8521-a0ba0c48811c,AT,Kleinunternehmer,UST KU,PAYABLE,NET ONLY,,,"BMD: 16
+DVO: 16
+RZL: 2/22",,
+906f0273-0a92-4ad7-bd0a-12b045307055,AT,Lohnveredelung iVm Ausfuhr,UST AL LV,PAYABLE,NET ONLY,,,"BMD: 13r
+DATEV: 1r
+DVO: 13r
+RZL: 2/19",,
+0d99d941-245c-4b25-823b-2f499c38ce11,AT,Nicht steuerbare Umsätze §19/1,RC 19/1,PAYABLE,NET ONLY,VAT-ID,,"BMD: 64r
+DVO: 64r
+RZL: 2/14",,
+a989609c-21db-4ef1-bf0d-231d45461e80,AT,Personenbeförderung,UST Pers,PAYABLE,,,[20],"BMD: 14r
+DVO: 14r
+RZL: 2/20",,
+2b158ebf-f347-4da8-beb0-fe2b4dbe7769,AT,RC Gebäude §19/1,A RC Gebäude,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 45r
+DVO: 45r
+RZL: 1/05",,
+aad1ef4b-7a7f-424f-90ec-c290da6bb2d4,AT,RC Gebäude §19/1c,RC 19/1c Gebäude,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 47r
+DVO: 47r
+RZL: 1/06",,
+e6ca804a-3896-467a-9f1a-31cc6b4f71ce,AT,RC Gebäude §19/1e,RC 19/1e Gebäude,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 51r
+DVO: 51r
+RZL: 1/05r
+RZL: 1/06",,
+43ba7dd9-789c-4b6a-9f06-9c3aa5032965,AT,RC KFZ §19/1,A RC KFZ,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 44r
+DVO: 44r
+RZL: 1/05r
+RZL: 1/06",,
+191f43f9-812d-44d6-9ac4-f820153fdf62,AT,RC KFZ §19/1c,RC 19/1c KFZ,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 46r
+DVO: 46r
+RZL: 1/05r
+RZL: 1/06",,
+36dd5d36-d03b-43ec-8780-33ec0c49e52c,AT,RC KFZ §19/1e,RC 19/1e KFZ,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 50r
+DVO: 50r
+RZL: 1/05",,
+610eda2e-4dce-46cf-81af-4d38cfe1db1e,AT,Reverse Charge Ausgang,RC UST,PAYABLE,NET ONLY,VAT-ID,,"BMD: 77r
+DATEV: 47r
+DVO: 77r",,
+dd8487dc-81e6-4654-bac5-a085d25c7d0b,AT,Reverse Charge Eingang,A RC,RECLAIMABLE,NET ONLY,VAT-ID,[20],"BMD: 18
+BMD: 19r
+DATEV: 506r 20%
+DATEV: 6506 20%
+DVO: 18
+DVO: 19r
+RZL: 1/05r
+RZL: 1/06",,
+58ed6729-5e94-4101-8f8b-352111c53ff7,AT,Umsatz aus Leistung nicht steuerbar,UST Leis. n.sb.,PAYABLE,NET ONLY,,,"BMD: 82r
+DVO: 82r",,
+0718778c-a6b4-4583-adca-046d5931876b,AT,Umsatz aus Lieferung nicht steuerbar,UST Lief. n.sb.,PAYABLE,NET ONLY,,,"BMD: 81r
+DVO: 81r",,
+5be0fc7d-9285-472e-90b6-99a154631a14,AT,Umsatz RC Bauleistung,U RC 19/1a,PAYABLE,NET ONLY,VAT-ID,,"BMD: 27r
+DATEV: 46r
+DVO: 27r
+RZL: 2/14",,
+ba427baf-72a7-4cae-8b40-84ac5ff0e276,AT,Umsatz RC Gas & Elektrizität,U RC 19/1c,PAYABLE,NET ONLY,VAT-ID,,"BMD: 24r
+DATEV: 46r
+DVO: 24r
+RZL: 2/14",,
+ef7d3c27-dfb9-4f00-a55d-a3f020c41e97,AT,Umsatz RC Schrott & Altmetall,U RC 19/1d Schrott,PAYABLE,NET ONLY,VAT-ID,,"BMD: 57r
+DATEV: 46r
+DVO: 57r
+RZL: 2/14",,
+806e79ea-cd47-4aa6-a435-8e4f538fbc6e,AT,Umsatz RC Sicherungsübereignung,U RC 19/1b,PAYABLE,NET ONLY,VAT-ID,,"BMD: 21r
+DATEV: 46r
+DVO: 21r
+RZL: 2/14",,
+63df9fdd-34eb-4854-81de-d944f72bb5a8,AT,Umsatz RC Treibhausgas & Mobilfunk,U RC 19/1e,PAYABLE,NET ONLY,VAT-ID,,"BMD: 87r
+DATEV: 46r
+DVO: 87r
+RZL: 2/14",,
+52475137-cb50-403e-bc31-3cf3ae079129,AT,Umsatzsteuer,UST,PAYABLE,,,"[5, 10, 13, 20]","BMD: 1r
+DATEV: 2r 10%
+DATEV: 3r 20%
+DATEV: 4r 13%
+DVO: 1r
+RZL: 2r",,
+66e9bce0-55aa-45a6-b388-03f885772cff,AT,Vorsteuer,VST,RECLAIMABLE,,,"[5, 10, 13, 20]","BMD: 2r
+BMD: 42
+DATEV: 6r 13%
+DATEV: 8r 10%
+DATEV: 9r 20%
+DVO: 2r
+DVO: 42
+RZL: 1",,
+b5d08278-858f-42fa-9616-3270d4ad81da,DE,Andere Steuersätze,OTHER,RECLAIMABLE,NET ONLY,,,DATEV: 49r,,
+f9232dc3-aa25-496e-b2c8-36c56f409dc8,DE,Aufwand RC Bauleistung,A RC 13/2 Nr.4,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","BMD: 28
+BMD: 29r
+DATEV: 526r 16%
+DATEV: 526r 19%
+DATEV: 6526 16%
+DATEV: 6526 19%
+DVO: 28
+DVO: 29r",,
+c4ea90af-cc95-4400-9db3-bf5a5a24e78e,DE,Aufwand RC Gas & Elektrizität,A RC 13/2 Nr.5,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","DATEV: 531r 16%
+DATEV: 531r 19%
+DATEV: 6531 16%
+DATEV: 6531 19%",,
+9eda4779-98c1-478b-b3d8-a93954c8cba1,DE,Aufwand RC Mobilfunk,A RC 13/2 Nr. 10,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","DATEV: 561r 16%
+DATEV: 561r 19%
+DATEV: 6561 16%
+DATEV: 6561 19%",,
+90425b2c-35a2-42bc-867c-6eaf17730241,DE,Aufwand RC Schrott & Altmetall,A RC 13/2 Nr.7,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","BMD: 58
+BMD: 59r
+DATEV: 546r 16%
+DATEV: 546r 19%
+DATEV: 6546 16%
+DATEV: 6546 19%
+DVO: 58
+DVO: 59r",,
+adacca37-9747-43fe-ac0f-2b802e2e2e94,DE,Aufwand RC Sicherungsübereignung,A RC 13/2 Nr.2,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","DATEV: 516r 16%
+DATEV: 516r 19%
+DATEV: 6516 16%
+DATEV: 6516 19%",,
+4fa1d190-9afc-400f-b121-cbbfbfbaf714,DE,Aufwand RC Treibhausgasemissionszertifikate,A RC 13/2 Nr.6,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","DATEV: 541r 16%
+DATEV: 541r 19%
+DATEV: 6541 16%
+DATEV: 6541 19%",,
+728089ae-8066-4eed-8a18-dfc4333fc84d,DE,Aufwand sonstige Leistungen EU,A SL EU,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","BMD: 78
+BMD: 79r
+DATEV: 506r 16%
+DATEV: 506r 19%
+DATEV: 6506 16%
+DATEV: 6506 19%
+DVO: 78
+DVO: 79r",,
+c4bcbd89-532d-45e9-a81f-addb3b170127,DE,Ausfuhrlieferungen,UST AL,PAYABLE,NET ONLY,,,DATEV: 1r,,
+38872f7e-c741-4bb5-8028-84b8f1c65cad,DE,Dienstleisutng iVm Ausfuhr,UST AL DL,PAYABLE,NET ONLY,,,DATEV: 1r,,
+d7c26561-a4f1-4c2b-bdc9-9da755c03994,DE,Dreiecksgeschäft,UST DEG1,PAYABLE,NET ONLY,VAT-ID,,:,,
+6c1dd50c-1b62-4fc6-981d-05bca682589e,DE,Einfuhrumsatzsteuer,EUST,RECLAIMABLE,,,"[5, 7, 16, 19]","BMD: 34r
+DVO: 34r",,
+21e132b9-6345-4821-875b-9630b1cfab52,DE,Elektronische Dienstleistungen - MOSS,MOSS,PAYABLE,NET ONLY,,,DATEV: 44r,,
+767f2e92-f97d-43d8-a4d3-e7a80045b4ca,DE,Grundstücksumsätze,UST Grund,PAYABLE,NET ONLY,,,"BMD: 24r
+DVO: 24r",,
+4e143f18-bc16-48c1-bf1d-1e1609fbbadc,DE,innergemeinschaftliche Lieferung,igL,PAYABLE,NET ONLY,VAT-ID,,"BMD: 7r
+DATEV: 11r
+DVO: 7r",,
+1f927787-1504-4981-b0e0-f2c9f1358632,DE,innergemeinschaftlicher Erwerb,igE,RECLAIMABLE,NET ONLY,VAT-ID,"[5, 7, 16, 19]","BMD: 8
+BMD: 9r
+DATEV: 16r 5%
+DATEV: 17r 16%
+DATEV: 18r 7%
+DATEV: 19r 19%
+DVO: 8
+DVO: 9r",,
+03b9a185-391d-4ddc-adc6-a38867cc25c2,DE,innergemeinschaftlicher Erwerb neuer Fahrzeuge,igE KFZ,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","BMD: 35r
+DVO: 35r",,
+97fbe0fb-076f-4c27-aa08-e453551e4557,DE,Lohnveredelung iVm Ausfuhr,UST AL LV,PAYABLE,NET ONLY,,,DATEV: 1r,,
+c619ebed-7503-4ce7-a023-3eefd0cd2ecb,DE,RC Gebäude §19/1,A RC 13/2 Nr. 8,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","DATEV: 551r 16%
+DATEV: 551r 19%
+DATEV: 6551 16%
+DATEV: 6551 19%",,
+d053ec47-27d1-4d92-b484-596e33789f3a,DE,Reverse Charge Ausgang,U RC,PAYABLE,NET ONLY,VAT-ID,,"BMD: 77r
+DATEV: 47r
+DVO: 77r",,
+3bc29b8a-daed-497a-aca0-3d4f855a50c5,DE,Reverse Charge Eingang,A RC 13/2 Nr.1,RECLAIMABLE,NET ONLY,VAT-ID,"[16, 19]","BMD: 18
+BMD: 19r
+DATEV: 511r 16%
+DATEV: 511r 19%
+DATEV: 6511 16%
+DATEV: 6511 19%
+DVO: 18
+DVO: 19r",,
+ec41a564-9337-4c00-be25-824c83c1d209,DE,Umsatz aus Lieferung nicht steuerbar,UST Lief. n.sb.,PAYABLE,NET ONLY,,,"BMD: 81r
+DVO: 81r",,
+457f3613-c08c-46c5-a448-ba9641c00ce7,DE,Umsätze §19/1a,U RC 13/2 Nr.4,PAYABLE,NET ONLY,VAT-ID,,"BMD: 27r
+DATEV: 46r
+DVO: 27r",,
+580a446c-f4bb-4816-883c-e09b7678ded6,DE,Umsatz RC Gas & Elektrizität,U RC 13/2 Nr.5,PAYABLE,NET ONLY,VAT-ID,,DATEV: 46r,,
+fdc77ded-af73-4602-903e-e9f11195cf47,DE,Umsatz RC Mobilfunk,U RC 13/2 Nr. 10,PAYABLE,NET ONLY,VAT-ID,,DATEV: 201r,,
+c097991b-9cb2-4a1c-80f8-f59941c8d50c,DE,Umsatz RC Schrott & Altmetall,U RC 13/2 Nr.7,PAYABLE,NET ONLY,VAT-ID,,"BMD: 57r
+DATEV: 46r
+DVO: 57r",,
+f93c27f5-30d1-470c-a313-5bab130144b6,DE,Umsatz RC Sicherungsübereignung,U RC 13/2 Nr.2,PAYABLE,NET ONLY,VAT-ID,,DATEV: 46r,,
+2eae60ea-c50c-44fb-9842-7da0cb826c45,DE,Umsatz RC Treibhausgas & Mobilfunk,U RC 13/2 Nr.6,PAYABLE,NET ONLY,VAT-ID,,DATEV: 46r,,
+268bea24-0add-4213-a70c-3010f10e4ec9,DE,Umsatzsteuer,UST,PAYABLE,,,"[5, 7, 16, 19]","BMD: 1r
+DATEV: 2r 7%
+DATEV: 3r 19%
+DATEV: 4r 5%
+DATEV: 5r 16%
+DVO: 1r",,
+649927ac-81c8-4680-89f2-0a3033f19546,DE,Vorsteuer,VST,RECLAIMABLE,,,"[5, 7, 16, 19]","BMD: 2r
+BMD: 42
+DATEV: 6r 5%
+DATEV: 7r 16%
+DATEV: 8r 7%
+DATEV: 9r 19%
+DVO: 2r
+DVO: 42",,
