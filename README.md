@@ -337,6 +337,8 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
   "deliveredFrom": "2020-09-01",
   // Optional string with format "YYYY-MM-DD" or null, use as single delivery date
   "deliveredUntil": "2020-09-30",
+  // Optional string array
+  "deliveryNoteNumbers": ["D12345"],
   // Optional string or null
   "iban": "DE02120300000000202051",
   // Optional string or null
