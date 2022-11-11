@@ -277,6 +277,8 @@ To exclude deleted documents from the check add the form field `allowDuplicateDe
 With `allowDuplicateDeleted=true` a duplicate of an already deleted document can be uploaded
 as a new document.
 
+### Upload structured invoice data as JSON
+
 The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields
 (the JSONC format variant with comments is supported):
 
@@ -364,6 +366,8 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
   ]
 }
 ```
+
+### Querying uploaded document data with GraphQL
 
 Using the document UUID returned as plaintext body from the upload request as `rowId`,
 the uploaded invoice data can be queried like this:
