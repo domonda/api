@@ -10,6 +10,8 @@ The only exceptions are file uploads which are implemented as Multipart MIME HTT
 
 <https://domonda.app/api/public/graphiql>
 
+[![Working with GraphiQL](https://img.youtube.com/vi/L5bzHzqUn9M/0.jpg)](https://www.youtube.com/watch?v=L5bzHzqUn9M)
+
 You can provide an authentication token for authenticated access to your Domonda data.
 Without a valid token, demo data is provided by the API.
 
