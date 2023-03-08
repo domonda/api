@@ -53,6 +53,7 @@ Query own company data:
 {
   currentClientCompany {
     companyRowId
+    hasAccounting
     companyByCompanyRowId {
       name
       brandName
