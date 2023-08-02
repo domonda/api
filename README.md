@@ -107,7 +107,7 @@ may take up to 5 seconds per page, so adjust timeouts accordingly.
 Extracting invoice data is done asynchronously by default.
 Set the form field `waitForExtraction` to `true` for synchronous
 extraction where results will be available via GraphQL directly after
-the upload request returns (add another 15 seconds to timeouts).
+the upload request returns (add another 30 seconds to timeouts).
 
 To identify the category of the uploaded document, either the form field `documentCategory`
 must be provided or the form field `documentType` with the additional fields
@@ -172,7 +172,22 @@ The body of the response will be a JSON object with the following format:
 {
   "error": "Duplicate document content",
   "detail": {
+    "documentFileHash": "<SOME_HASH_STRING>",
     "duplicateDocumentIDs": ["00000000-0000-0000-0000-000000000000"]
+  }
+}
+```
+
+If content-hash duplicates are uploaded as overlapping requests where the first request
+hasn't had enough time yet to create a document with an ID in the database
+then the filename of the first still processing upload is returend as `processingFileName`:
+
+```json
+{
+  "error": "Duplicate document content",
+  "detail": {
+    "documentFileHash": "<SOME_HASH_STRING>",
+    "processingFileName": "ORIGINAL_FILENAME.pdf"
   }
 }
 ```
