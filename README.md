@@ -287,58 +287,6 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
 }
 ```
 
-### Querying uploaded document data with GraphQL
-
-Using the document UUID returned as plaintext body from the upload request as `rowId`,
-the uploaded invoice data can be queried like this:
-
-```gql
-{
-  documentByRowId(rowId: "cbd03cbe-5d2f-4f97-bf12-03f1481d6c41") {
-    numPages
-    tags
-    invoiceByDocumentRowId {
-      partnerName
-      invoiceNumber
-      invoiceNumberConfirmedBy
-      invoiceDate
-      invoiceDateConfirmedBy
-      dueDate
-      dueDateConfirmedBy
-      orderNumber
-      orderNumberConfirmedBy
-      orderDate
-      orderDateConfirmedBy
-      creditMemo
-      net
-      netConfirmedBy
-      total
-      totalConfirmedBy
-      vatPercent
-      vatPercentConfirmedBy
-      vatPercentages
-      discountPercent
-      discountPercentConfirmedBy
-      discountUntil
-      discountUntilConfirmedBy
-      currency
-      currencyConfirmedBy
-      conversionRate
-      conversionRateDate
-      conversionRateSource
-      goodsServices
-      goodsServicesConfirmedBy
-      deliveredFrom
-      deliveredFromConfirmedBy
-      deliveredUntil
-      deliveredUntilConfirmedBy
-      iban
-      bic
-    }
-  }
-}
-```
-
 If `confirmedBy` is set to a non-empty string then all values from the JSON
 will be marked as confirmed and not overwritten by values from domonda's automated invoice data extraction.
 Upload API confirmations can be overwritten by users of the domonda app, if they have sufficient rights.
@@ -406,13 +354,75 @@ ef059fa4-7288-4b77-8017-adce142e29a8
 
 The document ID will be a new v4 random UUID, except if a user-defined `uuid` that does not exist yet in domonda is passed as form-field. 
 
-
 This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
 
 In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
 
-## Example GraphQL queries
+### Querying uploaded document data with GraphQL
+
+Just checking if the automated extraction of the uploaded document data has finished
+with the UUID returned as plaintext body from the upload request as `rowId`:
+
+```gql
+{
+  documentByRowId(rowId: "cbd03cbe-5d2f-4f97-bf12-03f1481d6c41") {
+    extracted
+  }
+}
+```
+
+Querying invoice data:
+
+```gql
+{
+  documentByRowId(rowId: "cbd03cbe-5d2f-4f97-bf12-03f1481d6c41") {
+    numPages
+    tags
+    extracted
+    invoiceByDocumentRowId {
+      partnerName
+      invoiceNumber
+      invoiceNumberConfirmedBy
+      invoiceDate
+      invoiceDateConfirmedBy
+      dueDate
+      dueDateConfirmedBy
+      orderNumber
+      orderNumberConfirmedBy
+      orderDate
+      orderDateConfirmedBy
+      creditMemo
+      net
+      netConfirmedBy
+      total
+      totalConfirmedBy
+      vatPercent
+      vatPercentConfirmedBy
+      vatPercentages
+      discountPercent
+      discountPercentConfirmedBy
+      discountUntil
+      discountUntilConfirmedBy
+      currency
+      currencyConfirmedBy
+      conversionRate
+      conversionRateDate
+      conversionRateSource
+      goodsServices
+      goodsServicesConfirmedBy
+      deliveredFrom
+      deliveredFromConfirmedBy
+      deliveredUntil
+      deliveredUntilConfirmedBy
+      iban
+      bic
+    }
+  }
+}
+```
+
+## Other example GraphQL queries
 
 ### Query all document categories:
 
