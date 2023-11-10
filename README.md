@@ -180,7 +180,7 @@ The body of the response will be a JSON object with the following format:
 
 If content-hash duplicates are uploaded as overlapping requests where the first request
 hasn't had enough time yet to create a document with an ID in the database
-then the filename of the first still processing upload is returend as `processingFileName`:
+then the filename of the first still processing upload is returned as `processingFileName``:
 
 ```json
 {
@@ -357,7 +357,16 @@ The document ID will be a new v4 random UUID, except if a user-defined `uuid` th
 This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
 
-In case of an error, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
+### File upload HTTP response status codes
+
+In case of errors, standard 4xx and 5xx HTTP status code responses will be returned with plaintext error messages in the body.
+
+- 200 OK: Upload was successful
+- 400 Bad Request: The request contains invalid data
+- 401 Unauthorized: Invalid API key
+- 402 Payment Required: The client company is not active or was blocked because of missing payments
+- 409 Conflict: A document with the same UUID or file contents already exists
+- 500 Internal Server Error: Something unexpected went wrong
 
 ### Querying uploaded document data with GraphQL
 
