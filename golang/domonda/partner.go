@@ -1,6 +1,7 @@
 package domonda
 
 import (
+	"context"
 	"strconv"
 	"strings"
 
@@ -57,4 +58,8 @@ func (p *Partner) VendorAccountNumberUint() uint64 {
 func (p *Partner) ClientAccountNumberUint() uint64 {
 	u, _ := strconv.ParseUint(p.ClientAccountNumber.String(), 10, 64)
 	return u
+}
+
+func PostPartners(ctx context.Context, apiKey string, partners []Partner) error {
+	panic("TODO: implement me")
 }
