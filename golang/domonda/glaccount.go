@@ -14,6 +14,6 @@ type GLAccount struct {
 	Category nullable.TrimmedString
 }
 
-func PostGLAccounts(ctx context.Context, apiKey string, accounts []GLAccount) error {
+func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount) error {
 	panic("TODO: implement me")
 }

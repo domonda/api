@@ -60,6 +60,6 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 	return u
 }
 
-func PostPartners(ctx context.Context, apiKey string, partners []Partner) error {
+func PostPartners(ctx context.Context, apiKey string, partners []*Partner) error {
 	panic("TODO: implement me")
 }
