@@ -27,7 +27,14 @@ type RealEstateObject struct {
 }
 
 func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject) error {
-	panic("TODO: implement me")
+	response, err := postJSON(ctx, apiKey, "/masterdata/real-estate-objects", objects)
+	if err != nil {
+		return err
+	}
+	if response.StatusCode != 200 {
+		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+	return nil
 }
 
 type RealEstateObjectType string //#enum

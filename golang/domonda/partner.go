@@ -2,6 +2,7 @@ package domonda
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -61,5 +62,12 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 }
 
 func PostPartners(ctx context.Context, apiKey string, partners []*Partner) error {
-	panic("TODO: implement me")
+	response, err := postJSON(ctx, apiKey, "/masterdata/partner-companies", partners)
+	if err != nil {
+		return err
+	}
+	if response.StatusCode != 200 {
+		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+	return nil
 }
