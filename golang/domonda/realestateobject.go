@@ -1,7 +1,10 @@
 package domonda
 
+//go:generate go-enum $GOFILE
+
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/domonda/go-types/account"
@@ -10,6 +13,8 @@ import (
 	"github.com/domonda/go-types/notnull"
 	"github.com/domonda/go-types/nullable"
 )
+
+const RealEstateObjectsCSVHeader = `Type;Number;AccountingArea;UserAccount;Description;StreetAddress;AlternativeAddresses;ZipCode;City;Country;IBAN;BIC;Active`
 
 type RealEstateObject struct {
 	Type                 RealEstateObjectType
@@ -24,6 +29,36 @@ type RealEstateObject struct {
 	Country              country.Code
 	IBAN                 bank.NullableIBAN
 	BIC                  bank.NullableBIC
+	Active               bool
+}
+
+func (o *RealEstateObject) Validate() error {
+	var (
+		err  error
+		errs []error
+	)
+	if err = o.Type.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.Type: %w", err))
+	}
+	if err = o.Number.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.Number: %w", err))
+	}
+	if err = o.AccountingArea.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.AccountingArea: %w", err))
+	}
+	if err = o.UserAccount.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.UserAccount: %w", err))
+	}
+	if o.Country, err = o.Country.NormalizedWithAltCodes(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.Country: %w", err))
+	}
+	if o.IBAN, err = o.IBAN.Normalized(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.IBAN: %w", err))
+	}
+	if o.BIC, err = o.BIC.Normalized(); err != nil {
+		errs = append(errs, fmt.Errorf("RealEstateObject.BIC: %w", err))
+	}
+	return errors.Join(errs...)
 }
 
 func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject) error {
@@ -64,7 +99,7 @@ func (r RealEstateObjectType) Valid() bool {
 // Validate returns an error if r is none of the valid values for RealEstateObjectType
 func (r RealEstateObjectType) Validate() error {
 	if !r.Valid() {
-		return fmt.Errorf("invalid value %#v for type idwell.RealEstateObjectType", r)
+		return fmt.Errorf("invalid value %#v for type domonda.RealEstateObjectType", r)
 	}
 	return nil
 }

@@ -10,6 +10,8 @@ import (
 	"github.com/domonda/go-types/nullable"
 )
 
+const BankAccountsCSVHeader = `IBAN;BIC;Currency;Holder;AccountNumber;Name;Description`
+
 // BankAccount represents a checking account
 type BankAccount struct {
 	IBAN     bank.IBAN

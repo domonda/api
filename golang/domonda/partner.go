@@ -2,6 +2,7 @@ package domonda
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -15,8 +16,10 @@ import (
 	"github.com/domonda/go-types/vat"
 )
 
+const PartnersCSVHeader = `Name;AlternativeNames;Street;City;ZIP;Country;Phone;Email;Website;CompRegNo;TaxIDNo;VATIDNo;VendorAccountNumber;ClientAccountNumber;IBAN;BIC;IBAN2;BIC2`
+
 type Partner struct {
-	Name             string
+	Name             notnull.TrimmedString
 	AlternativeNames notnull.StringArray // used when merging
 
 	// main location
@@ -41,9 +44,18 @@ type Partner struct {
 	BIC2  bank.NullableBIC
 }
 
+func (p *Partner) Validate() error {
+	var err error
+	if p.Name == "" {
+		err = errors.Join(err, fmt.Errorf("empty Partner.Name"))
+	}
+	// TODO
+	return err
+}
+
 func (p *Partner) String() string {
 	var b strings.Builder
-	b.WriteString(p.Name)
+	b.WriteString(p.Name.String())
 	if p.VATIDNo.IsNotNull() {
 		b.WriteString(" ")
 		b.WriteString(string(p.VATIDNo))
