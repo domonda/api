@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 
 	"github.com/domonda/go-types/account"
 	"github.com/domonda/go-types/bank"
@@ -61,17 +62,6 @@ func (o *RealEstateObject) Validate() error {
 	return errors.Join(errs...)
 }
 
-func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject) error {
-	response, err := postJSON(ctx, apiKey, "/masterdata/real-estate-objects", objects)
-	if err != nil {
-		return err
-	}
-	if response.StatusCode != 200 {
-		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
-	}
-	return nil
-}
-
 type RealEstateObjectType string //#enum
 
 const (
@@ -107,4 +97,19 @@ func (r RealEstateObjectType) Validate() error {
 // String implements the fmt.Stringer interface for RealEstateObjectType
 func (r RealEstateObjectType) String() string {
 	return string(r)
+}
+
+func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject, source string) error {
+	vals := make(url.Values)
+	if source != "" {
+		vals.Set("source", source)
+	}
+	response, err := postJSON(ctx, apiKey, "/masterdata/real-estate-objects", vals, objects)
+	if err != nil {
+		return err
+	}
+	if response.StatusCode != 200 {
+		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+	return nil
 }

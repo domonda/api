@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 
 	"github.com/domonda/go-types/account"
 	"github.com/domonda/go-types/nullable"
@@ -30,12 +31,16 @@ func (a *GLAccount) Validate() error {
 	return err
 }
 
-func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos *bool) error {
-	query := ""
+// nil for objectSpecificAccountNos means we do not care about this
+func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos *bool, source string) error {
+	vals := make(url.Values)
 	if objectSpecificAccountNos != nil {
-		query = fmt.Sprintf("?objectSpecificAccountNos=%t", *objectSpecificAccountNos)
+		vals.Set("objectSpecificAccountNos", fmt.Sprint(*objectSpecificAccountNos))
 	}
-	response, err := postJSON(ctx, apiKey, "/masterdata/gl-accounts"+query, accounts)
+	if source != "" {
+		vals.Set("source", source)
+	}
+	response, err := postJSON(ctx, apiKey, "/masterdata/gl-accounts", vals, accounts)
 	if err != nil {
 		return err
 	}

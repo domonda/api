@@ -3,6 +3,7 @@ package domonda
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"github.com/domonda/go-types/bank"
 	"github.com/domonda/go-types/money"
@@ -25,8 +26,10 @@ type BankAccount struct {
 	Description   nullable.TrimmedString
 }
 
-func PostBankAccounts(ctx context.Context, apiKey string, bankAccounts []*BankAccount) error {
-	response, err := postJSON(ctx, apiKey, "/masterdata/bank-accounts", bankAccounts)
+func PostBankAccounts(ctx context.Context, apiKey string, bankAccounts []*BankAccount, source string) error {
+	vals := make(url.Values)
+	vals.Set("source", source)
+	response, err := postJSON(ctx, apiKey, "/masterdata/bank-accounts", vals, bankAccounts)
 	if err != nil {
 		return err
 	}

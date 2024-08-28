@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -73,8 +74,12 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 	return u
 }
 
-func PostPartners(ctx context.Context, apiKey string, partners []*Partner) error {
-	response, err := postJSON(ctx, apiKey, "/masterdata/partner-companies", partners)
+func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) error {
+	vals := make(url.Values)
+	if source != "" {
+		vals.Set("source", source)
+	}
+	response, err := postJSON(ctx, apiKey, "/masterdata/partner-companies", vals, partners)
 	if err != nil {
 		return err
 	}
