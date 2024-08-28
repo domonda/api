@@ -28,7 +28,9 @@ type BankAccount struct {
 
 func PostBankAccounts(ctx context.Context, apiKey string, bankAccounts []*BankAccount, source string) error {
 	vals := make(url.Values)
-	vals.Set("source", source)
+	if source != "" {
+		vals.Set("source", source)
+	}
 	response, err := postJSON(ctx, apiKey, "/masterdata/bank-accounts", vals, bankAccounts)
 	if err != nil {
 		return err
