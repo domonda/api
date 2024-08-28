@@ -10,6 +10,11 @@ import (
 
 const (
 	baseURL = "https://domonda.app/api/public"
+
+	// SourceTestEndpointNOP can be passed as magical value for
+	// the source argument of the post functions
+	// to test the endpoints without side effects.
+	SourceTestEndpointNOP = "TestEndpointNOP"
 )
 
 func postJSON(ctx context.Context, apiKey, endpoint string, vals url.Values, payload any) (*http.Response, error) {
