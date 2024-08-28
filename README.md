@@ -27,14 +27,14 @@ the company that is using domonda and who authorized the usage of the data.
 ```http
 POST https://domonda.app/api/public/graphql
 
-Authorization: Bearer API_KEY
+Authorization: Bearer ${DOMONDA_API_KEY}
 ```
 
 Minimal example:
 
 ```sh
 curl -X POST \
-  -H "Authorization: Bearer API_KEY" \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: application/graphql" \
   --data "{ allDocuments{ totalCount } }" \
   https://domonda.app/api/public/graphql
@@ -89,7 +89,7 @@ To request the PDF file for the document with the ID `00000000-0000-0000-0000-00
 
 ```sh
 curl \
-  -H "Authorization: Bearer API_KEY" \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   --fail \
   --remote-name \
   https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf
@@ -300,7 +300,7 @@ Example using the CURL command-line tool with a `documentCategory` ID and multip
 
 ```sh
 curl -X POST \
-  -H "Authorization: Bearer API_KEY" \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: multipart/form-data" \
   -F "uuid=01505320-42f7-4cff-a930-4669eeb5e999"
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
@@ -316,7 +316,7 @@ Example with `documentType`, `bookingType`, `bookingCategory`, and `waitForExtra
 
 ```sh
 curl -X POST \
-  -H "Authorization: Bearer API_KEY" \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: multipart/form-data" \
   -F "documentType=INCOMING_INVOICE" \
   -F "bookingType=CLEARING_ACCOUNT" \
@@ -333,7 +333,7 @@ and `waitForExtraction`:
 
 ```sh
 curl -X POST \
-  -H "Authorization: Bearer API_KEY" \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: multipart/form-data" \
   -F "documentType=OUTGOING_INVOICE" \
   -F "document=@example/invoice.pdf" \

@@ -26,6 +26,16 @@ type BankAccount struct {
 	Description   nullable.TrimmedString
 }
 
+// PostBankAccounts posts the given bankAccounts to the domonda API.
+//
+// Usage example:
+//
+//	curl -X POST \
+//	  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
+//	  -H "Content-Type: application/json" \
+//	  --data "[]"" \
+//	  --include \
+//	  https://domonda.app/api/public/masterdata/bank-accounts
 func PostBankAccounts(ctx context.Context, apiKey string, bankAccounts []*BankAccount, source string) error {
 	vals := make(url.Values)
 	if source != "" {
