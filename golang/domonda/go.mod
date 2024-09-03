@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/domonda/go-types v0.0.0-20240822142828-3b45a403e1e2
-	github.com/ungerik/go-fs v0.0.0-20240702143946-3ecb6733945d
+	github.com/ungerik/go-fs v0.0.0-20240829170221-72a8ff83f83f
 )
 
 require (
@@ -14,7 +14,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gogs/chardet v0.0.0-20211120154057-b7413eaefb8f // indirect
 	github.com/jaytaylor/html2text v0.0.0-20230321000545-74c2419ad056 // indirect
-	github.com/jhillyerd/enmime v1.2.0 // indirect
+	github.com/jhillyerd/enmime v1.3.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect

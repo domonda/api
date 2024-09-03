@@ -47,10 +47,36 @@ type Partner struct {
 
 func (p *Partner) Validate() error {
 	var err error
-	if p.Name == "" {
-		err = errors.Join(err, fmt.Errorf("empty Partner.Name"))
+	if p.Name.IsEmpty() {
+		err = errors.Join(err, errors.New("empty Partner.Name"))
 	}
-	// TODO
+	if e := p.Country.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.Country %q: %w", p.Country, e))
+	}
+	if e := p.Email.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.Email %q: %w", p.Email, e))
+	}
+	if e := p.VATIDNo.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.VATIDNo %q: %w", p.VATIDNo, e))
+	}
+	if e := p.VendorAccountNumber.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.VendorAccountNumber %q: %w", p.VendorAccountNumber, e))
+	}
+	if e := p.ClientAccountNumber.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.ClientAccountNumber %q: %w", p.ClientAccountNumber, e))
+	}
+	if e := p.IBAN.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.IBAN %q: %w", p.IBAN, e))
+	}
+	if e := p.BIC.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.BIC %q: %w", p.BIC, e))
+	}
+	if e := p.IBAN2.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.IBAN2 %q: %w", p.IBAN2, e))
+	}
+	if e := p.BIC2.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid Partner.BIC2 %q: %w", p.BIC2, e))
+	}
 	return err
 }
 
