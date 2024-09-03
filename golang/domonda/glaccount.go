@@ -33,6 +33,16 @@ func (a *GLAccount) Validate() error {
 
 // nil for objectSpecificAccountNos means we do not care about this
 func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos *bool, source string) error {
+	var err error
+	for i, acc := range accounts {
+		if e := acc.Validate(); e != nil {
+			err = errors.Join(err, fmt.Errorf("GLAccount at index %d has error: %w", i, e))
+		}
+	}
+	if err != nil {
+		return err
+	}
+
 	vals := make(url.Values)
 	if objectSpecificAccountNos != nil {
 		vals.Set("objectSpecificAccountNos", fmt.Sprint(*objectSpecificAccountNos))

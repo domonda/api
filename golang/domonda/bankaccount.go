@@ -2,6 +2,7 @@ package domonda
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 
@@ -26,6 +27,23 @@ type BankAccount struct {
 	Description   nullable.TrimmedString
 }
 
+func (a *BankAccount) Validate() error {
+	var err error
+	if e := a.IBAN.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid BankAccount.IBAN %q: %w", a.IBAN, e))
+	}
+	if e := a.BIC.Validate(); e != nil {
+		err = errors.Join(err, fmt.Errorf("invalid BankAccount.BIC %q: %w", a.BIC, e))
+	}
+	if !a.Currency.Valid() {
+		err = errors.Join(err, fmt.Errorf("invalid BankAccount.Currency %q", a.Currency))
+	}
+	if a.Holder.IsEmpty() {
+		err = errors.Join(err, errors.New("empty BankAccount.Holder"))
+	}
+	return err
+}
+
 // PostBankAccounts posts the given bankAccounts to the domonda API.
 //
 // Usage example:
@@ -37,6 +55,16 @@ type BankAccount struct {
 //	  --include \
 //	  https://domonda.app/api/public/masterdata/bank-accounts
 func PostBankAccounts(ctx context.Context, apiKey string, bankAccounts []*BankAccount, source string) error {
+	var err error
+	for i, acc := range bankAccounts {
+		if e := acc.Validate(); e != nil {
+			err = errors.Join(err, fmt.Errorf("BankAccount at index %d has error: %w", i, e))
+		}
+	}
+	if err != nil {
+		return err
+	}
+
 	vals := make(url.Values)
 	if source != "" {
 		vals.Set("source", source)

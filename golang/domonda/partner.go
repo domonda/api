@@ -75,6 +75,16 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 }
 
 func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) error {
+	var err error
+	for i, partner := range partners {
+		if e := partner.Validate(); e != nil {
+			err = errors.Join(err, fmt.Errorf("Partner at index %d has error: %w", i, e))
+		}
+	}
+	if err != nil {
+		return err
+	}
+
 	vals := make(url.Values)
 	if source != "" {
 		vals.Set("source", source)

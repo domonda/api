@@ -100,6 +100,16 @@ func (r RealEstateObjectType) String() string {
 }
 
 func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject, source string) error {
+	var err error
+	for i, obj := range objects {
+		if e := obj.Validate(); e != nil {
+			err = errors.Join(err, fmt.Errorf("RealEstateObject at index %d has error: %w", i, e))
+		}
+	}
+	if err != nil {
+		return err
+	}
+
 	vals := make(url.Values)
 	if source != "" {
 		vals.Set("source", source)
