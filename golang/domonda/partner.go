@@ -39,10 +39,13 @@ type Partner struct {
 	VendorAccountNumber account.NullableNumber // "" means not set -> will not create a partner account
 	ClientAccountNumber account.NullableNumber // "" means not set -> will not create a partner account
 
-	IBAN  bank.NullableIBAN
-	BIC   bank.NullableBIC
-	IBAN2 bank.NullableIBAN
-	BIC2  bank.NullableBIC
+	// A single payment bank account for the partner.
+	// IBAN and BIC are well suited as CSV columns.
+	IBAN bank.NullableIBAN
+	BIC  bank.NullableBIC
+	// More payment bank accounts for the partner.
+	// As struct better suited for JSON import.
+	BankAccounts []bank.Account
 }
 
 func (p *Partner) Validate() error {
@@ -71,11 +74,10 @@ func (p *Partner) Validate() error {
 	if e := p.BIC.Validate(); e != nil {
 		err = errors.Join(err, fmt.Errorf("invalid Partner.BIC %q: %w", p.BIC, e))
 	}
-	if e := p.IBAN2.Validate(); e != nil {
-		err = errors.Join(err, fmt.Errorf("invalid Partner.IBAN2 %q: %w", p.IBAN2, e))
-	}
-	if e := p.BIC2.Validate(); e != nil {
-		err = errors.Join(err, fmt.Errorf("invalid Partner.BIC2 %q: %w", p.BIC2, e))
+	for i := range p.BankAccounts {
+		if e := p.BankAccounts[i].Validate(); e != nil {
+			err = errors.Join(err, fmt.Errorf("invalid Partner.BankAccounts[%d] %s: %w", i, p.BankAccounts[i], e))
+		}
 	}
 	return err
 }

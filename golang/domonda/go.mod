@@ -3,8 +3,8 @@ module github.com/domonda/api/golang/domonda
 go 1.23
 
 require (
-	github.com/domonda/go-types v0.0.0-20240822142828-3b45a403e1e2
-	github.com/ungerik/go-fs v0.0.0-20240829170221-72a8ff83f83f
+	github.com/domonda/go-types v0.0.0-20241001090154-50384689aa30
+	github.com/ungerik/go-fs v0.0.0-20240919125757-1b6f933a416d
 )
 
 require (
@@ -22,9 +22,9 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/teamwork/tnef v0.0.0-20200108124832-7deabccfdb32 // indirect
-	github.com/ungerik/go-reflection v0.0.0-20240110134735-61cada706fec // indirect
-	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
+	github.com/ungerik/go-reflection v0.0.0-20240905081803-708928fe0862 // indirect
+	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/text v0.18.0 // indirect
 	mvdan.cc/xurls/v2 v2.5.0 // indirect
 )
