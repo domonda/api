@@ -28,8 +28,7 @@ type RealEstateObject struct {
 	ZipCode              nullable.TrimmedString
 	City                 nullable.TrimmedString
 	Country              country.Code
-	IBAN                 bank.NullableIBAN
-	BIC                  bank.NullableBIC
+	BankAccounts         []bank.Account
 	Active               bool
 }
 
@@ -53,11 +52,10 @@ func (o *RealEstateObject) Validate() error {
 	if o.Country, err = o.Country.NormalizedWithAltCodes(); err != nil {
 		errs = append(errs, fmt.Errorf("RealEstateObject.Country: %w", err))
 	}
-	if o.IBAN, err = o.IBAN.Normalized(); err != nil {
-		errs = append(errs, fmt.Errorf("RealEstateObject.IBAN: %w", err))
-	}
-	if o.BIC, err = o.BIC.Normalized(); err != nil {
-		errs = append(errs, fmt.Errorf("RealEstateObject.BIC: %w", err))
+	for i := range o.BankAccounts {
+		if err = o.BankAccounts[i].Validate(); err != nil {
+			errs = append(errs, fmt.Errorf("RealEstateObject.BankAccounts[%d]: %w", i, err))
+		}
 	}
 	return errors.Join(errs...)
 }
