@@ -10,8 +10,6 @@ import (
 	"github.com/domonda/go-types/nullable"
 )
 
-const GLAccountsCSVHeader = `Number;Name;Category`
-
 // GLAccount represents a general ledger account
 type GLAccount struct {
 	Number   account.Number

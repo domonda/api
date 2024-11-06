@@ -17,8 +17,6 @@ import (
 	"github.com/domonda/go-types/vat"
 )
 
-const PartnersCSVHeader = `Name;AlternativeNames;Street;City;ZIP;Country;Phone;Email;Website;CompRegNo;TaxIDNo;VATIDNo;VendorAccountNumber;ClientAccountNumber;IBAN;BIC;BankAccounts`
-
 type Partner struct {
 	Name             notnull.TrimmedString
 	AlternativeNames notnull.StringArray // used when merging

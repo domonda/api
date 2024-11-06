@@ -15,8 +15,6 @@ import (
 	"github.com/domonda/go-types/nullable"
 )
 
-const RealEstateObjectsCSVHeader = `Type;Number;AccountingArea;UserAccount;Description;StreetAddress;AlternativeAddresses;ZipCode;City;Country;IBAN;BIC;Active`
-
 type RealEstateObject struct {
 	Type                 RealEstateObjectType
 	Number               account.Number
