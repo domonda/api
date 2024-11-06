@@ -10,6 +10,8 @@ github.com/domonda/go-types v0.0.0-20241001090154-50384689aa30 h1:XHFdfkOBZZibBe
 github.com/domonda/go-types v0.0.0-20241001090154-50384689aa30/go.mod h1:QfZG5NrNWDrwcqOp3ZlNh2XaLjZI1ncNpGPAa9MIUUE=
 github.com/domonda/go-types v0.0.0-20241104142400-8d1c15e5203e h1:vJz55QzCqiyqWXjJmTAH4FXqqKTfKHifowcu0Q7vt9s=
 github.com/domonda/go-types v0.0.0-20241104142400-8d1c15e5203e/go.mod h1:QfZG5NrNWDrwcqOp3ZlNh2XaLjZI1ncNpGPAa9MIUUE=
+github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426 h1:pWWcXqt8jvIGsqpo+o2RPe1Rx5lyFRj6lUKN2sTJ+rU=
+github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426/go.mod h1:QfZG5NrNWDrwcqOp3ZlNh2XaLjZI1ncNpGPAa9MIUUE=
 github.com/fsnotify/fsnotify v1.7.0 h1:8JEhPFa5W2WU7YfeZzPNqzMP6Lwt7L2715Ggo0nosvA=
 github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyTJwOpGvigM=
 github.com/fsnotify/fsnotify v1.8.0 h1:dAwr6QBTBZIkG8roQaJjGof0pp0EeF+tNV7YBP3F/8M=
@@ -50,6 +52,8 @@ github.com/ungerik/go-fs v0.0.0-20240919125757-1b6f933a416d h1:71JniF82NUc6v7nBx
 github.com/ungerik/go-fs v0.0.0-20240919125757-1b6f933a416d/go.mod h1:nMIa35zyLzk4K3tTLL+AAsOZ9Q+0lgX/lxYubEwCZSY=
 github.com/ungerik/go-fs v0.0.0-20241029181032-3e0bba4739a8 h1:XvNOz9F2B021JmJc2lzAYG2wxQGfmckK3gLHiKJIrfY=
 github.com/ungerik/go-fs v0.0.0-20241029181032-3e0bba4739a8/go.mod h1:nMIa35zyLzk4K3tTLL+AAsOZ9Q+0lgX/lxYubEwCZSY=
+github.com/ungerik/go-fs v0.0.0-20241106120305-a6e3fe880888 h1:6Ffh2W28jVony006U2lKV25Jvvi7gm6IiX84E7JB1u0=
+github.com/ungerik/go-fs v0.0.0-20241106120305-a6e3fe880888/go.mod h1:5e5pAtKSTbP0JOwYsKcVZS081IkuqOxdt4/V1sUjPgk=
 github.com/ungerik/go-reflection v0.0.0-20240905081803-708928fe0862 h1:rxp/NtuHYkx0HRYL/Y7xh/07ZwI/Pbk3VPkVoq3IUgQ=
 github.com/ungerik/go-reflection v0.0.0-20240905081803-708928fe0862/go.mod h1:Ic/uip1MCECqTPItawo5lRHmyaOT6vCM0UuKrczg6LY=
 golang.org/x/net v0.29.0 h1:5ORfpBpCs4HzDYoodCDBbwHzdR5UrLBZ3sOnUJmFoHo=

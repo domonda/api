@@ -1,3 +1,5 @@
+github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426 h1:pWWcXqt8jvIGsqpo+o2RPe1Rx5lyFRj6lUKN2sTJ+rU=
+github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426/go.mod h1:QfZG5NrNWDrwcqOp3ZlNh2XaLjZI1ncNpGPAa9MIUUE=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
 golang.org/x/crypto v0.26.0/go.mod h1:GY7jblb9wI+FOo5y8/S2oY4zWP07AkOJ4+jxCqdqn54=
 golang.org/x/crypto v0.27.0/go.mod h1:1Xngt8kV6Dvbssa53Ziq6Eqn0HqbZi5Z6R0ZpwQzt70=

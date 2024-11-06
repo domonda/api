@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426
-	github.com/ungerik/go-fs v0.0.0-20241029181032-3e0bba4739a8
+	github.com/ungerik/go-fs v0.0.0-20241106120305-a6e3fe880888
 )
 
 require (
@@ -29,4 +29,4 @@ require (
 	mvdan.cc/xurls/v2 v2.5.0 // indirect
 )
 
-replace github.com/domonda/go-types => ../../../go-types
+// replace github.com/domonda/go-types => ../../../go-types
