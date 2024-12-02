@@ -12,8 +12,10 @@ import (
 
 type ObjectTenantOwner struct {
 	ObjectNo      account.Number
+	TenantOwnerID int64
 	TenantOwnerNo int64
 	UnitNo        int64
+	Unit          notnull.TrimmedString
 	OwnerLinkNo   int64
 	Owner         notnull.TrimmedString
 }
@@ -25,6 +27,9 @@ func (o *ObjectTenantOwner) Validate() error {
 	)
 	if err = o.ObjectNo.Validate(); err != nil {
 		errs = append(errs, fmt.Errorf("ObjectTenantOwner.ObjectNo: %w", err))
+	}
+	if o.Unit.IsEmpty() {
+		errs = append(errs, errors.New("empty ObjectTenantOwner.Unit"))
 	}
 	if o.Owner.IsEmpty() {
 		errs = append(errs, errors.New("empty ObjectTenantOwner.Owner"))
