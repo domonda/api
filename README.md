@@ -2,27 +2,35 @@
 
 # DOMONDA API
 
-The general Domonda API is implemented using the [GraphQL protocol](http://graphql.org/).
+The Domonda API consists of a [GraphQL](http://graphql.org/)
+and a [REST](https://en.wikipedia.org/wiki/REST) part.
 
-The only exceptions are file uploads which are implemented as Multipart MIME HTTP POST requests.
+[**GraphQL**](#graphql-api) is the main API for querying data and changing single data items with mutations.
 
-## GraphiQL interactive access and documentation
+[**REST**](#rest-api) is used for file up- and downloads. This includes PDFs for invoices
+but also importing bulk master-data for client companies.
 
-<https://domonda.app/api/public/graphiql>
+[**Authentication**](#authentication) of requests is identical for GraphQL and REST
+and is based on API keys that give access to the data of a client company.
 
-[![Working with GraphiQL](https://img.youtube.com/vi/L5bzHzqUn9M/0.jpg)](https://www.youtube.com/watch?v=L5bzHzqUn9M)
+## Table of Content
 
-You can provide an authentication token for authenticated access to your Domonda data.
-Without a valid token, demo data is provided by the API.
-
-Alternatively, you can use the desktop client Altair (<https://altair.sirmuel.design/>).
+1. [**Authentication**](#authentication)
+2. [**GraphQL API**](#graphql-api)
+   * [Graph*i*QL interactive access and documentation](#graphiql-interactive-access-and-documentation)
+   * [GraphQL query examples](#graphQL-query-examples)
+3. [**REST API**](#rest-api)
+   * [Document PDF download](#document-pdf-download)
+   * [File uploads](#file-uploads)
+   * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
+   * [Upload company master data as JSON](#upload-company-master-data-as-json)
 
 ## Authentication
 
-Authentication is implemented via Bearer token. In the following examples
-replace `API_KEY` with the API key specific to the client company in domonda.
-API keys can be requested from support@domonda.com, please include information about
-the company that is using domonda and who authorized the usage of the data.
+Authentication for [GraphQL](#graphql-api) and [REST](#rest-api) requests
+is implemented via Bearer token that holds an API key specific to a client-company. 
+
+In the following examples replace `DOMONDA_API_KEY` with your actual API key.
 
 ```http
 POST https://domonda.app/api/public/graphql
@@ -40,7 +48,24 @@ curl -X POST \
   https://domonda.app/api/public/graphql
 ```
 
-## Basic usage
+
+## GraphQL API
+
+### Graph*i*QL interactive access and documentation
+
+For an intro on how to work With GraphQL and the interactive Graph*i*GL tool, we recommend watching this Youtube video:
+https://www.youtube.com/watch?v=L5bzHzqUn9M
+
+The URL for the Domonda API Graph*i*QL tool is:
+https://domonda.app/api/public/graphiql
+
+You can provide an authentication token for authenticated access to your Domonda data.
+Without a valid token, demo data is provided by the API.
+
+Alternatively, you can use the desktop client Altair (<https://altair.sirmuel.design/>).
+
+
+### Basic GraphQL usage
 
 You can find all GraphQL query types in the generated documentation:
 <https://domonda.github.io/api/doc/schema/query.doc.html>
@@ -82,7 +107,330 @@ field `userByImportedBy` which gets you the associated user.
 }
 ```
 
-## Document PDF download
+### GraphQL query examples
+
+#### Query all document categories:
+
+```gql
+{
+  allDocumentCategories {
+    nodes {
+      rowId
+      documentType
+      bookingType
+      bookingCategory
+      description
+      emailAlias
+      createdAt
+    }
+  }
+}
+```
+
+#### Query all documents:
+
+```gql
+{
+  allDocuments {
+    nodes {
+      rowId
+      categoryRowId
+      workflowStepRowId
+      name
+      title
+      language
+      tags
+      numPages
+      numAttachPages
+      version
+      importedBy
+      updatedAt
+      createdAt
+    }
+  }
+}
+```
+
+#### Query all invoices:
+
+```gql
+{
+  allInvoices {
+    nodes {
+      documentRowId
+      partnerName
+      invoiceNumber
+      invoiceDate
+      dueDate
+      orderNumber
+      orderDate
+      creditMemo
+      net
+      total
+      vatPercent
+      vatPercentages
+      discountPercent
+      discountUntil
+      currency
+      conversionRate
+      conversionRateDate
+      conversionRateSource
+      goodsServices
+      deliveredFrom
+      deliveredUntil
+      iban
+      bic
+    }
+  }
+}
+```
+
+#### All incoming invoices of a month including payment status
+
+```gql
+{
+  filterDocuments(dateFilterType: INVOICE_DATE, fromDate: "2022-06-01", untilDate: "2022-07-01", documentTypes: [INCOMING_INVOICE], orderBys: [INVOICE_DATE_ASC]) {
+    nodes {
+      rowId
+      documentCategoryByCategoryRowId {
+        documentType
+      }
+      tags
+      paymentStatus
+      documentMoneyTransactionsByDocumentRowId {
+        nodes {
+          moneyTransactionByMoneyTransactionRowId {
+            bookingDate
+            amount
+          }
+        }
+      }
+      invoiceByDocumentRowId {
+        invoiceDate
+        invoiceNumber
+        net
+        total
+        paymentStatus
+        paidDate
+        invoiceCostCentersByInvoiceDocumentRowId {
+          nodes {
+            clientCompanyCostCenterByClientCompanyCostCenterRowId {
+              number
+              description
+            }
+            amount
+          }
+        }
+        partnerCompanyByPartnerCompanyRowId {
+          name
+          alternativeNames
+          derivedName
+        }
+        companyLocationByPartnerCompanyLocationRowId {
+          main
+          street
+          city
+          zip
+          country
+          email
+          website
+          vatNo
+          registrationNo
+        }
+      }
+    }
+  }
+}
+```
+
+#### Query invoice booking lines (accounting items):
+
+```gql
+{
+  invoiceByDocumentRowId(
+    documentRowId: "035bda2e-a5a1-445d-a712-6943e803f108"
+  ) {
+    invoiceAccountingItemsByInvoiceDocumentRowId {
+      nodes {
+        title
+        amount
+        amountType
+        bookingType
+        generalLedgerAccountRowId
+        valueAddedTaxRowId
+        valueAddedTaxPercentageRowId
+      }
+    }
+  }
+}
+```
+
+#### Query all delivery notes:
+
+```gql
+{
+  allDeliveryNotes {
+    nodes {
+      documentRowId
+      partnerCompanyRowId
+      invoiceDocumentRowId
+      invoiceNumber
+      deliveryNoteNumber
+      deliveryDate
+      createdAt
+    }
+  }
+}
+```
+
+#### Query all delivery note items:
+
+```gql
+{
+  allDeliveryNoteItems {
+    nodes {
+      deliveryNoteDocumentRowId
+      posNo
+      quantity
+      productNo
+      gtinNo
+      eanNo
+      description
+    }
+  }
+}
+```
+
+#### Find money transactions:
+
+```gql
+{
+  filterMoneyTransactions(searchText: "My Transaction Reference") {
+    nodes {
+      rowId
+      accountRowId
+      type
+      partnerName
+      partnerIban
+      partnerCompanyRowId
+      amount
+      foreignCurrency
+      foreignAmount
+      purpose
+      bookingDate
+      valueDate
+      importDocumentRowId
+      moneyCategoryRowId
+      updatedAt
+      createdAt
+    }
+  }
+}
+```
+
+#### Load last month's invoices in Google Sheets
+
+1. Open Google Sheets
+1. In the app bar, click on Extensions -> Apps Script
+1. Add [Moment](https://momentjs.com)
+   1. Click on plus in Libraries
+   1. Use script ID: `15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo`
+   1. Click on `Look up`
+   1. Use v9 and `Moment` as an identifier
+   1. Click on Add
+1. Use script:
+
+   ```js
+   const DOMONDA_API = "https://domonda.app/api/public/graphql";
+   const API_TOKEN = ""; // your personal access token
+
+   function lastMonthImportedInvoices() {
+     var lastMonth = Moment.moment(new Date()).subtract(1, "months");
+     var options = {
+       method: "POST",
+       headers: { Authorization: "Bearer " + API_TOKEN },
+       contentType: "application/json",
+       payload: JSON.stringify({
+         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
+         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
+            filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
+              nodes {
+                invoice: invoiceByDocumentRowId {
+                  partnerName
+                  partnerVatID: partnerVatRowIdNo
+                  invoiceDate
+                  invoiceNumber
+                  totalInEur
+                }
+              }
+            }
+          }`,
+         variables: {
+           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
+           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
+         },
+       }),
+     };
+
+     var response = UrlFetchApp.fetch(DOMONDA_API, options);
+
+     var json = JSON.parse(response.getContentText());
+     var invoices = json.data.filterDocuments.nodes.map(
+       ({ invoice }) => invoice
+     );
+
+     var rows = [];
+     for (const invoice of invoices) {
+       // skip non-invoices
+       if (!invoice) continue;
+
+       const row = [];
+
+       // when rows is empty, start by creating the header
+       if (rows.length === 0) {
+         for (const key of Object.keys(invoice)) {
+           row.push(key);
+         }
+         rows.push(row);
+         continue;
+       }
+
+       // first row is always header
+       const header = rows[0];
+
+       // add data rows following the header
+       for (const key of header) {
+         row.push(invoice[key]);
+       }
+       rows.push(row);
+     }
+
+     const active = SpreadsheetApp.getActive();
+
+     // get or create sheet named YYYY-MM
+     const sheetName = lastMonth.format("YYYY-MM");
+     let sheet = active.getSheetByName(sheetName);
+     if (!sheet) {
+       sheet = active.insertSheet();
+       sheet.setName(sheetName);
+     }
+
+     if (rows.length === 0) {
+       sheet.getRange(1, 1).setValue("No data");
+     } else {
+       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
+     }
+
+     active.setActiveSheet(sheet);
+   }
+   ```
+
+1. Click on Run
+1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
+
+## REST API
+
+### Document PDF download
 
 To request the PDF file for the document with the ID `00000000-0000-0000-0000-000000000000`
 (replace zeros with actual UUID hex-code) make the following GET request:
@@ -95,7 +443,7 @@ curl \
   https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf
 ```
 
-## File uploads
+### File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
 `https://domonda.app/api/public/upload`
@@ -431,323 +779,4 @@ Querying invoice data:
 }
 ```
 
-## Other example GraphQL queries
-
-### Query all document categories:
-
-```gql
-{
-  allDocumentCategories {
-    nodes {
-      rowId
-      documentType
-      bookingType
-      bookingCategory
-      description
-      emailAlias
-      createdAt
-    }
-  }
-}
-```
-
-### Query all documents:
-
-```gql
-{
-  allDocuments {
-    nodes {
-      rowId
-      categoryRowId
-      workflowStepRowId
-      name
-      title
-      language
-      tags
-      numPages
-      numAttachPages
-      version
-      importedBy
-      updatedAt
-      createdAt
-    }
-  }
-}
-```
-
-### Query all invoices:
-
-```gql
-{
-  allInvoices {
-    nodes {
-      documentRowId
-      partnerName
-      invoiceNumber
-      invoiceDate
-      dueDate
-      orderNumber
-      orderDate
-      creditMemo
-      net
-      total
-      vatPercent
-      vatPercentages
-      discountPercent
-      discountUntil
-      currency
-      conversionRate
-      conversionRateDate
-      conversionRateSource
-      goodsServices
-      deliveredFrom
-      deliveredUntil
-      iban
-      bic
-    }
-  }
-}
-```
-
-### All incoming invoices of a month including payment status
-
-```gql
-{
-  filterDocuments(dateFilterType: INVOICE_DATE, fromDate: "2022-06-01", untilDate: "2022-07-01", documentTypes: [INCOMING_INVOICE], orderBys: [INVOICE_DATE_ASC]) {
-    nodes {
-      rowId
-      documentCategoryByCategoryRowId {
-        documentType
-      }
-      tags
-      paymentStatus
-      documentMoneyTransactionsByDocumentRowId {
-        nodes {
-          moneyTransactionByMoneyTransactionRowId {
-            bookingDate
-            amount
-          }
-        }
-      }
-      invoiceByDocumentRowId {
-        invoiceDate
-        invoiceNumber
-        net
-        total
-        paymentStatus
-        paidDate
-        invoiceCostCentersByInvoiceDocumentRowId {
-          nodes {
-            clientCompanyCostCenterByClientCompanyCostCenterRowId {
-              number
-              description
-            }
-            amount
-          }
-        }
-        partnerCompanyByPartnerCompanyRowId {
-          name
-          alternativeNames
-          derivedName
-        }
-        companyLocationByPartnerCompanyLocationRowId {
-          main
-          street
-          city
-          zip
-          country
-          email
-          website
-          vatNo
-          registrationNo
-        }
-      }
-    }
-  }
-}
-```
-
-### Query invoice booking lines (accounting items):
-
-```gql
-{
-  invoiceByDocumentRowId(
-    documentRowId: "035bda2e-a5a1-445d-a712-6943e803f108"
-  ) {
-    invoiceAccountingItemsByInvoiceDocumentRowId {
-      nodes {
-        title
-        amount
-        amountType
-        bookingType
-        generalLedgerAccountRowId
-        valueAddedTaxRowId
-        valueAddedTaxPercentageRowId
-      }
-    }
-  }
-}
-```
-
-### Query all delivery notes:
-
-```gql
-{
-  allDeliveryNotes {
-    nodes {
-      documentRowId
-      partnerCompanyRowId
-      invoiceDocumentRowId
-      invoiceNumber
-      deliveryNoteNumber
-      deliveryDate
-      createdAt
-    }
-  }
-}
-```
-
-### Query all delivery note items:
-
-```gql
-{
-  allDeliveryNoteItems {
-    nodes {
-      deliveryNoteDocumentRowId
-      posNo
-      quantity
-      productNo
-      gtinNo
-      eanNo
-      description
-    }
-  }
-}
-```
-
-### Find money transactions:
-
-```gql
-{
-  filterMoneyTransactions(searchText: "My Transaction Reference") {
-    nodes {
-      rowId
-      accountRowId
-      type
-      partnerName
-      partnerIban
-      partnerCompanyRowId
-      amount
-      foreignCurrency
-      foreignAmount
-      purpose
-      bookingDate
-      valueDate
-      importDocumentRowId
-      moneyCategoryRowId
-      updatedAt
-      createdAt
-    }
-  }
-}
-```
-
-## Load last month's invoices in Google Sheets
-
-1. Open Google Sheets
-1. In the app bar, click on Extensions -> Apps Script
-1. Add [Moment](https://momentjs.com)
-   1. Click on plus in Libraries
-   1. Use script ID: `15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo`
-   1. Click on `Look up`
-   1. Use v9 and `Moment` as an identifier
-   1. Click on Add
-1. Use script:
-
-   ```js
-   const DOMONDA_API = "https://domonda.app/api/public/graphql";
-   const API_TOKEN = ""; // your personal access token
-
-   function lastMonthImportedInvoices() {
-     var lastMonth = Moment.moment(new Date()).subtract(1, "months");
-     var options = {
-       method: "POST",
-       headers: { Authorization: "Bearer " + API_TOKEN },
-       contentType: "application/json",
-       payload: JSON.stringify({
-         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
-         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
-            filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
-              nodes {
-                invoice: invoiceByDocumentRowId {
-                  partnerName
-                  partnerVatID: partnerVatRowIdNo
-                  invoiceDate
-                  invoiceNumber
-                  totalInEur
-                }
-              }
-            }
-          }`,
-         variables: {
-           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
-           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
-         },
-       }),
-     };
-
-     var response = UrlFetchApp.fetch(DOMONDA_API, options);
-
-     var json = JSON.parse(response.getContentText());
-     var invoices = json.data.filterDocuments.nodes.map(
-       ({ invoice }) => invoice
-     );
-
-     var rows = [];
-     for (const invoice of invoices) {
-       // skip non-invoices
-       if (!invoice) continue;
-
-       const row = [];
-
-       // when rows is empty, start by creating the header
-       if (rows.length === 0) {
-         for (const key of Object.keys(invoice)) {
-           row.push(key);
-         }
-         rows.push(row);
-         continue;
-       }
-
-       // first row is always header
-       const header = rows[0];
-
-       // add data rows following the header
-       for (const key of header) {
-         row.push(invoice[key]);
-       }
-       rows.push(row);
-     }
-
-     const active = SpreadsheetApp.getActive();
-
-     // get or create sheet named YYYY-MM
-     const sheetName = lastMonth.format("YYYY-MM");
-     let sheet = active.getSheetByName(sheetName);
-     if (!sheet) {
-       sheet = active.insertSheet();
-       sheet.setName(sheetName);
-     }
-
-     if (rows.length === 0) {
-       sheet.getRange(1, 1).setValue("No data");
-     } else {
-       sheet.getRange(1, 1, rows.length, rows[0].length).setValues(rows);
-     }
-
-     active.setActiveSheet(sheet);
-   }
-   ```
-
-1. Click on Run
-1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
+### Upload company master data as JSON
