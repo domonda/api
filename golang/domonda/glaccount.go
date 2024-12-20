@@ -12,8 +12,8 @@ import (
 
 // GLAccount represents a general ledger account
 type GLAccount struct {
-	Number   account.Number
-	Name     nullable.TrimmedString
+	Number   account.Number         // Alphanumeric account number
+	Name     nullable.TrimmedString // Name of the account
 	Category nullable.TrimmedString // Higher level description of the account
 	ObjectNo account.NullableNumber // Real estate object number
 }
@@ -29,6 +29,9 @@ func (a *GLAccount) Validate() error {
 	return err
 }
 
+// PostGLAccounts upserts general ledger accounts
+// using the API endpoint https://domonda.app/api/public/masterdata/gl-accounts.
+//
 // nil for objectSpecificAccountNos means we do not care about this
 func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos *bool, source string) error {
 	var err error

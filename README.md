@@ -780,3 +780,97 @@ Querying invoice data:
 ```
 
 ### Upload company master data as JSON
+
+Updating the master-data of a client-company can be done in bulk using the REST API
+with JSON data. In general those API endpoints follow an `upsert` logic,
+meaning that if data records can be identified by an ID or name,
+they will be updated with the provided data,
+else new records will be inserted.
+
+For those endpoints we also provide a Go SDK with the package
+[github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda).
+
+Using this Go package to make API requests has the benefit of basic
+client side validation of the data before sending the request
+and the client package will always be kept up to date
+with the API server implementation.
+
+The server is also implemented with Go and uses the standard library
+JSON parser which is documented here: <https://pkg.go.dev/encoding/json>.
+
+The struct types in `github.com/domonda/api/golang/domonda` define the JSON API
+where every struct is mapped to a JSON object
+with the names of the struct fields used as JSON object value names.
+The Go JSON parser detects object values names case insensitive
+and object values that are left out in the JSON will have
+their types' Go zero value after parsing.
+
+So for example the follwing JSON:
+
+```json
+{
+  "number": "1/200",
+  "name": "Account for object 66",
+  "category": null,
+  "objectNo": "66"
+}
+```
+
+...can be parsed as `GLAccount` struct:
+
+```go
+type GLAccount struct {
+	Number   account.Number
+	Name     nullable.TrimmedString
+	Category nullable.TrimmedString
+	ObjectNo account.NullableNumber
+}
+```
+
+The types used in those structs are from the package [github.com/domonda/go-types](https://pkg.go.dev/github.com/domonda/go-types) and should be self explanary.
+
+Just note that `account.Number` is not an integer number,
+but an alphanumeric string which has to match the regular expression
+`^[0-9A-Za-z][0-9A-Za-z_\-\/:.;,]*$`
+
+
+
+#### POST General Ledger Accounts
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostGLAccounts
+
+API endpoint: https://domonda.app/api/public/masterdata/gl-accounts
+
+Optional URL query parameters:
+* `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
+* `source`: string describing the source of the data, use your company or service name
+
+Example: `https://domonda.app/api/public/masterdata/gl-accounts?objectSpecificAccountNos=true&source=MyCompany`
+
+The request body is JSON array with objects matching the struct:
+
+```go
+type GLAccount struct {
+	Number   account.Number         // Alphanumeric account number
+	Name     nullable.TrimmedString // Name of the account
+	Category nullable.TrimmedString // Higher level description of the account
+	ObjectNo account.NullableNumber // Real estate object number
+}
+```
+
+Example:
+
+```json
+[
+  {
+    "Number": "1/200",
+    "Name": "Account for object 66",
+    "Category": null,
+    "ObjectNo": "66"
+  },
+  {
+    "Number": "9/100",
+    "Name": "Other costs",
+  }
+]
+```
