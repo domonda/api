@@ -100,6 +100,8 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 	return u
 }
 
+// PostPartners upserts partner companies.
+// Endpoint: https://domonda.app/api/public/masterdata/partner-companies
 func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) error {
 	var err error
 	for i, partner := range partners {

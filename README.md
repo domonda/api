@@ -545,6 +545,19 @@ To exclude deleted documents from the check add the form field `allowDuplicateDe
 With `allowDuplicateDeleted=true` a duplicate of an already deleted document can be uploaded
 as a new document.
 
+### File upload with Go SDK
+
+See Go SDK with the package
+[github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda).
+
+Using this Go package to make API requests has the benefit of basic
+client side validation of the data before sending the request
+and the client package will always be kept up to date
+with the API server implementation.
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocument
+
+
 ### Upload structured invoice data as JSON
 
 The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields
@@ -842,8 +855,8 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostGLAcco
 API endpoint: https://domonda.app/api/public/masterdata/gl-accounts
 
 Optional URL query parameters:
-* `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
 * `source`: string describing the source of the data, use your company or service name
+* `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
 
 Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true`
 
@@ -875,20 +888,119 @@ Example:
 ]
 ```
 
-#### POST new document file
+#### POST Partner Companies
 
-Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocument
+Existing partner companies are identified by VATIDNo, VendorAccountNumber,
+ClientAccountNumber, and Name and then updated.
+Else a new partner company is created.
 
-API endpoint: https://domonda.app/api/public/upload
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostPartners
 
-This endpoint expects a `multipart/form-data` POST request
-with the following form fields:
+API endpoint: https://domonda.app/api/public/masterdata/partner-companies
 
-`documentCategory`: UUID string identifying the document-category for the new document
+Optional URL query parameters:
+* `source`: string describing the source of the data, use your company or service name
 
-`document`: form file of type PDF, JPEG, PNG, or office document/spreadsheet files
+The request body is JSON array with objects matching the struct:
 
-`invoice`: optional form file in JSON format described at [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
+```go
+type Partner struct {
+	Name             notnull.TrimmedString
+	AlternativeNames notnull.StringArray // used when merging
 
-In case of success, a HTTP Status 200 response with a plaintext
-body containing the newly created document UUID string will be returned.
+	// main location
+	Street    nullable.TrimmedString
+	City      nullable.TrimmedString
+	ZIP       nullable.TrimmedString
+	Country   country.NullableCode
+	Phone     nullable.TrimmedString
+	Email     email.NullableAddress
+	Website   nullable.TrimmedString
+	CompRegNo nullable.TrimmedString
+	TaxIDNo   nullable.TrimmedString
+	VATIDNo   vat.NullableID
+
+	// partner accounts
+	VendorAccountNumber account.NullableNumber // "" means not set -> will not create a partner account
+	ClientAccountNumber account.NullableNumber // "" means not set -> will not create a partner account
+
+	// A single payment bank account for the partner.
+	// IBAN and BIC are well suited as CSV columns.
+	IBAN bank.NullableIBAN
+	BIC  bank.NullableBIC
+	// More payment bank accounts for the partner.
+	// As struct better suited for JSON import.
+	BankAccounts []bank.Account
+}
+```
+
+#### POST Bank Accounts
+
+Existing bank accounts are identified by their IBAN and then updated instead of inserted.
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostBankAccounts
+
+API endpoint: https://domonda.app/api/public/masterdata/bank-accounts
+
+Optional URL query parameters:
+* `source`: string describing the source of the data, use your company or service name
+
+The request body is JSON array with objects matching the struct:
+
+```go
+type BankAccount struct {
+	IBAN     bank.IBAN
+	BIC      bank.BIC
+	Currency money.Currency
+	Holder   notnull.TrimmedString
+
+	// Optional
+	AccountNumber nullable.TrimmedString
+	Name          nullable.TrimmedString
+	Description   nullable.TrimmedString
+}
+```
+
+#### POST Real Estate Objects
+
+Existing objects are identified by their Number and then updated instead of inserted.
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostRealEstateObjects
+
+API endpoint: https://domonda.app/api/public/masterdata/real-estate-objects
+
+Optional URL query parameters:
+* `source`: string describing the source of the data, use your company or service name
+
+The request body is JSON array with objects matching the struct:
+
+```go
+type RealEstateObject struct {
+	Type                 RealEstateObjectType
+	Number               account.Number
+	AccountingArea       account.NullableNumber
+	UserAccount          account.NullableNumber
+	Description          nullable.TrimmedString
+	StreetAddress        notnull.TrimmedString
+	AlternativeAddresses nullable.StringArray
+	ZipCode              nullable.TrimmedString
+	City                 nullable.TrimmedString
+	Country              country.Code
+	BankAccounts         []bank.Account
+	Active               bool
+}
+```
+
+`RealEstateObjectType` is an enum with the following string values:
+
+```go
+type RealEstateObjectType string //#enum
+
+const (
+	RealEstateObjectTypeHI      RealEstateObjectType = "HI"
+	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG"
+	RealEstateObjectTypeSUB     RealEstateObjectType = "SUB"
+	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
+	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
+)
+```
