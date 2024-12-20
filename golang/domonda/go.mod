@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/domonda/go-types v0.0.0-20241104173616-e85c6dede426
-	github.com/ungerik/go-fs v0.0.0-20241106120305-a6e3fe880888
+	github.com/ungerik/go-fs v0.0.0-20241213130555-c93eabeaac28
 )
 
 require (
@@ -23,9 +23,9 @@ require (
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/teamwork/tnef v0.0.0-20200108124832-7deabccfdb32 // indirect
 	github.com/ungerik/go-reflection v0.0.0-20240905081803-708928fe0862 // indirect
-	golang.org/x/net v0.30.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	mvdan.cc/xurls/v2 v2.5.0 // indirect
 )
 
