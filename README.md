@@ -845,7 +845,7 @@ Optional URL query parameters:
 * `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
 * `source`: string describing the source of the data, use your company or service name
 
-Example: `https://domonda.app/api/public/masterdata/gl-accounts?objectSpecificAccountNos=true&source=MyCompany`
+Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true`
 
 The request body is JSON array with objects matching the struct:
 
@@ -874,3 +874,21 @@ Example:
   }
 ]
 ```
+
+#### POST new document file
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocument
+
+API endpoint: https://domonda.app/api/public/upload
+
+This endpoint expects a `multipart/form-data` POST request
+with the following form fields:
+
+`documentCategory`: UUID string identifying the document-category for the new document
+
+`document`: form file of type PDF, JPEG, PNG, or office document/spreadsheet files
+
+`invoice`: optional form file in JSON format described at [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
+
+In case of success, a HTTP Status 200 response with a plaintext
+body containing the newly created document UUID string will be returned.
