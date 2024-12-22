@@ -8,7 +8,7 @@ and a [REST](https://en.wikipedia.org/wiki/REST) part.
 [**GraphQL**](#graphql-api) is the main API for querying data and changing single data items with mutations.
 
 [**REST**](#rest-api) is used for file up- and downloads. This includes PDFs for invoices
-but also importing bulk master-data for client companies.
+but also importing bulk master data for client companies.
 
 [**Authentication**](#authentication) of requests is identical for GraphQL and REST
 and is based on API keys that give access to the data of a client company.
@@ -28,9 +28,9 @@ and is based on API keys that give access to the data of a client company.
 ## Authentication
 
 Authentication for [GraphQL](#graphql-api) and [REST](#rest-api) requests
-is implemented via Bearer token that holds an API key specific to a client-company. 
+is implemented via `Bearer` token that holds an API key specific to a client-company. 
 
-In the following examples replace `DOMONDA_API_KEY` with your actual API key.
+In the following examples, replace `${DOMONDA_API_KEY}` with your actual API key.
 
 ```http
 POST https://domonda.app/api/public/graphql
@@ -53,13 +53,13 @@ curl -X POST \
 
 ### Graph*i*QL interactive access and documentation
 
-For an intro on how to work With GraphQL and the interactive Graph*i*GL tool, we recommend watching this Youtube video:
+For an intro on how to work With GraphQL and the interactive Graph*i*GL tool, we recommend watching this YouTube video:
 https://www.youtube.com/watch?v=L5bzHzqUn9M
 
 The URL for the Domonda API Graph*i*QL tool is:
 https://domonda.app/api/public/graphiql
 
-You can provide an authentication token for authenticated access to your Domonda data.
+You can provide an authentication token to authenticate access to your Domonda data.
 Without a valid token, demo data is provided by the API.
 
 Alternatively, you can use the desktop client Altair (<https://altair.sirmuel.design/>).
@@ -88,8 +88,8 @@ Query own company data:
 }
 ```
 
-If you want to query all documents with the additional information of the import user you can achieve this by using the
-field `userByImportedBy` which gets you the associated user.
+If you want to query all documents with the additional information of the import user, you can achieve this by using the
+field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
@@ -185,7 +185,7 @@ field `userByImportedBy` which gets you the associated user.
 }
 ```
 
-#### All incoming invoices of a month including payment status
+#### All incoming invoices of a month, including payment status
 
 ```gql
 {
@@ -454,16 +454,16 @@ may take up to 5 seconds per page, so adjust timeouts accordingly.
 
 Extracting invoice data is done asynchronously by default.
 Set the form field `waitForExtraction` to `true` for synchronous
-extraction where results will be available via GraphQL directly after
+extraction, where results will be available via GraphQL directly after
 the upload request returns (add another 30 seconds to timeouts).
 
 To identify the category of the uploaded document, either the form field `documentCategory`
-must be provided or the form field `documentType` with the additional fields
+must be provided, or the form field `documentType` with the additional fields
 `bookingType` and `bookingCategory` if their value for the category is non-null/empty.
 A combination of `documentType`, `bookingType`, `bookingCategory` uniquely identifies
 a document category and may be easier to use than querying document category IDs upfront.
 
-Valid values for documentType are:
+Valid values for `documentType` are:
 
 ```txt
 INCOMING_INVOICE
@@ -541,8 +541,8 @@ then the filename of the first still processing upload is returned as `processin
 ```
 
 By default, the content hash conflict check also includes documents that have been marked as deleted.
-To exclude deleted documents from the check add the form field `allowDuplicateDeleted` with the value `true`.
-With `allowDuplicateDeleted=true` a duplicate of an already deleted document can be uploaded
+To exclude deleted documents from the check, add the form field `allowDuplicateDeleted` with the value `true`.
+With `allowDuplicateDeleted=true`, a duplicate of an already deleted document can be uploaded
 as a new document.
 
 ### File upload with Go SDK
@@ -648,9 +648,9 @@ The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) 
 }
 ```
 
-If `confirmedBy` is set to a non-empty string then all values from the JSON
-will be marked as confirmed and not overwritten by values from domonda's automated invoice data extraction.
-Upload API confirmations can be overwritten by users of the domonda app, if they have sufficient rights.
+If `confirmedBy` is set to a non-empty string, then all values from the JSON
+will be marked as confirmed and not overwritten by values from Domonda's automated invoice data extraction.
+Upload API confirmations can be overwritten by users of the domonda app if they have sufficient rights.
 
 The optional form field `ebInterface` contains an XML file in the ebInterface 5.0 format as specified at:
 <https://www.wko.at/service/netzwerke/ebinterface-aktuelle-version-xml-rechnungsstandard.html>
@@ -713,7 +713,7 @@ Content-Type: text/plain
 ef059fa4-7288-4b77-8017-adce142e29a8
 ```
 
-The document ID will be a new v4 random UUID, except if a user-defined `uuid` that does not exist yet in domonda is passed as form-field. 
+The document ID will be a new v4 random UUID, except if a user-defined `uuid` that does not exist yet in domonda is passed as form field. 
 
 This UUID can be used in the GraphQL document API:
 <https://domonda.github.io/api/doc/schema/document.doc.html>
@@ -794,22 +794,22 @@ Querying invoice data:
 
 ### Upload company master data as JSON
 
-Updating the master-data of a client-company can be done in bulk using the REST API
-with JSON data. In general those API endpoints follow an `upsert` logic,
+Updating the master data of a client-company can be done in bulk using the REST API
+with JSON data. In general, those API endpoints follow an `upsert` logic,
 meaning that if data records can be identified by an ID or name,
 they will be updated with the provided data,
 else new records will be inserted.
 
-For those endpoints we also provide a Go SDK with the package
+For those endpoints, we also provide a Go SDK with the package
 [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda).
 
 Using this Go package to make API requests has the benefit of basic
-client side validation of the data before sending the request
+client-side validation of the data before sending the request
 and the client package will always be kept up to date
 with the API server implementation.
 
 The server is also implemented with Go and uses the standard library
-JSON parser which is documented here: <https://pkg.go.dev/encoding/json>.
+JSON parser, which is documented here: <https://pkg.go.dev/encoding/json>.
 
 The struct types in `github.com/domonda/api/golang/domonda` define the JSON API
 where every struct is mapped to a JSON object
@@ -818,7 +818,7 @@ The Go JSON parser detects object values names case insensitive
 and object values that are left out in the JSON will have
 their types' Go zero value after parsing.
 
-So for example the follwing JSON:
+So for example, the following JSON:
 
 ```json
 {
@@ -840,7 +840,7 @@ type GLAccount struct {
 }
 ```
 
-The types used in those structs are from the package [github.com/domonda/go-types](https://pkg.go.dev/github.com/domonda/go-types) and should be self explanary.
+The types used in those structs are from the package [github.com/domonda/go-types](https://pkg.go.dev/github.com/domonda/go-types) and should be self-explanatory.
 
 Just note that `account.Number` is not an integer number,
 but an alphanumeric string which has to match the regular expression
@@ -855,7 +855,7 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostGLAcco
 API endpoint: https://domonda.app/api/public/masterdata/gl-accounts
 
 Optional URL query parameters:
-* `source`: string describing the source of the data, use your company or service name
+* `source`: string describing the source of the data; use your company or service name
 * `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
 
 Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true`
@@ -892,14 +892,14 @@ Example:
 
 Existing partner companies are identified by VATIDNo, VendorAccountNumber,
 ClientAccountNumber, and Name and then updated.
-Else a new partner company is created.
+Else, a new partner company is created.
 
 Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostPartners
 
 API endpoint: https://domonda.app/api/public/masterdata/partner-companies
 
 Optional URL query parameters:
-* `source`: string describing the source of the data, use your company or service name
+* `source`: string describing the source of the data; use your company or service name
 
 The request body is JSON array with objects matching the struct:
 
@@ -943,7 +943,7 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostBankAc
 API endpoint: https://domonda.app/api/public/masterdata/bank-accounts
 
 Optional URL query parameters:
-* `source`: string describing the source of the data, use your company or service name
+* `source`: string describing the source of the data; use your company or service name
 
 The request body is JSON array with objects matching the struct:
 
@@ -970,7 +970,7 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostRealEs
 API endpoint: https://domonda.app/api/public/masterdata/real-estate-objects
 
 Optional URL query parameters:
-* `source`: string describing the source of the data, use your company or service name
+* `source`: string describing the source of the data; use your company or service name
 
 The request body is JSON array with objects matching the struct:
 
