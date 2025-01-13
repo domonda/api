@@ -963,7 +963,8 @@ type BankAccount struct {
 
 #### POST Real Estate Objects
 
-Existing objects are identified by their Number and then updated instead of inserted.
+The following endpoint updates or inserts instances of the `RealEstateObject` class
+using the `Number` property as the identifier for objects.
 
 Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostRealEstateObjects
 
@@ -972,7 +973,7 @@ API endpoint: https://domonda.app/api/public/masterdata/real-estate-objects
 Optional URL query parameters:
 * `source`: string describing the source of the data; use your company or service name
 
-The request body is JSON array with objects matching the struct:
+The request body is a JSON array of objects matching the struct:
 
 ```go
 type RealEstateObject struct {
@@ -1003,4 +1004,39 @@ const (
 	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
 )
+```
+
+#### POST Custom Object Class Instances
+
+The following endpoint updates or inserts instances of a custom object class
+using the property `idPropName` as the identifier for the objects.
+
+Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostObjectInstancesWithIDProp
+
+API endpoint schema: https://domonda.app/api/public/masterdata/upsert-objects/{className}/id-prop/{idPropName}
+
+Replace `{className}` with the name of the custom object class and
+`{idPropName}` with the name of the property that is used as the identifier for the objects.
+
+Optional URL query parameters:
+* `source`: string describing the source of the data; use your company or service name
+
+The request body is a JSON array of objects with keys matching the property names of the class.
+
+The properties of a class can be queried with the GraphQL API using the following query
+(replace `RealEstateObject` with the name of your custom class):
+
+```graphql
+{
+  objectClassProps(className: "RealEstateObject") {
+    nodes {
+      rowId
+      name
+      type
+      required
+      options
+      description
+    }
+  }
+}
 ```
