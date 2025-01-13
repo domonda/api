@@ -53,16 +53,16 @@ curl -X POST \
 
 ### Graph*i*QL interactive access and documentation
 
-For an intro on how to work With GraphQL and the interactive Graph*i*GL tool, we recommend watching this YouTube video:
-https://www.youtube.com/watch?v=L5bzHzqUn9M
-
-The URL for the Domonda API Graph*i*QL tool is:
+The URL for the **Domonda API Graph*i*QL tool** is:
 https://domonda.app/api/public/graphiql
 
 You can provide an authentication token to authenticate access to your Domonda data.
 Without a valid token, demo data is provided by the API.
 
 Alternatively, you can use the desktop client Altair (<https://altair.sirmuel.design/>).
+
+For an intro on how to work With GraphQL and the interactive Graph*i*GL tool, we recommend watching this YouTube video:
+https://www.youtube.com/watch?v=L5bzHzqUn9M
 
 
 ### Basic GraphQL usage
