@@ -856,7 +856,7 @@ API endpoint: https://domonda.app/api/public/masterdata/gl-accounts
 
 Optional URL query parameters:
 * `source`: string describing the source of the data; use your company or service name
-* `objectSpecificAccountNos`: ass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
+* `objectSpecificAccountNos`: pass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
 
 Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true`
 
