@@ -443,6 +443,32 @@ curl \
   https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf
 ```
 
+To add an audit trail to the PDF or request only the audit trail,
+use the following values for the query parameter `auditTrail`:
+
+  - `append`: append the audit trail to the end of the document
+  - `prepend`: prepend the audit trail before the first page of the document
+  - `configured`: use the audit trail position configured for the client company
+  - `only`: download only the audit trail as PDF
+
+The default language of the audit trail is German.
+To request the audit trail in a different language,
+use the query parameter `auditTrailLang` with a language code.
+
+Example URL to download only the audit trail in English:
+
+```txt
+https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf?auditTrail=only&auditTrailLang=en
+```
+
+
+```txt
+only
+append
+prepend
+configured
+```
+
 ### File uploads
 
 File uploads are not using GraphQL, but Multipart MIME HTTP POST requests to the following URL:
