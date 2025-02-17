@@ -457,16 +457,8 @@ use the query parameter `auditTrailLang` with a language code.
 
 Example URL to download only the audit trail in English:
 
-```txt
-https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf?auditTrail=only&auditTrailLang=en
 ```
-
-
-```txt
-only
-append
-prepend
-configured
+https://domonda.app/api/public/document/00000000-0000-0000-0000-000000000000.pdf?auditTrail=only&auditTrailLang=en
 ```
 
 ### File uploads
