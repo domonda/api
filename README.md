@@ -45,6 +45,7 @@ curl -X POST \
   -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: application/graphql" \
   --data "{ allDocuments{ totalCount } }" \
+  -o - \
   https://domonda.app/api/public/graphql
 ```
 
@@ -688,6 +689,7 @@ curl -X POST \
   -F "tag=TagA" \
   -F "tag=TagB" \
   -F "allowDuplicateDeleted=true" \
+  -o - \
   https://domonda.app/api/public/upload
 ```
 
@@ -704,6 +706,7 @@ curl -X POST \
   -F "ebInterface=@example/invoice.xml" \
   -F "allowDuplicateDeleted=false" \
   -F "waitForExtraction=true" \
+  -o - \
   https://domonda.app/api/public/upload
 ```
 
@@ -719,6 +722,7 @@ curl -X POST \
   -F "ebInterface=@example/invoice.xml" \
   -F "allowDuplicateDeleted=false" \
   -F "waitForExtraction=true" \
+  -o - \
   https://domonda.app/api/public/upload
 ```
 
