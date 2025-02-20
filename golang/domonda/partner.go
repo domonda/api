@@ -90,6 +90,21 @@ func (p *Partner) String() string {
 	return b.String()
 }
 
+// EqualAlternativeNames returns true if the partner
+// has exactly all of the passed names in its
+// AlternativeNames, but independent of order.
+func (p *Partner) EqualAlternativeNames(names []string) bool {
+	if len(p.AlternativeNames) != len(names) {
+		return false
+	}
+	for _, name := range names {
+		if !p.AlternativeNames.Contains(name) {
+			return false
+		}
+	}
+	return true
+}
+
 func (p *Partner) VendorAccountNumberUint() uint64 {
 	u, _ := strconv.ParseUint(p.VendorAccountNumber.String(), 10, 64)
 	return u
