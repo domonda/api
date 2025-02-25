@@ -47,7 +47,7 @@ func (o *RealEstateObject) Validate() error {
 	if err = o.UserAccount.Validate(); err != nil {
 		errs = append(errs, fmt.Errorf("RealEstateObject.UserAccount: %w", err))
 	}
-	if o.Country, err = o.Country.NormalizedWithAltCodes(); err != nil {
+	if o.Country, err = o.Country.Normalized(); err != nil {
 		errs = append(errs, fmt.Errorf("RealEstateObject.Country: %w", err))
 	}
 	for i := range o.BankAccounts {
