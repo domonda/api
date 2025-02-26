@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/domonda/go-types/email"
 	"github.com/domonda/go-types/notnull"
 	"github.com/domonda/go-types/nullable"
+	"github.com/domonda/go-types/strutil"
 	"github.com/domonda/go-types/vat"
 )
 
@@ -78,6 +80,54 @@ func (p *Partner) Validate() error {
 		}
 	}
 	return err
+}
+
+func (p *Partner) Normalize() []error {
+	var errs []error
+	if p.Name.IsEmpty() {
+		errs = append(errs, errors.New("Name is empty"))
+	}
+	// Trim whitespace and remove empty alternative names
+	for a := 0; a < len(p.AlternativeNames); a++ {
+		p.AlternativeNames[a] = strutil.TrimSpace(p.AlternativeNames[a])
+		if p.AlternativeNames[a] == "" {
+			p.AlternativeNames = slices.Delete(p.AlternativeNames, a, a+1)
+			a--
+		}
+	}
+	var err error
+	p.Country, err = p.Country.Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("Country %q has error: %w", p.Country, err))
+	}
+	p.Email, err = p.Email.Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("Email %q has error: %w", p.Email, err))
+	}
+	p.VATIDNo, err = p.VATIDNo.Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("VATIDNo %q has error: %w", p.VATIDNo, err))
+	}
+	if err = p.VendorAccountNumber.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("VendorAccountNumber %q has error: %w", p.VendorAccountNumber, err))
+	}
+	if err = p.ClientAccountNumber.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("ClientAccountNumber %q has error: %w", p.ClientAccountNumber, err))
+	}
+	p.IBAN, err = bank.NullableIBAN(strings.ToUpper(string(p.IBAN))).Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("IBAN %q has error: %w", p.IBAN, err))
+	}
+	p.BIC, err = p.BIC.Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("BIC %q has error: %w", p.BIC, err))
+	}
+	for i, bankAccount := range p.BankAccounts {
+		if err = bankAccount.Normalize(); err != nil {
+			errs = append(errs, fmt.Errorf("BankAccounts[%d] has error: %w", i, err))
+		}
+	}
+	return errs
 }
 
 func (p *Partner) String() string {
