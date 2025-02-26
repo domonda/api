@@ -82,49 +82,74 @@ func (p *Partner) Validate() error {
 	return err
 }
 
-func (p *Partner) Normalize() []error {
+func (p *Partner) Normalize(resetInvalid bool) []error {
 	var errs []error
 	if p.Name.IsEmpty() {
 		errs = append(errs, errors.New("Name is empty"))
 	}
 	// Trim whitespace and remove empty alternative names
-	for a := 0; a < len(p.AlternativeNames); a++ {
-		p.AlternativeNames[a] = strutil.TrimSpace(p.AlternativeNames[a])
-		if p.AlternativeNames[a] == "" {
-			p.AlternativeNames = slices.Delete(p.AlternativeNames, a, a+1)
-			a--
+	for i := 0; i < len(p.AlternativeNames); i++ {
+		p.AlternativeNames[i] = strutil.TrimSpace(p.AlternativeNames[i])
+		if p.AlternativeNames[i] == "" {
+			p.AlternativeNames = slices.Delete(p.AlternativeNames, i, i+1)
+			i--
 		}
 	}
 	var err error
 	p.Country, err = p.Country.Normalized()
 	if err != nil {
-		errs = append(errs, fmt.Errorf("Country %q has error: %w", p.Country, err))
+		errs = append(errs, fmt.Errorf("Country '%s' has error: %w", p.Country, err))
+		if resetInvalid {
+			p.Country.SetNull()
+		}
 	}
 	p.Email, err = p.Email.Normalized()
 	if err != nil {
-		errs = append(errs, fmt.Errorf("Email %q has error: %w", p.Email, err))
+		errs = append(errs, fmt.Errorf("Email '%s' has error: %w", p.Email, err))
+		if resetInvalid {
+			p.Email.SetNull()
+		}
 	}
 	p.VATIDNo, err = p.VATIDNo.Normalized()
 	if err != nil {
-		errs = append(errs, fmt.Errorf("VATIDNo %q has error: %w", p.VATIDNo, err))
+		errs = append(errs, fmt.Errorf("VATIDNo '%s' has error: %w", p.VATIDNo, err))
+		if resetInvalid {
+			p.VATIDNo.SetNull()
+		}
 	}
 	if err = p.VendorAccountNumber.Validate(); err != nil {
-		errs = append(errs, fmt.Errorf("VendorAccountNumber %q has error: %w", p.VendorAccountNumber, err))
+		errs = append(errs, fmt.Errorf("VendorAccountNumber '%s' has error: %w", p.VendorAccountNumber, err))
+		if resetInvalid {
+			p.VendorAccountNumber.SetNull()
+		}
 	}
 	if err = p.ClientAccountNumber.Validate(); err != nil {
-		errs = append(errs, fmt.Errorf("ClientAccountNumber %q has error: %w", p.ClientAccountNumber, err))
+		errs = append(errs, fmt.Errorf("ClientAccountNumber '%s' has error: %w", p.ClientAccountNumber, err))
+		if resetInvalid {
+			p.ClientAccountNumber.SetNull()
+		}
 	}
 	p.IBAN, err = bank.NullableIBAN(strings.ToUpper(string(p.IBAN))).Normalized()
 	if err != nil {
-		errs = append(errs, fmt.Errorf("IBAN %q has error: %w", p.IBAN, err))
+		errs = append(errs, fmt.Errorf("IBAN '%s' has error: %w", p.IBAN, err))
+		if resetInvalid {
+			p.IBAN.SetNull()
+		}
 	}
 	p.BIC, err = p.BIC.Normalized()
 	if err != nil {
-		errs = append(errs, fmt.Errorf("BIC %q has error: %w", p.BIC, err))
+		errs = append(errs, fmt.Errorf("BIC '%s' has error: %w", p.BIC, err))
+		if resetInvalid {
+			p.BIC.SetNull()
+		}
 	}
-	for i, bankAccount := range p.BankAccounts {
-		if err = bankAccount.Normalize(); err != nil {
+	for i := 0; i < len(p.BankAccounts); i++ {
+		if err = p.BankAccounts[i].Normalize(); err != nil {
 			errs = append(errs, fmt.Errorf("BankAccounts[%d] has error: %w", i, err))
+			if resetInvalid {
+				p.BankAccounts = slices.Delete(p.BankAccounts, i, i+1)
+				i--
+			}
 		}
 	}
 	return errs
