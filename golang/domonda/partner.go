@@ -103,18 +103,27 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 			p.Country.SetNull()
 		}
 	}
-	p.Email, err = p.Email.Normalized()
-	if err != nil {
-		errs = append(errs, fmt.Errorf("Email '%s' has error: %w", p.Email, err))
-		if resetInvalid {
-			p.Email.SetNull()
-		}
-	}
 	p.VATIDNo, err = p.VATIDNo.Normalized()
 	if err != nil {
 		errs = append(errs, fmt.Errorf("VATIDNo '%s' has error: %w", p.VATIDNo, err))
 		if resetInvalid {
 			p.VATIDNo.SetNull()
+		}
+	}
+	if p.VATIDNo.ValidAndNotNull() && p.Country.ValidAndNotNull() {
+		vatCountry := p.VATIDNo.Get().CountryCode()
+		if vatCountry != vat.MOSSSchemaVATCountryCode && vatCountry != p.Country.Get() {
+			errs = append(errs, fmt.Errorf("Country '%s' is different from VATIDNo '%s' country code", p.Country, p.VATIDNo))
+			if resetInvalid {
+				p.Country.SetNull() // Setting the country to null loses less data than losing the VAT ID
+			}
+		}
+	}
+	p.Email, err = p.Email.Normalized()
+	if err != nil {
+		errs = append(errs, fmt.Errorf("Email '%s' has error: %w", p.Email, err))
+		if resetInvalid {
+			p.Email.SetNull()
 		}
 	}
 	if err = p.VendorAccountNumber.Validate(); err != nil {
