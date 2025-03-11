@@ -189,6 +189,19 @@ func (p *Partner) EqualAlternativeNames(names []string) bool {
 	return true
 }
 
+func (p *Partner) HasLocation() bool {
+	return p.Street.IsNotNull() ||
+		p.City.IsNotNull() ||
+		p.ZIP.IsNotNull() ||
+		p.Country.IsNotNull() ||
+		p.Phone.IsNotNull() ||
+		p.Email.IsNotNull() ||
+		p.Website.IsNotNull() ||
+		p.CompRegNo.IsNotNull() ||
+		p.TaxIDNo.IsNotNull() ||
+		p.VATIDNo.IsNotNull()
+}
+
 func (p *Partner) VendorAccountNumberUint() uint64 {
 	u, _ := strconv.ParseUint(p.VendorAccountNumber.String(), 10, 64)
 	return u
