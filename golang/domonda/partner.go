@@ -161,6 +161,15 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 			}
 		}
 	}
+	if p.IBAN.IsNotNull() {
+		// Use IBAN/BIC as first bank account
+		p.BankAccounts = append(
+			[]bank.Account{{IBAN: p.IBAN.Get(), BIC: p.BIC}},
+			p.BankAccounts...,
+		)
+		p.IBAN.SetNull()
+		p.BIC.SetNull()
+	}
 	return errs
 }
 
