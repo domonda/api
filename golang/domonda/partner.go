@@ -110,15 +110,21 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 			p.VATIDNo.SetNull()
 		}
 	}
-	if p.VATIDNo.ValidAndNotNull() && p.Country.ValidAndNotNull() {
-		vatCountry := p.VATIDNo.Get().CountryCode()
-		if vatCountry != vat.MOSSSchemaVATCountryCode && vatCountry != p.Country.Get() {
-			errs = append(errs, fmt.Errorf("Country '%s' is different from VATIDNo '%s' country code", p.Country, p.VATIDNo))
-			if resetInvalid {
-				p.Country.SetNull() // Setting the country to null loses less data than losing the VAT ID
-			}
-		}
-	}
+	// if p.VATIDNo.ValidAndNotNull() && p.Country.ValidAndNotNull() {
+	// 	vatCountry := p.VATIDNo.Get().CountryCode()
+	// 	if vatCountry != vat.MOSSSchemaVATCountryCode && vatCountry != p.Country.Get() {
+	// 		errs = append(errs, fmt.Errorf("Country '%s' is different from VATIDNo '%s' country code", p.Country, p.VATIDNo))
+	// 		if resetInvalid {
+	// 			if p.Street.IsNotNull() && p.ZIP.IsNotNull() && p.City.IsNotNull() {
+	// 				// If there is a complete address, don't set the country to null
+	// 				p.VATIDNo.SetNull()
+	// 			} else {
+	// 				// If there is no address, keep the VAT ID
+	// 				p.Country.SetNull()
+	// 			}
+	// 		}
+	// 	}
+	// }
 	p.Email, err = p.Email.Normalized()
 	if err != nil {
 		errs = append(errs, fmt.Errorf("Email '%s' has error: %w", p.Email, err))
