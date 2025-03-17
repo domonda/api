@@ -182,9 +182,17 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 func (p *Partner) String() string {
 	var b strings.Builder
 	b.WriteString(p.Name.String())
+	if p.Country.IsNotNull() {
+		fmt.Fprintf(&b, "|%s", p.Country)
+	}
 	if p.VATIDNo.IsNotNull() {
-		b.WriteString(" ")
-		b.WriteString(string(p.VATIDNo))
+		fmt.Fprintf(&b, "|%s", p.VATIDNo)
+	}
+	if p.VendorAccountNumber.IsNotNull() {
+		fmt.Fprintf(&b, "|Vendor:%s", p.VendorAccountNumber)
+	}
+	if p.ClientAccountNumber.IsNotNull() {
+		fmt.Fprintf(&b, "|Client:%s", p.ClientAccountNumber)
 	}
 	return b.String()
 }
