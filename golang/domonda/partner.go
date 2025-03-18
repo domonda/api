@@ -168,13 +168,27 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 		}
 	}
 	if p.IBAN.IsNotNull() {
-		// Use IBAN/BIC as first bank account
+		// Prepend IBAN/BIC as first bank account
 		p.BankAccounts = append(
 			[]bank.Account{{IBAN: p.IBAN.Get(), BIC: p.BIC}},
 			p.BankAccounts...,
 		)
+		// After prepending, set IBAN and BIC to null
 		p.IBAN.SetNull()
 		p.BIC.SetNull()
+	}
+	// Check for duplicate bank accounts
+	for i := 0; i < len(p.BankAccounts); i++ {
+		seenBefore := slices.ContainsFunc(p.BankAccounts[:i], func(b bank.Account) bool {
+			return b.IBAN == p.BankAccounts[i].IBAN
+		})
+		if seenBefore {
+			errs = append(errs, fmt.Errorf("duplicate bank account: %s", p.BankAccounts[i]))
+			if resetInvalid {
+				p.BankAccounts = slices.Delete(p.BankAccounts, i, i+1)
+				i--
+			}
+		}
 	}
 	return errs
 }
