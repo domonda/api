@@ -921,7 +921,10 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostPartne
 API endpoint: https://domonda.app/api/public/masterdata/partner-companies
 
 Optional URL query parameters:
-* `source`: string describing the source of the data; use your company or service name
+  - `failOnInvalid`: If true, the function will fail if any partner data is invalid.
+  - `useCleanedInvalid`: If true, the function will clean invalid partner data and use what's left. If false, invalid partner will be skipped.
+  - `allOrNone`: If true, the function will import either all partners or none in case of any error.
+  - `source`: The source of the partner data; use your company or service name.
 
 The request body is JSON array with objects matching the struct:
 
@@ -955,6 +958,24 @@ type Partner struct {
 	BankAccounts []bank.Account
 }
 ```
+
+The response is a JSON array with one object per request partner JSON object
+with the following object members.
+
+How the input from the request was normalized and used:
+  - `NormalizedInput` (how the request input was normalized and used)
+  - `InputWarnings` (warnings from validation and normalization)
+
+Created or updated partner data:
+  - `PartnerCompany`
+  - `PartnerLocations`
+  - `VendorAccount`
+  - `ClientAccount`
+  - `PaymentPresets`
+
+Result on partner level:
+  - `State` (one of `"UNCHANGED"`, `"UPDATED"`, `"CREATED"`, `"ERROR"`)
+  - `Error` (error message in case of `"State": "ERROR"` )
 
 #### POST Bank Accounts
 
