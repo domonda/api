@@ -966,7 +966,7 @@ How the input from the request was normalized and used:
   - `NormalizedInput` (how the request input was normalized and used)
   - `InputWarnings` (warnings from validation and normalization)
 
-Created or updated partner data:
+Created or updated partner data, only present when data exists:
   - `PartnerCompany`
   - `PartnerLocations`
   - `VendorAccount`
@@ -976,6 +976,18 @@ Created or updated partner data:
 Result on partner level:
   - `State` (one of `"UNCHANGED"`, `"UPDATED"`, `"CREATED"`, `"ERROR"`)
   - `Error` (error message in case of `"State": "ERROR"` )
+
+Example:
+
+```sh
+curl -X POST \
+  -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
+  -H "Content-Type: application/json" \
+  --data '[{"Name":"Beispiel GmbH","Street":"Ringstrasse","ZIP":"10115","City":"Berlin","Country":"DE","Email":"contact@example.com","ClientAccountNumber":"K1","VendorAccountNumber":"L1"}]' \
+  -o - \
+  https://domonda.app/api/public/masterdata/partner-companies
+```
+
 
 #### POST Bank Accounts
 
