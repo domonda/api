@@ -1,6 +1,10 @@
 package domonda
 
 import (
+	"errors"
+	"fmt"
+	"slices"
+
 	"github.com/domonda/go-types/account"
 	"github.com/domonda/go-types/bank"
 	"github.com/domonda/go-types/country"
@@ -8,6 +12,7 @@ import (
 	"github.com/domonda/go-types/money"
 	"github.com/domonda/go-types/notnull"
 	"github.com/domonda/go-types/nullable"
+	"github.com/domonda/go-types/strutil"
 	"github.com/domonda/go-types/uu"
 	"github.com/domonda/go-types/vat"
 )
@@ -104,4 +109,117 @@ type AccountingItem struct {
 
 	ValueAddedTaxID               uu.NullableID `json:"valueAddedTax,omitempty"`
 	ValueAddedTaxPercentageAmount *money.Amount `json:"valueAddedTaxPercentageAmount,omitempty"`
+}
+
+func (inv *Invoice) Validate() error {
+	if inv == nil {
+		return errors.New("<nil> Invoice")
+	}
+	if err := inv.PartnerVatID.Validate(); err != nil {
+		return fmt.Errorf("invalid partner VAT-ID: %w", err)
+	}
+	// if err := inv.PartnerCompanyID.Validate(); err != nil {
+	// 	return fmt.Errorf("invalid partner company ID: %w", err)
+	// }
+	// if err := inv.PartnerCompanyLocationID.Validate(); err != nil {
+	// 	return fmt.Errorf("invalid partner company location ID: %w", err)
+	// }
+	if err := inv.InvoiceDate.Validate(); err != nil {
+		return fmt.Errorf("invalid invoice date: %w", err)
+	}
+	if err := inv.DueDate.Validate(); err != nil {
+		return fmt.Errorf("invalid due date: %w", err)
+	}
+	if err := inv.OrderDate.Validate(); err != nil {
+		return fmt.Errorf("invalid order date: %w", err)
+	}
+	if inv.Net != nil && *inv.Net < 0 {
+		return errors.New("net amount must not be negative")
+	}
+	if inv.Total != nil && *inv.Total < 0 {
+		return errors.New("total amount must not be negative")
+	}
+	if inv.Net != nil && inv.Total != nil && *inv.Total < *inv.Net {
+		return fmt.Errorf("total amount %f must not be smaller than net %f", *inv.Total, *inv.Net)
+	}
+	if inv.VATPercent != nil && (*inv.VATPercent < 0 || *inv.VATPercent > 100) {
+		return fmt.Errorf("vat percent %f not in range of [0..100]", *inv.VATPercent)
+	}
+	for i, percent := range inv.VATPercentages {
+		if percent < 0 || percent > 100 {
+			return fmt.Errorf("vat percentage[%d] %f not in range of [0..100]", i, percent)
+		}
+	}
+	for i, amount := range inv.VATAmounts {
+		if amount < 0 {
+			return fmt.Errorf("vat amount[%d] %f must not be negative", i, amount)
+		}
+	}
+	if inv.DiscountPercent != nil && (*inv.DiscountPercent < 0 || *inv.DiscountPercent > 100) {
+		return fmt.Errorf("discount percent %f not in range of [0..100]", *inv.DiscountPercent)
+	}
+	if err := inv.DiscountUntil.Validate(); err != nil {
+		return fmt.Errorf("invalid discount until date: %w", err)
+	}
+	if !inv.Currency.Valid() {
+		return fmt.Errorf("invalid currency: %s", inv.Currency)
+	}
+	if inv.ConversionRate != nil && *inv.ConversionRate <= 0 {
+		return fmt.Errorf("conversion rate must be greater zero, but is %f", *inv.ConversionRate)
+	}
+	if err := inv.ConversionRateDate.Validate(); err != nil {
+		return fmt.Errorf("invalid conversion rate date: %w", err)
+	}
+	if err := inv.DeliveredFrom.Validate(); err != nil {
+		return fmt.Errorf("invalid deliveredFrom date: %w", err)
+	}
+	if err := inv.DeliveredUntil.Validate(); err != nil {
+		return fmt.Errorf("invalid deliveredUntil date: %w", err)
+	}
+	if inv.DeliveredFrom.IsNotNull() && inv.DeliveredUntil.IsNull() {
+		return errors.New("deliveredFrom date needs deliveredUntil date to be provided too")
+	}
+	if inv.DeliveredFrom.IsNotNull() && inv.DeliveredUntil.IsNotNull() && inv.DeliveredFrom.After(inv.DeliveredUntil) {
+		return fmt.Errorf("deliveredFrom date %s must not be after deliveredUntil date %s", inv.DeliveredFrom, inv.DeliveredUntil)
+	}
+	for i := range inv.DeliveryNoteNumbers {
+		trimmed := strutil.TrimSpace(inv.DeliveryNoteNumbers[i])
+		if trimmed == "" {
+			inv.DeliveryNoteNumbers = slices.Delete(inv.DeliveryNoteNumbers, i, i+1)
+			i--
+		} else {
+			inv.DeliveryNoteNumbers[i] = trimmed
+		}
+	}
+	if err := inv.IBAN.Validate(); err != nil {
+		return fmt.Errorf("invalid invoice IBAN: %w", err)
+	}
+	if err := inv.BIC.Validate(); err != nil {
+		return fmt.Errorf("invalid invoice BIC: %w", err)
+	}
+	if len(inv.CostCenters) > 0 {
+		var costCentersSum money.Amount
+		for number, amount := range inv.CostCenters {
+			if number == "" {
+				return errors.New("empty costCenter string")
+			}
+			if amount == 0 {
+				return fmt.Errorf("cost center '%s' amount must not be zero", number)
+			}
+			if amount < 0 {
+				return fmt.Errorf("cost center '%s' amount (%f) must not be negative", number, amount)
+			}
+			costCentersSum += amount
+		}
+		if inv.Net != nil {
+			net := *inv.Net
+			if inv.ConversionRate != nil {
+				net = net.MultipliedByRate(*inv.ConversionRate)
+			}
+			if costCentersSum > net {
+				return fmt.Errorf("sum of cost center amounts %f greater than invoice net sum %f", costCentersSum, net)
+			}
+		}
+	}
+	return nil
 }
