@@ -579,8 +579,12 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocu
 
 ### Upload structured invoice data as JSON
 
-The optional form field `invoice` contains a [JSON file](example/invoice.jsonc) with the following fields
-(the JSONC format variant with comments is supported):
+The optional form field `invoice` contains a [JSON file](example/invoice.jsonc)
+with the schema [invoice.schema.json](invoice.schema.json) (see https://json-schema.org/).
+
+The JSONC format variant with comments is supported.
+
+Example:
 
 ```jsonc
 {
