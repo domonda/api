@@ -28,7 +28,7 @@ type Invoice struct {
 	PartnerVatID vat.NullableID `json:"partnerVatId,omitempty"`
 	// Company registration number of the partner company
 	PartnerCompRegNo nullable.TrimmedString `json:"partnerCompRegNo,omitempty"`
-	// Country of the partner company
+	// ISO 3166-1 alpha 2 country code of the partner company
 	PartnerCountry country.NullableCode `json:"partnerCountry,omitempty"`
 	// Number that identifies the partner company like a vendor or client number
 	PartnerNumber nullable.TrimmedString `json:"partnerNumber,omitempty"`
