@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
-	"reflect"
 
 	"github.com/domonda/api/golang/domonda"
 	"github.com/invopop/jsonschema"
@@ -23,9 +21,7 @@ func main() {
 		log.Fatalf("Failed to change directory to golang/domonda: %v", err)
 	}
 	reflector := &jsonschema.Reflector{
-		Namer: func(t reflect.Type) string {
-			return path.Base(t.PkgPath()) + "." + t.Name()
-		},
+		Anonymous:      true,
 		ExpandedStruct: true,
 		DoNotReference: true,
 	}

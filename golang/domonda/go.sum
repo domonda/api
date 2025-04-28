@@ -10,8 +10,8 @@ github.com/domonda/go-errs v0.0.0-20240702051036-0e696c849b5f h1:9CZgqCVP/7eixUj
 github.com/domonda/go-errs v0.0.0-20240702051036-0e696c849b5f/go.mod h1:qLWt1z3aIg12+Dbxu9bMydFOHEi92vWE7vAHcHLd8n8=
 github.com/domonda/go-pretty v0.0.0-20240110134850-17385799142f h1:5eA74m451PqlqCXyJzWXp95Quj4PZ6Lm/ndKBuiNhe4=
 github.com/domonda/go-pretty v0.0.0-20240110134850-17385799142f/go.mod h1:3QkM8UJdyJMeKZiIo7hYzSkQBpRS3k0gOHw4ysyEIB4=
-github.com/domonda/go-types v0.0.0-20250425101633-45f6e09e0587 h1:O4IFCtNrggN4nvb2rFTkfsNDntqnGwTUd3cVofMif5Y=
-github.com/domonda/go-types v0.0.0-20250425101633-45f6e09e0587/go.mod h1:mCUY2FgDIEe9gc8t74lV4xlzzZcEyS7K/4EsWpsdQ6o=
+github.com/domonda/go-types v0.0.0-20250428113337-e5189c985dc2 h1:uwYdG+lnMQfKzGcdJLIooT1ZKOvm4wqsXDe94PxJ+5c=
+github.com/domonda/go-types v0.0.0-20250428113337-e5189c985dc2/go.mod h1:mCUY2FgDIEe9gc8t74lV4xlzzZcEyS7K/4EsWpsdQ6o=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=
 github.com/fsnotify/fsnotify v1.9.0/go.mod h1:8jBTzvmWwFyi3Pb8djgCCO5IBqzKJ/Jwo8TRcHyHii0=
 github.com/go-test/deep v1.1.0 h1:WOcxcdHcvdgThNXjw0t76K42FXTU7HpNQWHpA2HHNlg=

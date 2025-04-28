@@ -3,7 +3,7 @@ module github.com/domonda/api/golang/domonda
 go 1.24
 
 require (
-	github.com/domonda/go-types v0.0.0-20250425101633-45f6e09e0587
+	github.com/domonda/go-types v0.0.0-20250428113337-e5189c985dc2
 	github.com/ungerik/go-fs v0.0.0-20250410112719-c5187364824d
 )
 
