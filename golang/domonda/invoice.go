@@ -30,6 +30,8 @@ type Invoice struct {
 	PartnerCompRegNo nullable.TrimmedString `json:"partnerCompRegNo,omitempty"`
 	// Country of the partner company
 	PartnerCountry country.NullableCode `json:"partnerCountry,omitempty"`
+	// Number that identifies the partner company like a vendor or client number
+	PartnerNumber nullable.TrimmedString `json:"partnerNumber,omitempty"`
 
 	// Number of the invoice
 	InvoiceNumber nullable.TrimmedString `json:"invoiceNumber,omitempty"`

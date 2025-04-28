@@ -71,6 +71,19 @@
       "description": "Country of the partner company",
       "default": null
     },
+    "partnerNumber": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Nullable Trimmed String",
+      "description": "Number that identifies the partner company like a vendor or client number",
+      "default": null
+    },
     "invoiceNumber": {
       "anyOf": [
         {

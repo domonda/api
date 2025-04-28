@@ -85,6 +85,13 @@ Query own company data:
       brandName
       alternativeNames
     }
+    mainLocation {
+      street
+      city
+      zip
+      country
+      vatNo
+    }
   }
 }
 ```
