@@ -31,9 +31,13 @@ const (
 )
 
 type ImportPartnerResult struct {
+	// Shows how the input was normalized
 	NormalizedInput *Partner
-	InputWarnings   []string
 
+	// Warnings from normalizing and validating the input
+	InputWarnings []string
+
+	// Data of the partner after import
 	// TODO replace json.RawMessage with struct types
 	PartnerCompany   json.RawMessage `json:",omitempty"`
 	PartnerLocations json.RawMessage `json:",omitempty"` // Main location first
@@ -41,7 +45,10 @@ type ImportPartnerResult struct {
 	ClientAccount    json.RawMessage `json:",omitempty"`
 	PaymentPresets   json.RawMessage `json:",omitempty"`
 
+	// State of the partner after import
 	State ImportPartnerState
+
+	// Error message from the import in case of State "ERROR"
 	Error string `json:",omitempty"`
 }
 
