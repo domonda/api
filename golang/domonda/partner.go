@@ -34,12 +34,12 @@ type ImportPartnerResult struct {
 	NormalizedInput *Partner
 	InputWarnings   []string
 
-	// TODO replace any with struct types
-	PartnerCompany   any `json:",omitempty"`
-	PartnerLocations any `json:",omitempty"` // Main location first
-	VendorAccount    any `json:",omitempty"`
-	ClientAccount    any `json:",omitempty"`
-	PaymentPresets   any `json:",omitempty"`
+	// TODO replace json.RawMessage with struct types
+	PartnerCompany   json.RawMessage `json:",omitempty"`
+	PartnerLocations json.RawMessage `json:",omitempty"` // Main location first
+	VendorAccount    json.RawMessage `json:",omitempty"`
+	ClientAccount    json.RawMessage `json:",omitempty"`
+	PaymentPresets   json.RawMessage `json:",omitempty"`
 
 	State ImportPartnerState
 	Error string `json:",omitempty"`
