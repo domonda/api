@@ -2,8 +2,10 @@ package domonda
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/url"
 	"slices"
 	"strconv"
@@ -18,6 +20,30 @@ import (
 	"github.com/domonda/go-types/strutil"
 	"github.com/domonda/go-types/vat"
 )
+
+type ImportPartnerState string
+
+const (
+	ImportPartnerStateUnchanged ImportPartnerState = "UNCHANGED"
+	ImportPartnerStateUpdated   ImportPartnerState = "UPDATED"
+	ImportPartnerStateCreated   ImportPartnerState = "CREATED"
+	ImportPartnerStateError     ImportPartnerState = "ERROR"
+)
+
+type ImportPartnerResult struct {
+	NormalizedInput *Partner
+	InputWarnings   []string
+
+	// TODO replace any with struct types
+	PartnerCompany   any `json:",omitempty"`
+	PartnerLocations any `json:",omitempty"` // Main location first
+	VendorAccount    any `json:",omitempty"`
+	ClientAccount    any `json:",omitempty"`
+	PaymentPresets   any `json:",omitempty"`
+
+	State ImportPartnerState
+	Error string `json:",omitempty"`
+}
 
 type Partner struct {
 	Name             notnull.TrimmedString
@@ -251,27 +277,25 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 
 // PostPartners upserts partner companies.
 // Endpoint: https://domonda.app/api/public/masterdata/partner-companies
-func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) error {
-	var err error
-	for i, partner := range partners {
-		if e := partner.Validate(); e != nil {
-			err = errors.Join(err, fmt.Errorf("Partner at index %d has error: %w", i, e))
-		}
-	}
-	if err != nil {
-		return err
-	}
-
+func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) (results []ImportPartnerResult, err error) {
 	vals := make(url.Values)
 	if source != "" {
 		vals.Set("source", source)
 	}
 	response, err := postJSON(ctx, apiKey, "/masterdata/partner-companies", vals, partners)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	defer response.Body.Close()
 	if response.StatusCode != 200 {
-		return fmt.Errorf("unexpected status code: %d", response.StatusCode)
+		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
 	}
-	return nil
+	data, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %w", err)
+	}
+	if err := json.Unmarshal(data, &results); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
+	}
+	return results, nil
 }
