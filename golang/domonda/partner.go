@@ -284,8 +284,17 @@ func (p *Partner) ClientAccountNumberUint() uint64 {
 
 // PostPartners upserts partner companies.
 // Endpoint: https://domonda.app/api/public/masterdata/partner-companies
-func PostPartners(ctx context.Context, apiKey string, partners []*Partner, source string) (results []ImportPartnerResult, err error) {
+func PostPartners(ctx context.Context, apiKey string, partners []*Partner, failOnInvalid, useCleanedInvalid, allOrNone bool, source string) (results []ImportPartnerResult, err error) {
 	vals := make(url.Values)
+	if failOnInvalid {
+		vals.Set("failOnInvalid", "true")
+	}
+	if useCleanedInvalid {
+		vals.Set("useCleanedInvalid", "true")
+	}
+	if allOrNone {
+		vals.Set("allOrNone", "true")
+	}
 	if source != "" {
 		vals.Set("source", source)
 	}
