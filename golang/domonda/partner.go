@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/url"
 	"slices"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -115,19 +116,28 @@ func (p *Partner) Validate() error {
 	return err
 }
 
+// NormalizedAlternativeNames returns the alternative names
+// with all whitespace trimmed and empty strings removed.
+// The names are sorted alphabetically.
+func (p *Partner) NormalizedAlternativeNames() []string {
+	names := make([]string, 0, len(p.AlternativeNames))
+	for _, name := range p.AlternativeNames {
+		if n := strutil.TrimSpace(name); n != "" {
+			names = append(names, n)
+		}
+	}
+	sort.Strings(names)
+	return names
+}
+
 func (p *Partner) Normalize(resetInvalid bool) []error {
 	var errs []error
 	if p.Name.IsEmpty() {
 		errs = append(errs, errors.New("Name is empty"))
 	}
-	// Trim whitespace and remove empty alternative names
-	for i := 0; i < len(p.AlternativeNames); i++ {
-		p.AlternativeNames[i] = strutil.TrimSpace(p.AlternativeNames[i])
-		if p.AlternativeNames[i] == "" {
-			p.AlternativeNames = slices.Delete(p.AlternativeNames, i, i+1)
-			i--
-		}
-	}
+
+	p.AlternativeNames = p.NormalizedAlternativeNames()
+
 	var err error
 	p.Country, err = p.Country.Normalized()
 	if err != nil {
@@ -252,7 +262,10 @@ func (p *Partner) EqualAlternativeNames(names []string) bool {
 		return false
 	}
 	for _, name := range names {
-		if !p.AlternativeNames.Contains(name) {
+		name = strings.TrimSpace(name)
+		if !slices.ContainsFunc(p.AlternativeNames, func(altName string) bool {
+			return name == strings.TrimSpace(altName)
+		}) {
 			return false
 		}
 	}
