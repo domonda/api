@@ -7,13 +7,15 @@ require (
 	github.com/ungerik/go-fs v0.0.0-20250527162931-1691110c1708
 )
 
+// Don't upgrade this to 1.x, it breaks the build!
+require github.com/olekukonko/tablewriter v0.0.5 // indirect
+
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cention-sany/utf7 v0.0.0-20170124080048-26cad61bd60a // indirect
 	github.com/domonda/go-errs v0.0.0-20250527162518-c9fdfcc032a1 // indirect
 	github.com/domonda/go-pretty v0.0.0-20240110134850-17385799142f // indirect
-	github.com/fatih/color v1.18.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gogs/chardet v0.0.0-20211120154057-b7413eaefb8f // indirect
 	github.com/invopop/jsonschema v0.13.0 // indirect
@@ -21,12 +23,7 @@ require (
 	github.com/jhillyerd/enmime v1.3.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
-	github.com/mattn/go-colorable v0.1.14 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
-	github.com/olekukonko/errors v1.1.0 // indirect
-	github.com/olekukonko/ll v0.0.8 // indirect
-	github.com/olekukonko/tablewriter v1.0.7 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
