@@ -22,15 +22,6 @@ import (
 	"github.com/domonda/go-types/vat"
 )
 
-type ImportPartnerState string
-
-const (
-	ImportPartnerStateUnchanged ImportPartnerState = "UNCHANGED"
-	ImportPartnerStateUpdated   ImportPartnerState = "UPDATED"
-	ImportPartnerStateCreated   ImportPartnerState = "CREATED"
-	ImportPartnerStateError     ImportPartnerState = "ERROR"
-)
-
 type ImportPartnerResult struct {
 	// Shows how the input was normalized
 	NormalizedInput *Partner
@@ -47,7 +38,7 @@ type ImportPartnerResult struct {
 	PaymentPresets   json.RawMessage `json:",omitempty"`
 
 	// State of the partner after import
-	State ImportPartnerState
+	State ImportState
 
 	// Error message from the import in case of State "ERROR"
 	Error string `json:",omitempty"`
