@@ -10,6 +10,7 @@ import (
 
 	"github.com/domonda/go-types/account"
 	"github.com/domonda/go-types/nullable"
+	"github.com/domonda/go-types/uu"
 )
 
 // GLAccount represents a general ledger account
@@ -34,6 +35,12 @@ func (a *GLAccount) Validate() error {
 type ImportGLAccountResult struct {
 	// General ledger account number
 	Number account.Number
+
+	// ID of the general ledger account that was created or updated
+	GeneralLedgerAccountID uu.NullableID `json:",omitzero"`
+
+	// ID of the real estate object connected to the general ledger account
+	RealEstateObjectID uu.NullableID `json:",omitzero"`
 
 	// State of the partner after import
 	State ImportState
