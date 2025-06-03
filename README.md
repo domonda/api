@@ -13,7 +13,7 @@ but also importing bulk master data for client companies.
 [**Authentication**](#authentication) of requests is identical for GraphQL and REST
 and is based on API keys that give access to the data of a client company.
 
-## Table of Content
+## Table of Contents
 
 1. [**Authentication**](#authentication)
 2. [**GraphQL API**](#graphql-api)
@@ -71,9 +71,9 @@ https://www.youtube.com/watch?v=L5bzHzqUn9M
 You can find all GraphQL query types in the generated documentation:
 <https://domonda.github.io/api/doc/schema/query.doc.html>
 
-Referenced fields always have an extra field for querying the actual data behind it.
+Referenced fields always have an extra field for querying the actual data behind them.
 
-Query own company data:
+Query the data of a client-company identified by the API key:
 
 ```gql
 {
@@ -96,7 +96,9 @@ Query own company data:
 }
 ```
 
-If you want to query all documents with the additional information of the import user, you can achieve this by using the
+`currentClientCompany -> companyRowId` is the ID of the client-company identified by the API key.
+
+If you want to query all documents with the additional information of the importing user, you can achieve this by using the
 field `userByImportedBy`, which gets you the associated user.
 
 ```gql
