@@ -1,6 +1,6 @@
 package domonda
 
-//go:generate go-enum $GOFILE
+//go:generate go tool go-enum $GOFILE
 
 import (
 	"context"

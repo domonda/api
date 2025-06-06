@@ -2,7 +2,7 @@ package domonda
 
 import "fmt"
 
-//go:generate go-enum $GOFILE
+//go:generate go tool go-enum $GOFILE
 
 type ImportState string //#enum
 
