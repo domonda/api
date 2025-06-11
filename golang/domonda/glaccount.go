@@ -18,7 +18,7 @@ type GLAccount struct {
 	Number   account.Number         // Alphanumeric account number
 	Name     nullable.TrimmedString // Name of the account
 	Category nullable.TrimmedString // Higher level description of the account
-	ObjectNo account.NullableNumber // Real estate object number
+	ObjectNo account.NullableNumber // Optional real estate object number connected to the account
 }
 
 func (a *GLAccount) Validate() error {
