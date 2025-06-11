@@ -33,11 +33,12 @@ func (a *GLAccount) Validate() error {
 }
 
 type ImportGLAccountResult struct {
-	// General ledger account number
-	Number account.Number
+	// General ledger account number after normalization
+	// (e.g. with object number appended if configured)
+	NormalizedNumber account.Number
 
 	// ID of the general ledger account that was created or updated
-	GeneralLedgerAccountID uu.NullableID `json:",omitzero"`
+	ID uu.NullableID `json:",omitzero"`
 
 	// ID of the real estate object connected to the general ledger account
 	RealEstateObjectID uu.NullableID `json:",omitzero"`
@@ -52,8 +53,13 @@ type ImportGLAccountResult struct {
 // PostGLAccounts upserts general ledger accounts
 // using the API endpoint https://domonda.app/api/public/masterdata/gl-accounts.
 //
-// nil for objectSpecificAccountNos means we do not care about this
-func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos *bool, source string) (results []*ImportGLAccountResult, err error) {
+// Arguments:
+//   - accounts: General ledger accounts to upsert
+//   - objectSpecificAccountNos: If true, object numbers will be appended to the account numbers
+//   - failOnInvalid: If true, the function will return an error if any of the accounts are invalid
+//   - allOrNone: If true, the function will return an error if any of the accounts are invalid
+//   - source: Source of the import
+func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos, failOnInvalid, allOrNone bool, source string) (results []*ImportGLAccountResult, err error) {
 	for i, acc := range accounts {
 		if e := acc.Validate(); e != nil {
 			err = errors.Join(err, fmt.Errorf("GLAccount at index %d has error: %w", i, e))
@@ -64,8 +70,14 @@ func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, o
 	}
 
 	vals := make(url.Values)
-	if objectSpecificAccountNos != nil {
-		vals.Set("objectSpecificAccountNos", fmt.Sprint(*objectSpecificAccountNos))
+	if objectSpecificAccountNos {
+		vals.Set("objectSpecificAccountNos", "true")
+	}
+	if failOnInvalid {
+		vals.Set("failOnInvalid", "true")
+	}
+	if allOrNone {
+		vals.Set("allOrNone", "true")
 	}
 	if source != "" {
 		vals.Set("source", source)
