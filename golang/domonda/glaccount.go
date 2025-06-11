@@ -55,10 +55,10 @@ type ImportGLAccountResult struct {
 //
 // Arguments:
 //   - accounts: General ledger accounts to upsert
-//   - objectSpecificAccountNos: If true, object numbers will be appended to the account numbers
-//   - failOnInvalid: If true, the function will return an error if any of the accounts are invalid
-//   - allOrNone: If true, the function will return an error if any of the accounts are invalid
-//   - source: Source of the import
+//   - objectSpecificAccountNos: Append the object numbers to the account numbers to make them unique
+//   - failOnInvalid:   If true, the function will fail if any account data is invalid
+//   - allOrNone:       If true, the function will import either all accounts or none in case of any error
+//   - source:          Optional name or ID of who did the import
 func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos, failOnInvalid, allOrNone bool, source string) (results []*ImportGLAccountResult, err error) {
 	for i, acc := range accounts {
 		if e := acc.Validate(); e != nil {
