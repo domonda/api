@@ -54,12 +54,13 @@ type ImportGLAccountResult struct {
 // using the API endpoint https://domonda.app/api/public/masterdata/gl-accounts.
 //
 // Arguments:
-//   - accounts: General ledger accounts to upsert
+//   - accounts:        General ledger accounts to insert or update
+//   - findByName:      Find existing GL accounts by name if not found by number
 //   - objectSpecificAccountNos: Append the object numbers to the account numbers to make them unique
-//   - failOnInvalid:   If true, the function will fail if any account data is invalid
-//   - allOrNone:       If true, the function will import either all accounts or none in case of any error
+//   - failOnInvalid:   Fail if any account data is invalid
+//   - allOrNone:       Import either all accounts or none in case of any error
 //   - source:          Optional name or ID of who did the import
-func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, objectSpecificAccountNos, failOnInvalid, allOrNone bool, source string) (results []*ImportGLAccountResult, err error) {
+func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, findByName, objectSpecificAccountNos, failOnInvalid, allOrNone bool, source string) (results []*ImportGLAccountResult, err error) {
 	for i, acc := range accounts {
 		if e := acc.Validate(); e != nil {
 			err = errors.Join(err, fmt.Errorf("GLAccount at index %d has error: %w", i, e))
@@ -70,6 +71,9 @@ func PostGLAccounts(ctx context.Context, apiKey string, accounts []*GLAccount, o
 	}
 
 	vals := make(url.Values)
+	if findByName {
+		vals.Set("findByName", "true")
+	}
 	if objectSpecificAccountNos {
 		vals.Set("objectSpecificAccountNos", "true")
 	}
