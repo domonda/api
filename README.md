@@ -892,8 +892,12 @@ API endpoint: https://domonda.app/api/public/masterdata/gl-accounts
 Optional URL query parameters:
 * `source`: string describing the source of the data; use your company or service name
 * `objectSpecificAccountNos`: pass `true` if the account numbers are specific for objects, meaning that an account number can mean something different per object
+* `findByName`: pass `true` to enable case-insensitive name search if GL account is not found by number
+* `failOnInvalid`: pass `true` to fail if any account data is invalid (interacts with `useCleanedInvalid`)
+* `allOrNone`: pass `true` to run the import in a Postgres transaction where any error will undo all other actions. If `false`, all GL accounts up to the one with the error will be imported
+* `useCleanedInvalid`: pass `true` to clean invalid data and import the rest (only effective when `failOnInvalid` is `false`)
 
-Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true`
+Example: `https://domonda.app/api/public/masterdata/gl-accounts?source=MyCompany&objectSpecificAccountNos=true&findByName=true&failOnInvalid=false&allOrNone=true&useCleanedInvalid=true`
 
 The request body is JSON array with objects matching the struct:
 
@@ -934,9 +938,9 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostPartne
 API endpoint: https://domonda.app/api/public/masterdata/partner-companies
 
 Optional URL query parameters:
-  - `failOnInvalid`: If true, the function will fail if any partner data is invalid.
+  - `failOnInvalid`: If true, the function will fail if any partner data is invalid (interacts with `useCleanedInvalid`).
   - `useCleanedInvalid`: If true, the function will clean invalid partner data and use what's left. If false, invalid partner will be skipped.
-  - `allOrNone`: If true, the function will import either all partners or none in case of any error.
+  - `allOrNone`: If true, the function will import either all partners or none in case of any error using a Postgres transaction.
   - `source`: The source of the partner data; use your company or service name.
 
 The request body is JSON array with objects matching the struct:
