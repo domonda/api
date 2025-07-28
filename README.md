@@ -1070,11 +1070,12 @@ type RealEstateObject struct {
 type RealEstateObjectType string //#enum
 
 const (
+	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG" // Wohnungseigentümergemeinschaft
 	RealEstateObjectTypeHI      RealEstateObjectType = "HI"
-	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG"
 	RealEstateObjectTypeSUB     RealEstateObjectType = "SUB"
 	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
+	RealEstateObjectTypeMRG     RealEstateObjectType = "MRG" // Objekt unterliegt dem Mietrechtsgesetz (MRG)
 )
 ```
 

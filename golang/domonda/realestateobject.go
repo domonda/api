@@ -61,22 +61,24 @@ func (o *RealEstateObject) Validate() error {
 type RealEstateObjectType string //#enum
 
 const (
+	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG" // Wohnungseigentümergemeinschaft
 	RealEstateObjectTypeHI      RealEstateObjectType = "HI"
-	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG"
 	RealEstateObjectTypeSUB     RealEstateObjectType = "SUB"
 	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
+	RealEstateObjectTypeMRG     RealEstateObjectType = "MRG" // Objekt unterliegt dem Mietrechtsgesetz (MRG)
 )
 
 // Valid indicates if r is any of the valid values for RealEstateObjectType
 func (r RealEstateObjectType) Valid() bool {
 	switch r {
 	case
-		RealEstateObjectTypeHI,
 		RealEstateObjectTypeWEG,
+		RealEstateObjectTypeHI,
 		RealEstateObjectTypeSUB,
 		RealEstateObjectTypeKREIS,
-		RealEstateObjectTypeMANDANT:
+		RealEstateObjectTypeMANDANT,
+		RealEstateObjectTypeMRG:
 		return true
 	}
 	return false
@@ -85,14 +87,42 @@ func (r RealEstateObjectType) Valid() bool {
 // Validate returns an error if r is none of the valid values for RealEstateObjectType
 func (r RealEstateObjectType) Validate() error {
 	if !r.Valid() {
-		return fmt.Errorf("invalid value %#v for type domonda.RealEstateObjectType", r)
+		return fmt.Errorf("invalid value %#v for type idwell.RealEstateObjectType", r)
 	}
 	return nil
+}
+
+// Enums returns all valid values for RealEstateObjectType
+func (RealEstateObjectType) Enums() []RealEstateObjectType {
+	return []RealEstateObjectType{
+		RealEstateObjectTypeWEG,
+		RealEstateObjectTypeHI,
+		RealEstateObjectTypeSUB,
+		RealEstateObjectTypeKREIS,
+		RealEstateObjectTypeMANDANT,
+		RealEstateObjectTypeMRG,
+	}
+}
+
+// EnumStrings returns all valid values for RealEstateObjectType as strings
+func (RealEstateObjectType) EnumStrings() []string {
+	return []string{
+		"WEG",
+		"HI",
+		"SUB",
+		"KREIS",
+		"MANDANT",
+		"MRG",
+	}
 }
 
 // String implements the fmt.Stringer interface for RealEstateObjectType
 func (r RealEstateObjectType) String() string {
 	return string(r)
+}
+
+func (r RealEstateObjectType) IsVirtual() bool {
+	return r == RealEstateObjectTypeKREIS || r == RealEstateObjectTypeMANDANT
 }
 
 func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject, source string) error {
