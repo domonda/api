@@ -54,6 +54,7 @@ type ImportGLAccountResult struct {
 // using the API endpoint https://domonda.app/api/public/masterdata/gl-accounts.
 //
 // Arguments:
+//   - apiKey:          API key (bearer token) for the domonda API
 //   - accounts:        General ledger accounts to insert or update
 //   - findByName:      Find existing GL accounts by name if not found by number
 //   - objectSpecificAccountNos: Append the object numbers to the account numbers to make them unique
