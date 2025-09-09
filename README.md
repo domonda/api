@@ -24,6 +24,7 @@ and is based on API keys that give access to the data of a client company.
    * [File uploads](#file-uploads)
    * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
    * [Upload company master data as JSON](#upload-company-master-data-as-json)
+   * [Get document's custom fields](#get-documents-custom-fields)
 
 ## Authentication
 
@@ -1112,4 +1113,31 @@ The properties of a class can be queried with the GraphQL API using the followin
     }
   }
 }
+```
+
+### GET document's custom fields
+
+Returns custom document fields parsed from the document's fulltext.
+
+
+### Example
+Request:
+```bash
+#!/bin/bash
+
+TOKEN="your API key"
+doc_id="document ID"
+
+curl https://domonda.app/api/public/document/${doc_id}/custom-fields/ \
+    -H "Authorization: Bearer ${TOKEN}"
+```
+
+Response:
+```json
+[
+  {
+    "name":"field1",
+    "value":"KundenNr. 14392"
+  }
+]
 ```
