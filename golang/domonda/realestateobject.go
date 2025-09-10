@@ -67,6 +67,8 @@ const (
 	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
 	RealEstateObjectTypeMRG     RealEstateObjectType = "MRG" // Objekt unterliegt dem Mietrechtsgesetz (MRG)
+	RealEstateObjectTypeMHV     RealEstateObjectType = "MHV" // Miethausverwaltung
+	RealEstateObjectTypeSEV     RealEstateObjectType = "SEV" // Sondereigentumsverwaltung
 )
 
 // Valid indicates if r is any of the valid values for RealEstateObjectType
@@ -78,7 +80,9 @@ func (r RealEstateObjectType) Valid() bool {
 		RealEstateObjectTypeSUB,
 		RealEstateObjectTypeKREIS,
 		RealEstateObjectTypeMANDANT,
-		RealEstateObjectTypeMRG:
+		RealEstateObjectTypeMRG,
+		RealEstateObjectTypeMHV,
+		RealEstateObjectTypeSEV:
 		return true
 	}
 	return false
@@ -87,7 +91,7 @@ func (r RealEstateObjectType) Valid() bool {
 // Validate returns an error if r is none of the valid values for RealEstateObjectType
 func (r RealEstateObjectType) Validate() error {
 	if !r.Valid() {
-		return fmt.Errorf("invalid value %#v for type idwell.RealEstateObjectType", r)
+		return fmt.Errorf("invalid value %#v for type domonda.RealEstateObjectType", r)
 	}
 	return nil
 }
@@ -101,6 +105,8 @@ func (RealEstateObjectType) Enums() []RealEstateObjectType {
 		RealEstateObjectTypeKREIS,
 		RealEstateObjectTypeMANDANT,
 		RealEstateObjectTypeMRG,
+		RealEstateObjectTypeMHV,
+		RealEstateObjectTypeSEV,
 	}
 }
 
@@ -113,6 +119,8 @@ func (RealEstateObjectType) EnumStrings() []string {
 		"KREIS",
 		"MANDANT",
 		"MRG",
+		"MHV",
+		"SEV",
 	}
 }
 

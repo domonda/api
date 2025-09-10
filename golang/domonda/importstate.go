@@ -34,6 +34,26 @@ func (i ImportState) Validate() error {
 	return nil
 }
 
+// Enums returns all valid values for ImportState
+func (ImportState) Enums() []ImportState {
+	return []ImportState{
+		ImportStateUnchanged,
+		ImportStateUpdated,
+		ImportStateCreated,
+		ImportStateError,
+	}
+}
+
+// EnumStrings returns all valid values for ImportState as strings
+func (ImportState) EnumStrings() []string {
+	return []string{
+		"UNCHANGED",
+		"UPDATED",
+		"CREATED",
+		"ERROR",
+	}
+}
+
 // String implements the fmt.Stringer interface for ImportState
 func (i ImportState) String() string {
 	return string(i)
