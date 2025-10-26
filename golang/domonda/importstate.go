@@ -4,13 +4,23 @@ import "fmt"
 
 //go:generate go tool go-enum $GOFILE
 
+// ImportState represents the result state of importing a single data item
+// (partner, GL account, bank account, etc.) via the Domonda API.
 type ImportState string //#enum
 
 const (
+	// ImportStateUnchanged indicates the item already exists with identical data
 	ImportStateUnchanged ImportState = "UNCHANGED"
-	ImportStateUpdated   ImportState = "UPDATED"
-	ImportStateCreated   ImportState = "CREATED"
-	ImportStateError     ImportState = "ERROR"
+
+	// ImportStateUpdated indicates an existing item was updated with new data
+	ImportStateUpdated ImportState = "UPDATED"
+
+	// ImportStateCreated indicates a new item was created
+	ImportStateCreated ImportState = "CREATED"
+
+	// ImportStateError indicates the import failed for this item
+	// Check the Error field in the result for details
+	ImportStateError ImportState = "ERROR"
 )
 
 // Valid indicates if i is any of the valid values for ImportState
