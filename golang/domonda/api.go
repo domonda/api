@@ -42,6 +42,19 @@ const (
 	SourceTestEndpointNOP = "TestEndpointNOP"
 )
 
+// postJSON is a helper function that sends a JSON POST request to the Domonda API.
+// It handles marshaling the payload, constructing the URL with query parameters,
+// setting the authorization header, and executing the request.
+//
+// Arguments:
+//   - ctx:      Context for the HTTP request (for cancellation and timeouts)
+//   - apiKey:   API key (bearer token) for authentication
+//   - endpoint: API endpoint path (e.g., "/masterdata/gl-accounts")
+//   - vals:     URL query parameters to append to the endpoint
+//   - payload:  Data to be marshaled to JSON and sent in the request body
+//
+// Returns the HTTP response or an error if the request fails.
+// Callers are responsible for closing the response body and checking the status code.
 func postJSON(ctx context.Context, apiKey, endpoint string, vals url.Values, payload any) (*http.Response, error) {
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {

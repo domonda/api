@@ -99,20 +99,36 @@ type Invoice struct {
 	AccountingItems []*AccountingItem `json:"accountingItems,omitempty"`
 }
 
+// AccountingItem represents a single booking line in an invoice's accounting.
+// Each item describes how the invoice amount should be posted to the general ledger.
 type AccountingItem struct {
+	// Title describing this accounting item
 	Title notnull.TrimmedString `json:"title"`
 
+	// GeneralLedgerAccountNumber where this item should be posted
 	GeneralLedgerAccountNumber account.Number `json:"generalLedgerAccountNumber"`
 
+	// BookingType indicates the side of the booking: "DEBIT" or "CREDIT"
 	BookingType string `json:"bookingType" jsonschema:"enum=DEBIT,enum=CREDIT"`
-	AmountType  string `json:"amountType"  jsonschema:"enum=NET,enum=TOTAL"`
 
+	// AmountType indicates whether Amount is "NET" (without VAT) or "TOTAL" (with VAT)
+	AmountType string `json:"amountType" jsonschema:"enum=NET,enum=TOTAL"`
+
+	// Amount to be booked for this item
 	Amount money.Amount `json:"amount"`
 
-	ValueAddedTaxID               uu.NullableID `json:"valueAddedTax,omitempty"`
+	// ValueAddedTaxID is the optional UUID of the VAT code to apply
+	ValueAddedTaxID uu.NullableID `json:"valueAddedTax,omitempty"`
+
+	// ValueAddedTaxPercentageAmount is the optional VAT percentage as amount (e.g., 20 for 20%)
 	ValueAddedTaxPercentageAmount *money.Amount `json:"valueAddedTaxPercentageAmount,omitempty"`
 }
 
+// Validate checks if the invoice data is valid according to business rules.
+// It validates dates, amounts, VAT percentages, currency codes, IBANs, BICs,
+// and ensures consistency between related fields (e.g., total >= net, cost centers sum <= net).
+//
+// Returns nil if the invoice is valid, or an error describing validation failures.
 func (inv *Invoice) Validate() error {
 	if inv == nil {
 		return errors.New("<nil> Invoice")

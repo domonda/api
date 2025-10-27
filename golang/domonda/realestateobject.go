@@ -15,19 +15,45 @@ import (
 	"github.com/domonda/go-types/nullable"
 )
 
+// RealEstateObject represents a real estate property managed in the system.
+// Objects are used for property management, accounting segregation, and organizing
+// related transactions and documents. Each object is identified by its Number.
 type RealEstateObject struct {
-	Type                 RealEstateObjectType
-	Number               account.Number
-	AccountingArea       account.NullableNumber
-	UserAccount          account.NullableNumber
-	Description          nullable.TrimmedString
-	StreetAddress        notnull.TrimmedString
+	// Type specifies the kind of real estate object (WEG, HI, SUB, KREIS, MANDANT, MRG, MHV, SEV)
+	Type RealEstateObjectType
+
+	// Number is the unique identifier for this object (alphanumeric)
+	Number account.Number
+
+	// AccountingArea is an optional accounting segregation identifier
+	AccountingArea account.NullableNumber
+
+	// UserAccount is an optional user account number associated with this object
+	UserAccount account.NullableNumber
+
+	// Description provides additional details about the property
+	Description nullable.TrimmedString
+
+	// StreetAddress is the primary street address (required)
+	StreetAddress notnull.TrimmedString
+
+	// AlternativeAddresses contains additional addresses for the same property
 	AlternativeAddresses nullable.StringArray
-	ZipCode              nullable.TrimmedString
-	City                 nullable.TrimmedString
-	Country              country.Code
-	BankAccounts         []bank.Account
-	Active               bool
+
+	// ZipCode is the postal/ZIP code
+	ZipCode nullable.TrimmedString
+
+	// City is the city name
+	City nullable.TrimmedString
+
+	// Country is the ISO 3166-1 alpha-2 country code (e.g., "DE", "AT")
+	Country country.Code
+
+	// BankAccounts are payment bank accounts associated with this object
+	BankAccounts []bank.Account
+
+	// Active indicates if this object is currently active
+	Active bool
 }
 
 func (o *RealEstateObject) Validate() error {
@@ -58,17 +84,38 @@ func (o *RealEstateObject) Validate() error {
 	return errors.Join(errs...)
 }
 
+// RealEstateObjectType categorizes real estate objects by their legal and management structure.
+// Different types have different requirements and business rules in the system.
 type RealEstateObjectType string //#enum
 
 const (
-	RealEstateObjectTypeWEG     RealEstateObjectType = "WEG" // Wohnungseigentümergemeinschaft
-	RealEstateObjectTypeHI      RealEstateObjectType = "HI"
-	RealEstateObjectTypeSUB     RealEstateObjectType = "SUB"
-	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
+	// RealEstateObjectTypeWEG represents a condominium owners' association
+	// (Wohnungseigentümergemeinschaft in German/Austrian law)
+	RealEstateObjectTypeWEG RealEstateObjectType = "WEG"
+
+	// RealEstateObjectTypeHI represents a house/building (Hausverwaltung)
+	RealEstateObjectTypeHI RealEstateObjectType = "HI"
+
+	// RealEstateObjectTypeSUB represents a sub-object or unit within a larger property
+	RealEstateObjectTypeSUB RealEstateObjectType = "SUB"
+
+	// RealEstateObjectTypeKREIS represents a virtual grouping object (accounting circle)
+	RealEstateObjectTypeKREIS RealEstateObjectType = "KREIS"
+
+	// RealEstateObjectTypeMANDANT represents a virtual client-level object
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
-	RealEstateObjectTypeMRG     RealEstateObjectType = "MRG" // Objekt unterliegt dem Mietrechtsgesetz (MRG)
-	RealEstateObjectTypeMHV     RealEstateObjectType = "MHV" // Miethausverwaltung
-	RealEstateObjectTypeSEV     RealEstateObjectType = "SEV" // Sondereigentumsverwaltung
+
+	// RealEstateObjectTypeMRG represents a property subject to Austrian rent control law
+	// (Mietrechtsgesetz - MRG)
+	RealEstateObjectTypeMRG RealEstateObjectType = "MRG"
+
+	// RealEstateObjectTypeMHV represents a rental property management object
+	// (Miethausverwaltung)
+	RealEstateObjectTypeMHV RealEstateObjectType = "MHV"
+
+	// RealEstateObjectTypeSEV represents a separate property management object
+	// (Sondereigentumsverwaltung)
+	RealEstateObjectTypeSEV RealEstateObjectType = "SEV"
 )
 
 // Valid indicates if r is any of the valid values for RealEstateObjectType
@@ -129,10 +176,27 @@ func (r RealEstateObjectType) String() string {
 	return string(r)
 }
 
+// IsVirtual returns true if this object type represents a virtual grouping
+// rather than a physical property. Virtual objects (KREIS, MANDANT) are used
+// for organizing and aggregating data but don't represent actual real estate.
 func (r RealEstateObjectType) IsVirtual() bool {
 	return r == RealEstateObjectTypeKREIS || r == RealEstateObjectTypeMANDANT
 }
 
+// PostRealEstateObjects upserts (inserts or updates) real estate objects via the Domonda API.
+// Objects are identified by their Number field - if an object with the same number exists,
+// it will be updated; otherwise, a new object is created.
+//
+// Arguments:
+//   - ctx:     Context for the HTTP request (for cancellation and timeouts)
+//   - apiKey:  API key (bearer token) for authentication
+//   - objects: Slice of real estate objects to import
+//   - source:  Optional identifier for the data source (e.g., your company name)
+//
+// Returns an error if validation fails or the API request fails.
+// The function validates all objects before sending the request.
+//
+// API endpoint: https://domonda.app/api/public/masterdata/real-estate-objects
 func PostRealEstateObjects(ctx context.Context, apiKey string, objects []*RealEstateObject, source string) error {
 	var err error
 	for i, obj := range objects {
