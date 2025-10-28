@@ -25,6 +25,7 @@ and is based on API keys that give access to the data of a client company.
    * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
    * [Upload company master data as JSON](#upload-company-master-data-as-json)
    * [Get document's custom fields](#get-documents-custom-fields)
+   * [Upload iDWELL CRM ticket](#put-idwell-crm-ticket)
 
 ## Authentication
 
@@ -1140,4 +1141,20 @@ Response:
     "value":"KundenNr. 14392"
   }
 ]
+```
+
+### PUT iDWELL CRM ticket
+Upserts an iDWELL CRM ticket
+
+### Example
+Request:
+```bash
+#!/bin/bash
+
+TOKEN="your API key"
+
+curl -X PUT https://domonda.app/api/public/idwell/crm-ticket/ \
+    -H "Authorization: Bearer ${TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{CRM ticket...}'
 ```
