@@ -32,6 +32,7 @@ The Domonda API is a comprehensive platform for managing financial documents, in
 4. [**Go SDK**](#go-sdk)
    * [Installation](#installation)
    * [Usage examples](#usage-examples)
+   * [Upload iDWELL CRM ticket](#put-idwell-crm-ticket)
 
 ## Authentication
 
@@ -592,7 +593,6 @@ and the client package will always be kept up to date
 with the API server implementation.
 
 Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocument
-
 
 ### Upload structured invoice data as JSON
 
@@ -1468,3 +1468,19 @@ The SDK uses types from [github.com/domonda/go-types](https://pkg.go.dev/github.
 - `uu.ID`: UUID
 
 These types provide automatic validation and normalization.
+
+### PUT iDWELL CRM ticket
+Upserts an iDWELL CRM ticket
+
+### Example
+Request:
+```bash
+#!/bin/bash
+
+TOKEN="your API key"
+
+curl -X PUT https://domonda.app/api/public/idwell/crm-ticket/ \
+    -H "Authorization: Bearer ${TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{CRM ticket...}'
+```

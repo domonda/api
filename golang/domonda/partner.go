@@ -192,7 +192,10 @@ func (p *Partner) Normalize(resetInvalid bool) []error {
 	// 		}
 	// 	}
 	// }
-	p.Email, err = p.Email.Normalized()
+	p.Email, err = p.Email.AddressPart()
+	if err == nil {
+		p.Email, err = p.Email.Normalized()
+	}
 	if err != nil {
 		errs = append(errs, fmt.Errorf("Email '%s' has error: %w", p.Email, err))
 		if resetInvalid {
