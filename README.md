@@ -2,29 +2,36 @@
 
 # DOMONDA API
 
-The Domonda API consists of a [GraphQL](http://graphql.org/)
-and a [REST](https://en.wikipedia.org/wiki/REST) part.
+The Domonda API is a comprehensive platform for managing financial documents, invoices, and master data. It provides two complementary interfaces:
 
-[**GraphQL**](#graphql-api) is the main API for querying data and changing single data items with mutations.
+[**GraphQL**](#graphql-api) is the main API for querying data and changing single data items with mutations. Use this for reading documents, invoices, partners, and other entity data, as well as for making individual changes.
 
-[**REST**](#rest-api) is used for file up- and downloads. This includes PDFs for invoices
-but also importing bulk master data for client companies.
+[**REST**](#rest-api) is used for file uploads/downloads and bulk operations. This includes:
+- Uploading document PDFs and invoice data
+- Downloading document PDFs with audit trails
+- Bulk importing master data (partners, GL accounts, bank accounts, real estate objects)
+- Retrieving custom document fields
 
-[**Authentication**](#authentication) of requests is identical for GraphQL and REST
-and is based on API keys that give access to the data of a client company.
+[**Authentication**](#authentication) is identical for both GraphQL and REST APIs and uses Bearer token authentication with API keys that provide access to a specific client company's data.
+
+[**Go SDK**](#go-sdk) is available at [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda) for type-safe API interactions with client-side validation.
 
 ## Table of Contents
 
 1. [**Authentication**](#authentication)
 2. [**GraphQL API**](#graphql-api)
    * [Graph*i*QL interactive access and documentation](#graphiql-interactive-access-and-documentation)
-   * [GraphQL query examples](#graphQL-query-examples)
+   * [Basic GraphQL usage](#basic-graphql-usage)
+   * [GraphQL query examples](#graphql-query-examples)
 3. [**REST API**](#rest-api)
    * [Document PDF download](#document-pdf-download)
    * [File uploads](#file-uploads)
    * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
    * [Upload company master data as JSON](#upload-company-master-data-as-json)
    * [Get document's custom fields](#get-documents-custom-fields)
+4. [**Go SDK**](#go-sdk)
+   * [Installation](#installation)
+   * [Usage examples](#usage-examples)
    * [Upload iDWELL CRM ticket](#put-idwell-crm-ticket)
 
 ## Authentication
@@ -587,7 +594,6 @@ with the API server implementation.
 
 Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#UploadDocument
 
-
 ### Upload structured invoice data as JSON
 
 The optional form field `invoice` contains a [JSON file](example/invoice.jsonc)
@@ -1142,6 +1148,326 @@ Response:
   }
 ]
 ```
+
+## Go SDK
+
+The Domonda API provides a Go SDK that offers type-safe access to all REST API endpoints with built-in client-side validation. The SDK is automatically kept in sync with the server implementation, ensuring compatibility.
+
+### Installation
+
+Install the SDK using Go modules:
+
+```bash
+go get github.com/domonda/api/golang/domonda
+```
+
+### Package Documentation
+
+Full package documentation is available at: https://pkg.go.dev/github.com/domonda/api/golang/domonda
+
+### Key Features
+
+- **Type Safety**: All API requests use strongly-typed structs
+- **Client-Side Validation**: Data is validated before sending requests to reduce errors
+- **Automatic JSON Handling**: Structs are automatically marshaled to/from JSON
+- **Error Handling**: Clear error messages for validation and API errors
+- **Always Up-to-Date**: SDK is maintained in the same repository as the server implementation
+
+### Usage Examples
+
+#### Upload a Document
+
+```go
+import (
+    "context"
+    "github.com/domonda/api/golang/domonda"
+    "github.com/domonda/go-types/uu"
+    "github.com/ungerik/go-fs"
+)
+
+func uploadDocument() error {
+    ctx := context.Background()
+    apiKey := "YOUR_API_KEY"
+    categoryID := uu.IDFromString("YOUR_CATEGORY_ID")
+
+    documentFile := fs.File("invoice.pdf")
+    invoiceFile := fs.File("invoice.json")
+
+    documentID, err := domonda.UploadDocument(
+        ctx,
+        apiKey,
+        categoryID,
+        documentFile,
+        invoiceFile,
+        "tag1", "tag2",
+    )
+    if err != nil {
+        return err
+    }
+
+    // Use documentID for further operations
+    println("Uploaded document:", documentID)
+    return nil
+}
+```
+
+#### Import Partner Companies
+
+```go
+import (
+    "context"
+    "github.com/domonda/api/golang/domonda"
+    "github.com/domonda/go-types/account"
+    "github.com/domonda/go-types/country"
+    "github.com/domonda/go-types/notnull"
+    "github.com/domonda/go-types/nullable"
+)
+
+func importPartners() error {
+    ctx := context.Background()
+    apiKey := "YOUR_API_KEY"
+
+    partners := []*domonda.Partner{
+        {
+            Name:    notnull.TrimmedString("Example Company GmbH"),
+            Street:  nullable.TrimmedString("Hauptstrasse 123"),
+            City:    nullable.TrimmedString("Berlin"),
+            ZIP:     nullable.TrimmedString("10115"),
+            Country: country.NullableCode("DE"),
+            VendorAccountNumber: account.NullableNumber("L1000"),
+            ClientAccountNumber: account.NullableNumber("K2000"),
+        },
+    }
+
+    results, err := domonda.PostPartners(
+        ctx,
+        apiKey,
+        partners,
+        false, // failOnInvalid
+        true,  // useCleanedInvalid
+        false, // allOrNone
+        "MyERP", // source
+    )
+    if err != nil {
+        return err
+    }
+
+    // Check results
+    for i, result := range results {
+        switch result.State {
+        case domonda.ImportStateCreated:
+            println("Partner", i, "created")
+        case domonda.ImportStateUpdated:
+            println("Partner", i, "updated")
+        case domonda.ImportStateUnchanged:
+            println("Partner", i, "unchanged")
+        case domonda.ImportStateError:
+            println("Partner", i, "error:", result.Error)
+        }
+    }
+
+    return nil
+}
+```
+
+#### Import General Ledger Accounts
+
+```go
+import (
+    "context"
+    "github.com/domonda/api/golang/domonda"
+    "github.com/domonda/go-types/account"
+    "github.com/domonda/go-types/nullable"
+)
+
+func importGLAccounts() error {
+    ctx := context.Background()
+    apiKey := "YOUR_API_KEY"
+
+    accounts := []*domonda.GLAccount{
+        {
+            Number:   account.Number("1000"),
+            Name:     nullable.TrimmedString("Cash"),
+            Category: nullable.TrimmedString("Assets"),
+        },
+        {
+            Number:   account.Number("4000"),
+            Name:     nullable.TrimmedString("Sales Revenue"),
+            Category: nullable.TrimmedString("Revenue"),
+        },
+    }
+
+    results, err := domonda.PostGLAccounts(
+        ctx,
+        apiKey,
+        accounts,
+        false, // findByName
+        false, // objectSpecificAccountNos
+        false, // failOnInvalid
+        true,  // allOrNone
+        "MyERP", // source
+    )
+    if err != nil {
+        return err
+    }
+
+    // Check results
+    for i, result := range results {
+        if result.State == domonda.ImportStateError {
+            println("Account", i, "error:", result.Error)
+        } else {
+            println("Account", result.NormalizedNumber, "imported with state:", result.State)
+        }
+    }
+
+    return nil
+}
+```
+
+#### Import Bank Accounts
+
+```go
+import (
+    "context"
+    "github.com/domonda/api/golang/domonda"
+    "github.com/domonda/go-types/bank"
+    "github.com/domonda/go-types/money"
+    "github.com/domonda/go-types/notnull"
+)
+
+func importBankAccounts() error {
+    ctx := context.Background()
+    apiKey := "YOUR_API_KEY"
+
+    accounts := []*domonda.BankAccount{
+        {
+            IBAN:     bank.IBAN("DE89370400440532013000"),
+            BIC:      bank.BIC("COBADEFFXXX"),
+            Currency: money.Currency("EUR"),
+            Holder:   notnull.TrimmedString("Example Company GmbH"),
+        },
+    }
+
+    results, err := domonda.PostBankAccounts(
+        ctx,
+        apiKey,
+        accounts,
+        false, // failOnInvalid
+        true,  // allOrNone
+        "MyERP", // source
+    )
+    if err != nil {
+        return err
+    }
+
+    // Check results
+    for i, result := range results {
+        if result.State == domonda.ImportStateError {
+            println("Bank account", i, "error:", result.Error)
+        } else {
+            println("Bank account", result.IBAN, "imported with state:", result.State)
+        }
+    }
+
+    return nil
+}
+```
+
+#### Import Real Estate Objects
+
+```go
+import (
+    "context"
+    "github.com/domonda/api/golang/domonda"
+    "github.com/domonda/go-types/account"
+    "github.com/domonda/go-types/country"
+    "github.com/domonda/go-types/notnull"
+)
+
+func importRealEstateObjects() error {
+    ctx := context.Background()
+    apiKey := "YOUR_API_KEY"
+
+    objects := []*domonda.RealEstateObject{
+        {
+            Type:          domonda.RealEstateObjectTypeWEG,
+            Number:        account.Number("001"),
+            StreetAddress: notnull.TrimmedString("Musterstrasse 10"),
+            City:          nullable.TrimmedString("Berlin"),
+            ZipCode:       nullable.TrimmedString("10115"),
+            Country:       country.Code("DE"),
+            Active:        true,
+        },
+    }
+
+    err := domonda.PostRealEstateObjects(
+        ctx,
+        apiKey,
+        objects,
+        "MyPropertyManagement", // source
+    )
+    if err != nil {
+        return err
+    }
+
+    println("Real estate objects imported successfully")
+    return nil
+}
+```
+
+### Error Handling
+
+All SDK functions return errors that should be checked. Validation errors are returned before any network request is made, ensuring fast feedback:
+
+```go
+partner := &domonda.Partner{
+    Name: notnull.TrimmedString(""), // Invalid: empty name
+}
+
+err := partner.Validate()
+if err != nil {
+    // Handle validation error before making API call
+    println("Validation error:", err)
+}
+```
+
+### Import States
+
+When importing data, the API returns the state of each imported item:
+
+- `UNCHANGED`: Item already exists with identical data
+- `UPDATED`: Existing item was updated with new data
+- `CREATED`: New item was created
+- `ERROR`: Import failed for this item (check the Error field for details)
+
+### Query Parameters
+
+Most import functions support optional query parameters to control behavior:
+
+- **source**: Identifier for the data source (your company/service name)
+- **failOnInvalid**: Fail immediately if any data is invalid
+- **allOrNone**: Use a transaction - import all items or none on error
+- **useCleanedInvalid**: Clean invalid data and import what's valid
+- **findByName**: Search for existing items by name if not found by ID
+- **objectSpecificAccountNos**: Append object numbers to account numbers
+
+### Types
+
+The SDK uses types from [github.com/domonda/go-types](https://pkg.go.dev/github.com/domonda/go-types):
+
+- `notnull.TrimmedString`: Required string that cannot be null or empty
+- `nullable.TrimmedString`: Optional string that can be null
+- `account.Number`: Alphanumeric account number (matches regex `^[0-9A-Za-z][0-9A-Za-z_\-\/:.;,]*$`)
+- `bank.IBAN`: Validated IBAN
+- `bank.BIC`: Validated BIC/SWIFT code
+- `vat.ID`: Validated VAT ID
+- `country.Code`: ISO 3166-1 alpha-2 country code
+- `money.Currency`: ISO 4217 currency code
+- `money.Amount`: Monetary amount
+- `date.Date`: Date without time
+- `uu.ID`: UUID
+
+These types provide automatic validation and normalization.
 
 ### PUT iDWELL CRM ticket
 Upserts an iDWELL CRM ticket
