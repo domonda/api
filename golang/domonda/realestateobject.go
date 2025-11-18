@@ -76,6 +76,9 @@ func (o *RealEstateObject) Validate() error {
 	if o.Country, err = o.Country.Normalized(); err != nil {
 		errs = append(errs, fmt.Errorf("RealEstateObject.Country: %w", err))
 	}
+	if o.StreetAddress.IsEmpty() {
+		errs = append(errs, errors.New("empty RealEstateObject.StreetAddress"))
+	}
 	for i := range o.BankAccounts {
 		if err = o.BankAccounts[i].Validate(); err != nil {
 			errs = append(errs, fmt.Errorf("RealEstateObject.BankAccounts[%d]: %w", i, err))
