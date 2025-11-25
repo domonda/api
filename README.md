@@ -470,6 +470,8 @@ use the following values for the query parameter `auditTrail`:
   - `configured`: use the audit trail position configured for the client company
   - `only`: download only the audit trail as PDF
 
+To embed the UN/CEFACT format XML into the PDF, add the `embedXML=1` query parameter to the URL.
+
 The default language of the audit trail is German.
 To request the audit trail in a different language,
 use the query parameter `auditTrailLang` with a language code.
