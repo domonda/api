@@ -74,7 +74,7 @@ func UploadDocument(ctx context.Context, apiKey string, documentCategory uu.ID, 
 		return uu.IDNil, err
 	}
 
-	request, err := http.NewRequestWithContext(ctx, "POST", BaseURL+"/upload", body)
+	request, err := http.NewRequestWithContext(ctx, "POST", baseURLFromCtx(ctx)+"/upload", body)
 	if err != nil {
 		return uu.IDNil, err
 	}
