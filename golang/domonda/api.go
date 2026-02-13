@@ -60,7 +60,7 @@ func postJSON(ctx context.Context, apiKey, endpoint string, vals url.Values, pay
 	if err != nil {
 		return nil, err
 	}
-	url := BaseURL + endpoint
+	url := baseURLFromCtx(ctx) + endpoint
 	if len(vals) > 0 {
 		url += "?" + vals.Encode()
 	}
