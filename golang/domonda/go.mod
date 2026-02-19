@@ -18,8 +18,8 @@ require (
 	github.com/cention-sany/utf7 v0.0.0-20170124080048-26cad61bd60a // indirect
 	github.com/clipperhouse/uax29/v2 v2.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/domonda/go-errs v0.0.0-20260113110342-222f906bd7a6 // indirect
-	github.com/domonda/go-pretty v0.0.0-20260112082908-96fe37692898 // indirect
+	github.com/domonda/go-errs v1.0.0 // indirect
+	github.com/domonda/go-pretty v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gogs/chardet v0.0.0-20211120154057-b7413eaefb8f // indirect
 	github.com/invopop/jsonschema v0.13.0 // indirect
@@ -40,12 +40,12 @@ require (
 	github.com/ungerik/go-enum v0.0.0-20251216115906-f928944aa546 // indirect
 	github.com/ungerik/go-reflection v0.0.0-20251017081454-aea4ca25282d // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
-	golang.org/x/mod v0.32.0 // indirect
+	golang.org/x/mod v0.33.0 // indirect
 	golang.org/x/net v0.50.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
-	golang.org/x/tools v0.41.0 // indirect
+	golang.org/x/tools v0.42.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/xurls/v2 v2.6.0 // indirect
 )
