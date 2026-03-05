@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"regexp"
 )
 
 // PostObjectInstancesWithIDProp updates or inserts instances of the class "className"
@@ -21,11 +22,19 @@ func PostObjectInstancesWithIDProp(ctx context.Context, apiKey string, className
 	if idPropName == "" {
 		return errors.New("idPropName is required")
 	}
+	if !validIdentifier.MatchString(className) {
+		return errors.New("className contains invalid characters")
+	}
+	if !validIdentifier.MatchString(idPropName) {
+		return errors.New("idPropName contains invalid characters")
+	}
+
 	for i, props := range objectsProps {
 		if props[idPropName] == nil {
 			err = errors.Join(err, fmt.Errorf("object at index %d has no ID prop %q", i, idPropName))
 		}
 	}
+
 	if err != nil {
 		return err
 	}
@@ -34,6 +43,7 @@ func PostObjectInstancesWithIDProp(ctx context.Context, apiKey string, className
 	if source != "" {
 		vals.Set("source", source)
 	}
+
 	endpoint := fmt.Sprintf("/masterdata/upsert-objects/%s/id-prop/%s", className, idPropName)
 	response, err := postJSON(ctx, apiKey, endpoint, vals, objectsProps)
 	if err != nil {
@@ -44,3 +54,5 @@ func PostObjectInstancesWithIDProp(ctx context.Context, apiKey string, className
 	}
 	return nil
 }
+
+var validIdentifier = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
