@@ -119,6 +119,10 @@ const (
 	// RealEstateObjectTypeSEV represents a separate property management object
 	// (Sondereigentumsverwaltung)
 	RealEstateObjectTypeSEV RealEstateObjectType = "SEV"
+
+	// RealEstateObjectTypeHBH represents a general ledger / main bookkeeping object
+	// (Hauptbuchhaltung)
+	RealEstateObjectTypeHBH RealEstateObjectType = "HBH"
 )
 
 // Valid indicates if r is any of the valid values for RealEstateObjectType
@@ -132,7 +136,8 @@ func (r RealEstateObjectType) Valid() bool {
 		RealEstateObjectTypeMANDANT,
 		RealEstateObjectTypeMRG,
 		RealEstateObjectTypeMHV,
-		RealEstateObjectTypeSEV:
+		RealEstateObjectTypeSEV,
+		RealEstateObjectTypeHBH:
 		return true
 	}
 	return false
@@ -157,6 +162,7 @@ func (RealEstateObjectType) Enums() []RealEstateObjectType {
 		RealEstateObjectTypeMRG,
 		RealEstateObjectTypeMHV,
 		RealEstateObjectTypeSEV,
+		RealEstateObjectTypeHBH,
 	}
 }
 
@@ -171,6 +177,7 @@ func (RealEstateObjectType) EnumStrings() []string {
 		"MRG",
 		"MHV",
 		"SEV",
+		"HBH",
 	}
 }
 
