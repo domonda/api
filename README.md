@@ -93,13 +93,13 @@ Query the data of a client-company identified by the API key:
       name
       brandName
       alternativeNames
-    }
-    mainLocation {
-      street
-      city
-      zip
-      country
-      vatNo
+      mainLocation {
+        street
+        city
+        zip
+        country
+        vatNo
+      }
     }
   }
 }
@@ -292,10 +292,11 @@ field `userByImportedBy`, which gets you the associated user.
     nodes {
       documentRowId
       partnerCompanyRowId
-      invoiceDocumentRowId
       invoiceNumber
-      deliveryNoteNumber
-      deliveryDate
+      noteNumber
+      issueDate
+      deliveredAt
+      netSum
       createdAt
     }
   }
@@ -314,7 +315,7 @@ field `userByImportedBy`, which gets you the associated user.
       productNo
       gtinNo
       eanNo
-      description
+      title
     }
   }
 }
