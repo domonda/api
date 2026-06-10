@@ -2,7 +2,7 @@
 
 # DOMONDA API
 
-The Domonda API is a comprehensive platform for managing financial documents, invoices, and master data. It provides two complementary interfaces:
+The Domonda API is a comprehensive platform for managing financial documents, invoices, and master data. It provides three complementary interfaces:
 
 [**GraphQL**](#graphql-api) is the main API for querying data and changing single data items with mutations. Use this for reading documents, invoices, partners, and other entity data, as well as for making individual changes.
 
@@ -12,9 +12,13 @@ The Domonda API is a comprehensive platform for managing financial documents, in
 - Bulk importing master data (partners, GL accounts, bank accounts, real estate objects)
 - Retrieving custom document fields
 
+[**MCP**](#mcp-server-ai-assistant-access) lets AI assistants (Claude, ChatGPT, and other MCP-capable agents) read your financial data and upload documents using natural language, over the Model Context Protocol.
+
 [**Authentication**](#authentication) is identical for both GraphQL and REST APIs and uses Bearer token authentication with API keys that provide access to a specific client company's data.
 
 [**Go SDK**](#go-sdk) is available at [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda) for type-safe API interactions with client-side validation.
+
+> **New — AI assistant access (MCP).** You can now connect Claude, ChatGPT, and other AI assistants to your Domonda data through the new [MCP server](#mcp-server-ai-assistant-access): ask questions in plain language, read documents, invoices, and payments, and optionally upload files.
 
 ## Table of Contents
 
@@ -29,7 +33,8 @@ The Domonda API is a comprehensive platform for managing financial documents, in
    * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
    * [Upload company master data as JSON](#upload-company-master-data-as-json)
    * [Get document's custom fields](#get-documents-custom-fields)
-4. [**Go SDK**](#go-sdk)
+4. [**MCP Server (AI assistant access)**](#mcp-server-ai-assistant-access) — **new**
+5. [**Go SDK**](#go-sdk)
    * [Installation](#installation)
    * [Usage examples](#usage-examples)
    * [Upload iDWELL CRM ticket](#put-idwell-crm-ticket)
@@ -1151,6 +1156,28 @@ Response:
   }
 ]
 ```
+
+## MCP Server (AI assistant access)
+
+The Domonda **Model Context Protocol (MCP)** server lets AI assistants —
+Claude, ChatGPT, and any MCP-capable agent — read your company's financial
+data and (optionally) upload documents, using natural language. It is a fourth
+interface alongside the GraphQL and REST APIs.
+
+The server speaks the [Model Context Protocol](https://modelcontextprotocol.io)
+over Streamable HTTP at:
+
+    https://domonda.app/api/mcp/
+
+**Authentication** uses the same Bearer API key as the GraphQL and REST APIs
+(see [Authentication](#authentication)), or an interactive OAuth sign-in for AI
+clients that support it. All query tools are read-only; the only write tool is
+`add_document`, which uploads a file through the same pipeline as the public
+REST upload endpoint.
+
+Full documentation, per-client setup guides (Claude Code, Claude Desktop,
+ChatGPT, OpenClaw), the tool reference, and curl examples are in
+**[`mcp/`](./mcp/)**.
 
 ## Go SDK
 

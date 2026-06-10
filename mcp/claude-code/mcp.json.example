@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "domonda": {
+      "type": "http",
+      "url": "https://domonda.app/api/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${DOMONDA_API_KEY}"
+      }
+    }
+  }
+}
