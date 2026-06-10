@@ -18,6 +18,8 @@ The Domonda API is a comprehensive platform for managing financial documents, in
 
 [**Go SDK**](#go-sdk) is available at [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda) for type-safe API interactions with client-side validation.
 
+> **New — AI assistant access (MCP).** You can now connect Claude, ChatGPT, and other AI assistants to your Domonda data through the new [MCP server](#mcp-server-ai-assistant-access): ask questions in plain language, read documents, invoices, and payments, and optionally upload files.
+
 ## Table of Contents
 
 1. [**Authentication**](#authentication)
@@ -31,7 +33,7 @@ The Domonda API is a comprehensive platform for managing financial documents, in
    * [Upload structured invoice data as JSON](#upload-structured-invoice-data-as-json)
    * [Upload company master data as JSON](#upload-company-master-data-as-json)
    * [Get document's custom fields](#get-documents-custom-fields)
-4. [**MCP Server (AI assistant access)**](#mcp-server-ai-assistant-access)
+4. [**MCP Server (AI assistant access)**](#mcp-server-ai-assistant-access) — **new**
 5. [**Go SDK**](#go-sdk)
    * [Installation](#installation)
    * [Usage examples](#usage-examples)

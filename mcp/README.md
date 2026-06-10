@@ -28,7 +28,7 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
 - [Tools](#tools)
 - [Resources](#resources)
 - [curl examples](#curl-examples)
-- [Limits and security](#limits-and-security)
+- [Why access is limited](#why-access-is-limited)
 
 ## Quick start
 
@@ -256,15 +256,26 @@ curl -s -X POST "https://domonda.app/api/mcp/" \
   -d '{"jsonrpc":"2.0","id":1,"method":"resources/read","params":{"uri":"document://DOCUMENT_UUID/pdf"}}' | jq .
 ```
 
-## Limits and security
+## Why access is limited
 
-- **Read-only by default.** Every query tool runs in a `READ ONLY` database
-  transaction; only `add_document` writes, through the same OCR,
-  duplicate-detection, and category-ownership checks as the public REST upload.
-- **Tenant-scoped.** Every request is restricted to the authenticated client
-  company; a query can never reach another company's data.
-- **`api` schema only.** `execute_query` accepts `SELECT`/`WITH` against the
-  `api` schema; DML, DDL, and other schemas are rejected.
-- **Resource limits.** Max **1,000 rows** per query, a **30-second** query
-  timeout, **10,000-character** maximum SQL length, and a **10 MiB** maximum
-  response size.
+The MCP server is a deliberately narrow, safe window onto your data. The limits
+below exist to protect your data and keep responses fast and predictable — not
+to make the API harder to use.
+
+- **Read-only, so an assistant can explore freely.** Every tool except
+  `add_document` can only read. You can point an AI assistant at your data and
+  ask anything without worrying it will change, move, or delete a record. The
+  one write tool, `add_document`, goes through the same validation and
+  duplicate checks as a normal upload.
+- **Only ever your company's data.** Every request sees just the data of the
+  company its token belongs to. There is no way to phrase a question that
+  reaches another customer's data.
+- **A curated view, not the raw database.** Queries run against the documented
+  `api` schema — the same one behind the GraphQL and REST APIs — rather than
+  internal tables. Your queries keep working across product updates, and you
+  only ever see fields meant for you.
+- **Sized to stay fast.** A single request returns at most **1,000 rows**, runs
+  for at most **30 seconds**, accepts up to **10,000 characters** of SQL, and
+  returns up to **10 MiB**. These bounds stop one broad question from slowing
+  things down for you or anyone else — narrow with filters (date range, partner,
+  status) and paginate when you need more.
