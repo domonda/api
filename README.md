@@ -27,6 +27,7 @@ The Domonda API is a comprehensive platform for managing financial documents, in
    * [Graph*i*QL interactive access and documentation](#graphiql-interactive-access-and-documentation)
    * [Basic GraphQL usage](#basic-graphql-usage)
    * [GraphQL query examples](#graphql-query-examples)
+   * [GraphQL mutation examples](#graphql-mutation-examples)
 3. [**REST API**](#rest-api)
    * [Document PDF download](#document-pdf-download)
    * [File uploads](#file-uploads)
@@ -452,6 +453,144 @@ field `userByImportedBy`, which gets you the associated user.
 
 1. Click on Run
 1. A new sheet with data named `YYYY-MM` should be added to the Google Sheet
+
+### GraphQL mutation examples
+
+Besides reading data, the GraphQL API can create, update and delete the
+**booking lines** (accounting items) of an invoice, together with their
+**cost center** and **cost unit** bookings — everything the accounting view
+offers on a document. Every write is attributed to the `API` user, so it shows
+up as the editing party in the accounting-item edit log.
+
+> Mutation arguments and object IDs use the `RowId` suffix (e.g. `rowId`,
+> `invoiceDocumentRowId`, `generalLedgerAccountRowId`), consistent with the
+> queries above. The `rowId`s of the referenced general ledger account and
+> cost center / cost unit are the same IDs returned by their list queries — use
+> the [Graph*i*QL explorer](https://domonda.app/api/public/graphiql) to look
+> them up. A mutation only ever affects objects of the client-company the API
+> key belongs to.
+
+#### Create an invoice booking line (accounting item):
+
+```gql
+mutation {
+  createInvoiceAccountingItem(input: {
+    invoiceDocumentRowId: "035bda2e-a5a1-445d-a712-6943e803f108"
+    generalLedgerAccountRowId: "00000000-0000-0000-0000-000000000000"
+    title: "Consulting services"
+    bookingType: DEBIT      # DEBIT or CREDIT
+    amountType: TOTAL       # TOTAL or NET
+    amount: 120
+    # VAT is optional:
+    valueAddedTaxRowId: "00000000-0000-0000-0000-000000000000"
+    valueAddedTaxPercentageRowId: "00000000-0000-0000-0000-000000000000"
+  }) {
+    invoiceAccountingItem {
+      rowId
+      title
+      amount
+      netAmount
+      taxAmount
+      totalAmount
+    }
+  }
+}
+```
+
+#### Add a cost center booking to an accounting item:
+
+```gql
+mutation {
+  addInvoiceAccountingItemCostCenter(input: {
+    invoiceAccountingItemRowId: "00000000-0000-0000-0000-000000000000"
+    clientCompanyCostCenterRowId: "00000000-0000-0000-0000-000000000000"
+    amount: 100
+  }) {
+    invoiceAccountingItemCostCenter {
+      rowId
+      number
+      description
+      amount
+    }
+  }
+}
+```
+
+#### Add a cost unit booking to an accounting item:
+
+```gql
+mutation {
+  addInvoiceAccountingItemCostUnit(input: {
+    invoiceAccountingItemRowId: "00000000-0000-0000-0000-000000000000"
+    clientCompanyCostUnitRowId: "00000000-0000-0000-0000-000000000000"
+    amount: 100
+  }) {
+    invoiceAccountingItemCostUnit {
+      rowId
+      number
+      description
+      amount
+    }
+  }
+}
+```
+
+#### Update an accounting item and a cost center booking:
+
+```gql
+mutation {
+  updateInvoiceAccountingItem(input: {
+    rowId: "00000000-0000-0000-0000-000000000000"
+    generalLedgerAccountRowId: "00000000-0000-0000-0000-000000000000"
+    title: "Consulting services"
+    bookingType: DEBIT
+    amountType: TOTAL
+    amount: 150
+  }) {
+    invoiceAccountingItem { rowId amount }
+  }
+}
+```
+
+```gql
+mutation {
+  updateInvoiceAccountingItemCostCenter(input: {
+    rowId: "00000000-0000-0000-0000-000000000000"
+    clientCompanyCostCenterRowId: "00000000-0000-0000-0000-000000000000"
+    amount: 150
+  }) {
+    invoiceAccountingItemCostCenter { rowId amount }
+  }
+}
+```
+
+The cost unit booking has an analogous `updateInvoiceAccountingItemCostUnit` mutation.
+
+#### Delete an accounting item or a single cost center / cost unit booking:
+
+Deleting an accounting item also removes its cost center and cost unit bookings.
+
+```gql
+mutation {
+  deleteInvoiceAccountingItem(input: {
+    rowId: "00000000-0000-0000-0000-000000000000"
+  }) {
+    invoiceAccountingItem { rowId title }
+  }
+}
+```
+
+```gql
+mutation {
+  deleteInvoiceAccountingItemCostCenter(input: {
+    rowId: "00000000-0000-0000-0000-000000000000"
+  }) {
+    invoiceAccountingItemCostCenter { rowId }
+  }
+}
+```
+
+The cost unit booking has an analogous `deleteInvoiceAccountingItemCostUnit` mutation.
 
 ## REST API
 
