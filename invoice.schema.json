@@ -219,6 +219,13 @@
       "type": "object",
       "description": "Cost centers of the invoice"
     },
+    "costUnits": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "type": "object",
+      "description": "Cost units of the invoice"
+    },
     "currency": {
       "type": "string",
       "description": "Currency of the invoice"

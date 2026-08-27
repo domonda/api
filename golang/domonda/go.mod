@@ -6,6 +6,7 @@ tool github.com/ungerik/go-enum
 
 require (
 	github.com/domonda/go-types v0.0.0-20260327082518-11ac2cfe4cdf
+	github.com/stretchr/testify v1.11.1
 	github.com/ungerik/go-fs v0.0.0-20260223082201-e2c085a20e01
 )
 
@@ -39,7 +40,6 @@ require (
 	github.com/pkg/xattr v0.4.12 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/teamwork/tnef v0.0.0-20200108124832-7deabccfdb32 // indirect
 	github.com/ungerik/go-astvisit v0.0.0-20251017171216-b7bb0384dd33 // indirect
 	github.com/ungerik/go-enum v0.0.0-20251216115906-f928944aa546 // indirect
