@@ -795,6 +795,13 @@ Example:
     // Cost-center "number" as key with net amount as value
     "9000": 60.5
   },
+  // Optional object or null
+  "costUnits": {
+    // Cost-unit "number" as key with net amount as value
+    "100": 5000,
+    // Cost-unit "number" as key with net amount as value
+    "200": 610.5
+  },
   // Optional string or null, 3 character ISO 4217 alphabetic code
   "currency": "EUR",
   // Optional number greater zero or null
@@ -819,7 +826,7 @@ Example:
       // Required string
       "title": "Test",
       // Required string
-      "generalLedgerAccountNumber": 1000,
+      "generalLedgerAccountNumber": "1000",
       // Required enum
       "bookingType": "DEBIT", // or CREDIT
       // Required enum

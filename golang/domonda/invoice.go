@@ -68,7 +68,10 @@ type Invoice struct {
 	DiscountUntil date.NullableDate `json:"discountUntil,omitempty"`
 
 	// Cost centers of the invoice
-	CostCenters map[string]money.Amount `json:"costCenters,omitempty"`
+	CostCenters map[string]money.Amount `json:"costCenters,omitempty" jsonschema:"oneof_type=object;null"`
+
+	// Cost units of the invoice
+	CostUnits map[string]money.Amount `json:"costUnits,omitempty" jsonschema:"oneof_type=object;null"`
 
 	// Currency of the invoice
 	Currency money.NullableCurrency `json:"currency,omitempty"`
@@ -215,29 +218,51 @@ func (inv *Invoice) Validate() error {
 	if err := inv.BIC.Validate(); err != nil {
 		return fmt.Errorf("invalid invoice BIC: %w", err)
 	}
-	if len(inv.CostCenters) > 0 {
-		var costCentersSum money.Amount
-		for number, amount := range inv.CostCenters {
-			if number == "" {
-				return errors.New("empty costCenter string")
-			}
-			if amount == 0 {
-				return fmt.Errorf("cost center '%s' amount must not be zero", number)
-			}
-			if amount < 0 {
-				return fmt.Errorf("cost center '%s' amount (%f) must not be negative", number, amount)
-			}
-			costCentersSum += amount
+	if err := inv.validateCostAmounts(inv.CostCenters, "costCenter", "cost center"); err != nil {
+		return err
+	}
+	if err := inv.validateCostAmounts(inv.CostUnits, "costUnit", "cost unit"); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateCostAmounts checks the net amounts of a cost center or cost unit
+// mapping keyed by number: every number must be non-empty and every amount
+// must be positive.
+//
+// The sum is compared against the net amount of the invoice, converted with
+// ConversionRate when one is set. An invoice without a Net amount has nothing
+// to compare the sum against, so that check is skipped.
+//
+// jsonField and label name the validated mapping in error messages,
+// jsonField as written in the JSON and label in prose.
+func (inv *Invoice) validateCostAmounts(amounts map[string]money.Amount, jsonField, label string) error {
+	if len(amounts) == 0 {
+		return nil
+	}
+	var sum money.Amount
+	for number, amount := range amounts {
+		if number == "" {
+			return fmt.Errorf("empty %s string", jsonField)
 		}
-		if inv.Net != nil {
-			net := *inv.Net
-			if inv.ConversionRate != nil {
-				net = net.MultipliedByRate(*inv.ConversionRate)
-			}
-			if costCentersSum > net {
-				return fmt.Errorf("sum of cost center amounts %f greater than invoice net sum %f", costCentersSum, net)
-			}
+		if amount == 0 {
+			return fmt.Errorf("%s '%s' amount must not be zero", label, number)
 		}
+		if amount < 0 {
+			return fmt.Errorf("%s '%s' amount (%f) must not be negative", label, number, amount)
+		}
+		sum += amount
+	}
+	if inv.Net == nil {
+		return nil
+	}
+	net := *inv.Net
+	if inv.ConversionRate != nil {
+		net = net.MultipliedByRate(*inv.ConversionRate)
+	}
+	if sum > net {
+		return fmt.Errorf("sum of %s amounts %f greater than invoice net sum %f", label, sum, net)
 	}
 	return nil
 }
