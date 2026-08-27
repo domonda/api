@@ -213,17 +213,31 @@
       "default": null
     },
     "costCenters": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "additionalProperties": {
         "type": "number"
       },
-      "type": "object",
       "description": "Cost centers of the invoice"
     },
     "costUnits": {
+      "oneOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
       "additionalProperties": {
         "type": "number"
       },
-      "type": "object",
       "description": "Cost units of the invoice"
     },
     "currency": {

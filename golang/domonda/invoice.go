@@ -68,10 +68,10 @@ type Invoice struct {
 	DiscountUntil date.NullableDate `json:"discountUntil,omitempty"`
 
 	// Cost centers of the invoice
-	CostCenters map[string]money.Amount `json:"costCenters,omitempty"`
+	CostCenters map[string]money.Amount `json:"costCenters,omitempty" jsonschema:"oneof_type=object;null"`
 
 	// Cost units of the invoice
-	CostUnits map[string]money.Amount `json:"costUnits,omitempty"`
+	CostUnits map[string]money.Amount `json:"costUnits,omitempty" jsonschema:"oneof_type=object;null"`
 
 	// Currency of the invoice
 	Currency money.NullableCurrency `json:"currency,omitempty"`
@@ -228,8 +228,12 @@ func (inv *Invoice) Validate() error {
 }
 
 // validateCostAmounts checks the net amounts of a cost center or cost unit
-// mapping keyed by number: every number must be non-empty, every amount must be
-// positive, and their sum must not exceed the converted net amount of the invoice.
+// mapping keyed by number: every number must be non-empty and every amount
+// must be positive.
+//
+// The sum is compared against the net amount of the invoice, converted with
+// ConversionRate when one is set. An invoice without a Net amount has nothing
+// to compare the sum against, so that check is skipped.
 //
 // jsonField and label name the validated mapping in error messages,
 // jsonField as written in the JSON and label in prose.
