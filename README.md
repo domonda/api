@@ -826,7 +826,7 @@ Example:
       // Required string
       "title": "Test",
       // Required string
-      "generalLedgerAccountNumber": 1000,
+      "generalLedgerAccountNumber": "1000",
       // Required enum
       "bookingType": "DEBIT", // or CREDIT
       // Required enum
