@@ -241,9 +241,8 @@ comment: `WHERE title ILIKE '%update_document%'` is rejected. Search for such
 text with `search_documents` or the `fulltext` filter of `list_documents`
 instead.
 
-If a query nonetheless manages to change the scope it runs in — the tenant,
-the `search_path`, the database role, or the statement timeout — the whole
-transaction is failed and its rows are discarded rather than returned.
+A query that tries to escape the scope it was given is failed outright and its
+rows discarded, rather than answered.
 
 ## Resources
 

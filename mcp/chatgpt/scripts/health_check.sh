@@ -10,10 +10,10 @@ if [ -f "$ENV_FILE" ]; then
   source "$ENV_FILE"
 fi
 
-# In production the domonda-web-server is mounted behind an /api path prefix,
-# so the MCP endpoint is https://domonda.app/api/mcp/. When running the web
-# server locally there is no /api prefix — use MCP_ENDPOINT to override, e.g.
-#   MCP_ENDPOINT=http://localhost:5001/mcp/ ./scripts/health_check.sh
+# The production MCP endpoint is https://domonda.app/api/mcp/ — note the /api
+# prefix. A deployment mounted without it is reachable at <base-url>/mcp/;
+# use MCP_ENDPOINT to override, e.g.
+#   MCP_ENDPOINT=https://example.test/mcp/ ./scripts/health_check.sh
 DOMONDA_URL="${DOMONDA_URL:-https://domonda.app}"
 MCP_ENDPOINT="${MCP_ENDPOINT:-${DOMONDA_URL}/api/mcp/}"
 

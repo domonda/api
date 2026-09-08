@@ -133,10 +133,10 @@ multi-company users who rely on the `X-Selected-Client-Company-ID` header.
 
 ### Base URL: production vs local
 
-In production the domonda-web-server is mounted behind an `/api` path prefix,
-so the MCP endpoint is `https://domonda.app/api/mcp/`. When running the web
-server locally there is **no** `/api` prefix — use `http://localhost:5001/mcp/`
-(5001 is the default port; override with `PORT=…`).
+The production MCP endpoint is `https://domonda.app/api/mcp/` — note the
+`/api` prefix. A non-production deployment may be mounted without it, in which
+case the endpoint is `<base-url>/mcp/`; point the server entry at that URL
+instead.
 
 ## Verify Connectivity
 

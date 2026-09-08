@@ -81,7 +81,7 @@ behalf — so it needs a **publicly reachable** URL and drives an OAuth sign-in.
    picker.
 
 > **Doesn't work for localhost.** Because the connector dials from OpenAI's
-> cloud, `http://localhost:5001/mcp/` is unreachable. Use Option 2 or 3 against
+> cloud, `http://localhost:<port>/mcp/` is unreachable. Use Option 2 or 3 against
 > your local server, or expose it with a tunnel (e.g. ngrok) over HTTPS.
 >
 > **OAuth only.** The UI has no raw-Bearer-JWT field. To use a static domonda
@@ -164,15 +164,15 @@ checks for, so registration is automatic:
 
 No client ID or secret is entered in the ChatGPT UI. See the
 [main README CIMD / DCR sections](../README.md#client-id-metadata-document-cimd)
-for the full flow and the Auth0 setup it depends on.
+for the full flow.
 
 ### Base URL: production vs local
 
-In production the domonda-web-server is mounted behind an `/api` path prefix,
-so the MCP endpoint is `https://domonda.app/api/mcp/`. When running the web
-server locally there is **no** `/api` prefix — use `http://localhost:5001/mcp/`
-(5001 is the default port; override with `PORT=…`). The ChatGPT app connector
-cannot reach localhost (see Option 1); the API paths can.
+The production MCP endpoint is `https://domonda.app/api/mcp/` — note the
+`/api` prefix. A non-production deployment may be mounted without it, in which
+case the endpoint is `<base-url>/mcp/`. The ChatGPT app connector dials from
+OpenAI's cloud and can only reach a publicly resolvable URL (see Option 1);
+Options 2 and 3 can reach anything your own code can.
 
 ## Verify Connectivity
 
@@ -283,7 +283,7 @@ The server enforces:
 | No "Add custom connector" / "Create" option      | Developer mode not enabled, or plan/workspace doesn't allow it | Enable developer mode (Settings → Connectors → Advanced); on workspaces ask an admin |
 | Connector can't reach `localhost:…`              | Connector dials from OpenAI's cloud, not your machine        | Use Option 2/3, or expose the local server over HTTPS via a tunnel                    |
 | No place to paste an API key in ChatGPT          | The app connector UI is OAuth-only                           | Use the Responses API / Agents SDK (Options 2 & 3) for a static Bearer JWT            |
-| OAuth sign-in loops or fails                     | Auth0 DCR/CIMD prerequisites missing on the tenant           | See the main README "DCR and CIMD" Auth0 setup steps                                  |
+| OAuth sign-in loops or fails                     | Client registration or the authorization round-trip failed   | Retry adding the connector; if it persists, contact domonda support                  |
 | HTTP 401                                         | Invalid, expired, or blocked token                           | Verify your API key or OAuth token; contact admin if blocked                         |
 | HTTP 403                                         | Forbidden company access or insufficient OAuth scopes        | Check the selected company or required scopes                                        |
 | HTTP 404                                         | Wrong endpoint URL                                           | Ensure the URL ends with `/mcp/` or `/mcp` (production: `/api/mcp/`)                  |

@@ -71,7 +71,7 @@ edit.
 5. Confirm the tools appear in the tool picker (hammer icon) in a new chat.
 
 > **Doesn't work for localhost.** The connector originates from Anthropic's
-> cloud, not your machine, so `http://localhost:5001/mcp/` is unreachable.
+> cloud, not your machine, so `http://localhost:<port>/mcp/` is unreachable.
 > Use Option 2 for local development.
 >
 > **Plain API-key JWTs aren't supported here.** The UI drives an OAuth flow;
@@ -151,11 +151,10 @@ template.
 
 Replace `YOUR_API_KEY_HERE` with your actual domonda JWT API key.
 
-> **Base URL.** In production the domonda-web-server lives behind an `/api`
-> path prefix, so the MCP endpoint is `https://domonda.app/api/mcp/`. When
-> you run the web server locally there is **no** `/api` prefix — the endpoint
-> is `http://localhost:5001/mcp/` (5001 is the default port; override with
-> `PORT=…`).
+> **Base URL.** The production MCP endpoint is
+> `https://domonda.app/api/mcp/` — note the `/api` prefix. A non-production
+> deployment may be mounted without it, in which case the endpoint is
+> `<base-url>/mcp/`.
 
 For local development, replace the URL with your local endpoint (note the
 missing `/api` segment):
@@ -167,7 +166,7 @@ missing `/api` segment):
       "command": "npx",
       "args": [
         "mcp-remote",
-        "http://localhost:5001/mcp/",
+        "http://localhost:<port>/mcp/",
         "--header",
         "Authorization: Bearer YOUR_API_KEY_HERE"
       ]
@@ -280,31 +279,23 @@ authentication. Two token types are supported:
 Authorization: Bearer <DOMONDA_API_KEY_OR_OAUTH_TOKEN>
 ```
 
-### OAuth client registration (CIMD, DCR, Anthropic-held credentials)
+### OAuth client registration (CIMD, DCR)
 
 When you add domonda through the Custom Connector UI, Claude has to register
 itself as an OAuth client with domonda's authorization server before the
-sign-in flow can run. Claude supports three registration approaches; domonda
-works with the first two **out of the box, no Auth0 changes required**:
+sign-in flow can run. This happens automatically — there is no client ID or
+secret for you to enter, and nothing to configure on your side:
 
 1. **Client ID Metadata Document (CIMD)** — *preferred, automatic.* Claude
-   uses an `https://` URL as its `client_id`; domonda's server fetches that
-   document and registers the client with Auth0 via DCR on Claude's behalf.
-   Claude selects CIMD automatically because domonda's authorization-server
-   metadata advertises **both** `"client_id_metadata_document_supported": true`
-   and `"none"` in `token_endpoint_auth_methods_supported` (required for a
-   public client). See the [main README CIMD section](../README.md#client-id-metadata-document-cimd).
+   uses an `https://` URL as its `client_id`, and domonda's server fetches
+   that document and registers the client on Claude's behalf. Claude selects
+   CIMD automatically because domonda's authorization-server metadata
+   advertises **both** `"client_id_metadata_document_supported": true` and
+   `"none"` in `token_endpoint_auth_methods_supported` (required for a public
+   client). See the [main README CIMD section](../README.md#client-id-metadata-document-cimd).
 2. **Dynamic Client Registration (DCR, RFC 7591)** — *automatic fallback.*
-   Claude calls domonda's `/register` endpoint (proxied to Auth0) on each new
-   connection. Used automatically if the CIMD metadata above is ever missing.
-3. **Anthropic-held credentials** — *opt-in alternative, not needed for
-   domonda.* You email `mcp-review@anthropic.com` a `client_id` /
-   `client_secret` for a **confidential** Auth0 application you create against
-   the MCP API; Anthropic stores them and performs the token exchange on your
-   users' behalf during the consent flow. This trades per-connection
-   registration for one fixed set of credentials. domonda does not rely on
-   this path — CIMD/DCR already cover the Custom Connector UI — but it is
-   available if you ever want Anthropic to use fixed credentials instead.
+   Claude calls domonda's `/register` endpoint on each new connection. Used
+   automatically if the CIMD metadata above is ever missing.
 
 The server enforces:
 
