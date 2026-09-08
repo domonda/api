@@ -65,8 +65,9 @@ edit.
 2. Scroll to **Add custom connector**.
 3. Enter the MCP URL: `https://domonda.app/api/mcp/`
 4. Complete the authentication prompt. domonda's MCP endpoint serves the
-   Auth0 OAuth discovery metadata (`.well-known/oauth-protected-resource`
-   per RFC 9728), so the UI will redirect you to Auth0 to sign in.
+   OAuth discovery metadata (`.well-known/oauth-protected-resource` per
+   RFC 9728) and proxies the `/authorize`, `/token` and `/register` endpoints
+   to Auth0, so the UI will redirect you to Auth0 to sign in.
 5. Confirm the tools appear in the tool picker (hammer icon) in a new chat.
 
 > **Doesn't work for localhost.** The connector originates from Anthropic's
@@ -232,7 +233,8 @@ See `SKILL.md` for the complete tool reference with parameters.
    schema before writing queries.
 4. **`list_documents`** or **`list_invoices`** — Browse recent data.
 5. **`execute_query`** — Run ad-hoc read-only SQL for anything the specialized
-   tools don't cover.
+   tools don't cover. Requires an admin, super-admin, or accountant **OAuth**
+   user; API-key callers are rejected.
 
 ### Tool categories
 
@@ -311,6 +313,13 @@ The server enforces:
 - **Row limit** — max 1,000 rows per query
 - **Query timeout** — 30-second default
 - **Query length** — max 10,000 characters
+- **Admin/accountant requirement** — an OAuth user must be an admin,
+  super-admin, or accountant at the selected client company to use the MCP
+  server at all
+- **`execute_query` is further restricted** — it is company-scoped but does
+  not apply per-user ACL, so API-key callers are rejected outright and OAuth
+  callers need one of the roles above. Its SQL is validated before it reaches
+  the database; see [what it rejects](../README.md#what-execute_query-rejects)
 - **Writes are limited to `add_document`** — processed through the same OCR,
   duplicate-detection, and category-ownership checks as the public API
 
@@ -322,9 +331,12 @@ The server enforces:
 | OAuth redirect fails / no OAuth prompt              | Using a local / non-public URL, or plan doesn't support it  | Use Option 2 with a raw JWT in the `Authorization` header                                 |
 | Tools don't appear (Option 2) in Claude Desktop     | Config file not found or malformed JSON                     | Verify the path and validate JSON syntax                                                  |
 | `npx` not found (Option 2)                          | Node.js not installed, or terminal opened before install    | See [What is `npx`?](#what-is-npx); install Node.js and restart the terminal              |
-| `mcp-remote` connection error (Option 2)            | Network or firewall issue                                   | Check internet connectivity; try `curl https://domonda.app/api/mcp/`                      |
-| HTTP 401                                            | Invalid, expired, or blocked token                          | Verify your API key or OAuth token; contact admin if blocked                              |
+| `mcp-remote` connection error (Option 2)            | Network or firewall issue                                   | Check internet connectivity; run `./scripts/health_check.sh`                              |
+| `curl https://domonda.app/api/mcp/` returns 401     | Not a fault — an unauthenticated GET is challenged          | That is the healthy response; add `-H 'Accept: text/html'` for the info page              |
+| HTTP 401 from a client                              | Invalid, expired, or blocked token                          | Verify your API key or OAuth token; contact admin if blocked                              |
 | HTTP 403                                            | Forbidden company access or insufficient OAuth scopes       | Check the selected company or required scopes                                             |
 | HTTP 404                                            | Wrong endpoint URL                                          | Ensure the URL ends with `/mcp/` or `/mcp`                                                |
+| "MCP access is restricted to admin or accountant"   | The signed-in user has neither role at the selected company | Sign in as an admin, super-admin, or accountant user                                      |
 | Query returns no rows                               | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                     |
-| `execute_query` rejected                            | SQL validation failed (DML, wrong schema)                   | Use only SELECT/WITH against the `api` schema                                             |
+| `execute_query` not available to API-key callers    | The tool requires an admin/accountant OAuth user            | Use Option 1 (OAuth), or use the specialized tools with your API key                      |
+| `execute_query` rejected                            | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)               |

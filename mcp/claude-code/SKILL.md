@@ -141,16 +141,34 @@ Führt eine READ-ONLY SQL-Abfrage (`SELECT` oder `WITH`) gegen das
 `api`-Schema der Domonda-Datenbank aus. Nur das `api`-Schema ist zugänglich;
 `pg_catalog`, `information_schema` und andere Schemata werden abgelehnt.
 Unqualifizierte Tabellennamen werden ins `api`-Schema aufgelöst. Ergebnis:
-JSON-Array von Objekten, maximal 1000 Zeilen. Daten sind automatisch auf
-den angemeldeten Mandanten eingeschränkt. Nutzen nur wenn die
-spezialisierten Tools (`list_documents`, `list_invoices`,
-`list_money_transactions`, …) nicht ausreichen und eine eigene Abfrage
-nötig ist. Vorher `list_tables` und `describe_table` nutzen, um das Schema
-zu erkunden.
+JSON-Array von Objekten, maximal 1000 Zeilen. Daten sind auf den
+angemeldeten Mandanten eingeschränkt, aber per-Benutzer-ACL wird NICHT
+angewendet — gibt Daten des gesamten Mandanten zurück. Deshalb nur für
+Admin-/Accountant-OAuth-Benutzer freigegeben; andere Benutzer und
+API-Key-Aufrufer erhalten einen Autorisierungsfehler. Für benutzergefilterte
+Listen stattdessen die spezialisierten Tools (`list_documents`,
+`list_invoices`, `list_money_transactions`, …) nutzen. Vorher `list_tables`
+und `describe_table` nutzen, um das Schema zu erkunden.
 
 | Parameter | Type   | Required | Description                                                                                        |
 |-----------|--------|----------|----------------------------------------------------------------------------------------------------|
 | `sql`     | string | yes      | The SQL query to execute. Must start with `SELECT` or `WITH`. Only the `api` schema is accessible. |
+
+**Access.** This tool is company-scoped but does not apply per-user ACL, so it
+is restricted to **admin, super-admin, or accountant** OAuth users at the
+selected client company. API-key callers are rejected outright with
+`Tool execute_query is not available to API-key callers`.
+
+**Rejected before the query reaches the database.** A query is refused when it
+does not start with `SELECT` or `WITH`, contains a DML/DDL keyword, references
+a schema other than `api`, uses a `pg_*` identifier outside the introspection
+allowlist, calls a mutating `api` function by name (`update_document`,
+`create_invoice_accounting_item`, `partner_company_mutation`, …), or uses
+Postgres Unicode-escape syntax (`U&"…"` / `U&'…'`). The identifier scans run
+against the raw SQL text, so a rejected name matches inside string literals
+and comments too — `WHERE title ILIKE '%update_document%'` fails. Use
+`search_documents` or the `fulltext` filter of `list_documents` for such text
+searches.
 
 ### Document Tools
 
@@ -557,21 +575,25 @@ server.
 
 ## Authentication
 
-The domonda MCP server uses JWT Bearer token authentication. The API key is a JWT where the `sub` claim contains the client company ID. All queries execute within a read-only, company-scoped database transaction.
+The domonda MCP server uses Bearer token authentication over Streamable HTTP. Two token types are accepted: a domonda **API key** (HS256 JWT, whose `sub` claim contains the client company ID) and an **OAuth** access token obtained by signing in with a domonda account. All queries execute within a read-only, company-scoped database transaction.
 
 Pass the token in the HTTP `Authorization` header:
 
 ```
-Authorization: Bearer <your-api-key>
+Authorization: Bearer <your-api-key-or-oauth-token>
 ```
+
+An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate` header — that is the healthy response and it is what starts OAuth discovery, not an error to work around.
+
+**OAuth users must be an admin, super-admin, or accountant** at the selected client company; every tool call from any other user is refused with `Not allowed: MCP access is restricted to admin or accountant users`. Beyond that gate, OAuth calls are additionally filtered by the user's own document ACL and money-account role flags, while an API key represents the whole tenant.
 
 ## Usage Tips
 
 - Start with `get_my_company` to confirm connectivity and see which company you are authenticated as.
 - Use `list_tables` and `describe_table` for schema discovery before writing queries.
-- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case.
+- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case — it needs an admin/accountant OAuth user and is not available to API-key callers.
 - All date parameters use `YYYY-MM-DD` format.
 - UUID parameters must be valid UUID strings.
 - Results are capped at 1000 rows — use `limit` and `offset` for pagination.
 - `offset` is clamped to 100,000; stream beyond that by narrowing filters (date range, partner, status) instead of paginating deeper.
-- `execute_query` rejects SQL longer than 10,000 characters.
+- `execute_query` rejects SQL longer than 10,000 characters; any query result larger than 10 MiB is refused — narrow the query or select fewer columns.

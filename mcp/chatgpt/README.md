@@ -213,7 +213,8 @@ for the complete tool reference with parameters.
    schema before writing queries.
 4. **`list_documents`** or **`list_invoices`** — Browse recent data.
 5. **`execute_query`** — Run ad-hoc read-only SQL for anything the specialized
-   tools don't cover.
+   tools don't cover. Requires an admin, super-admin, or accountant **OAuth**
+   user; API-key callers are rejected.
 
 ### Tool categories
 
@@ -265,6 +266,13 @@ The server enforces:
 - **Row limit** — max 1,000 rows per query
 - **Query timeout** — 30-second default
 - **Query length** — max 10,000 characters
+- **Admin/accountant requirement** — an OAuth user must be an admin,
+  super-admin, or accountant at the selected client company to use the MCP
+  server at all
+- **`execute_query` is further restricted** — it is company-scoped but does
+  not apply per-user ACL, so API-key callers are rejected outright and OAuth
+  callers need one of the roles above. Its SQL is validated before it reaches
+  the database; see [what it rejects](../README.md#what-execute_query-rejects)
 - **Writes are limited to `add_document`** — processed through the same OCR,
   duplicate-detection, and category-ownership checks as the public API
 
@@ -279,5 +287,7 @@ The server enforces:
 | HTTP 401                                         | Invalid, expired, or blocked token                           | Verify your API key or OAuth token; contact admin if blocked                         |
 | HTTP 403                                         | Forbidden company access or insufficient OAuth scopes        | Check the selected company or required scopes                                        |
 | HTTP 404                                         | Wrong endpoint URL                                           | Ensure the URL ends with `/mcp/` or `/mcp` (production: `/api/mcp/`)                  |
+| "MCP access is restricted to admin or accountant" | The signed-in user has neither role at the selected company | Sign in as an admin, super-admin, or accountant user                                |
 | Query returns no rows                            | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                |
-| `execute_query` rejected                         | SQL validation failed (DML, wrong schema)                   | Use only SELECT/WITH against the `api` schema                                        |
+| `execute_query` not available to API-key callers | The tool requires an admin/accountant OAuth user            | Use Option 1 (OAuth), or use the specialized tools with your API key                 |
+| `execute_query` rejected                         | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)           |

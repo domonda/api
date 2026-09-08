@@ -22,10 +22,13 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
 - [Quick start](#quick-start)
 - [Authentication](#authentication)
   - [OAuth flow](#oauth-flow)
+    - [Public endpoints](#public-endpoints)
+    - [`GET` on the base path](#get-on-the-base-path)
   - [Client ID Metadata Document (CIMD)](#client-id-metadata-document-cimd)
   - [API key flow](#api-key-flow)
 - [Client setup guides](#client-setup-guides)
 - [Tools](#tools)
+  - [What `execute_query` rejects](#what-execute_query-rejects)
 - [Resources](#resources)
 - [curl examples](#curl-examples)
 - [Why access is limited](#why-access-is-limited)
@@ -72,17 +75,56 @@ OAuth 2.0 Protected Resource Metadata flow ([RFC 9728](https://www.rfc-editor.or
    ```
    WWW-Authenticate: Bearer resource_metadata="https://domonda.app/api/mcp/.well-known/oauth-protected-resource"
    ```
-3. The client fetches that metadata, discovers the authorization server, and
-   completes a standard OAuth 2.1 authorization-code flow with PKCE.
-4. The client retries with `Authorization: Bearer <access token>`.
-
-The `.well-known/oauth-protected-resource` and
-`.well-known/oauth-authorization-server` metadata endpoints are public; every
-other path requires authentication.
+3. The client fetches that metadata. Its `authorization_servers` names the MCP
+   server itself (`https://domonda.app/api/mcp/`), **not** Auth0: the server
+   proxies `/authorize`, `/token` and `/register` through to Auth0 so it can
+   add [CIMD](#client-id-metadata-document-cimd) support.
+4. The client fetches the authorization server metadata
+   ([RFC 8414](https://www.rfc-editor.org/rfc/rfc8414)) from that identifier
+   and completes a standard OAuth 2.1 authorization-code flow with PKCE.
+5. The client retries with `Authorization: Bearer <access token>`.
 
 To act on a client company other than your default, set the
 `X-Selected-Client-Company-ID` header to the target company UUID. The server
 verifies you have access before proceeding.
+
+#### Public endpoints
+
+These paths answer without a token. Every other path under `/api/mcp/`
+requires authentication:
+
+| Path                                      | Document                                   |
+|-------------------------------------------|--------------------------------------------|
+| `/.well-known/oauth-protected-resource`   | Protected resource metadata (RFC 9728)     |
+| `/.well-known/oauth-authorization-server` | Authorization server metadata (RFC 8414)   |
+| `/.well-known/openid-configuration`       | The same document, OpenID Connect fallback |
+| `/.well-known/mcp.json`                   | MCP server card                            |
+| `/authorize`, `/token`, `/register`       | OAuth endpoints, proxied to Auth0          |
+
+The four well-known documents are also the only paths that answer a CORS
+preflight and carry `Access-Control-Allow-Origin: *`, so a browser-based MCP
+client (the MCP Inspector, for example) can read them from its own origin.
+They are public and carry no credentials.
+
+#### `GET` on the base path
+
+`GET https://domonda.app/api/mcp/` is the Streamable HTTP server-to-client
+stream, not a landing page. Without a token it answers `401` with the
+`WWW-Authenticate` header above — **that is the healthy response**, and it is
+what starts OAuth discovery. A connectivity check that expects `200` here is
+checking the wrong thing; use the `POST`-based `scripts/health_check.sh` in
+your client folder instead.
+
+Only a request that explicitly asks for HTML gets the human-readable info
+page:
+
+```bash
+curl -H 'Accept: text/html' https://domonda.app/api/mcp/
+```
+
+The stream is long-lived and kept alive with a 30-second heartbeat, so a
+client that disappears without closing its connection is noticed and cleaned
+up.
 
 ### Client ID Metadata Document (CIMD)
 
@@ -133,7 +175,10 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 - **`describe_table`** — Describe columns of an `api` schema table/view
 
 ### SQL query
-- **`execute_query`** — Execute a read-only SQL query (api schema only)
+- **`execute_query`** — Execute a read-only SQL query (api schema only).
+  Restricted to **admin, super-admin or accountant** OAuth users; API-key
+  callers are rejected outright. See
+  [What `execute_query` rejects](#what-execute_query-rejects).
 
 ### Documents
 - **`list_documents`** — List documents with filtering (archived, category, fulltext, dates, amounts, status, …)
@@ -175,6 +220,31 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 
 See each client folder's `SKILL.md` for the full parameter reference.
 
+### What `execute_query` rejects
+
+The SQL you pass is validated before it reaches the database. A query is
+rejected — with the reason in the error message — when it:
+
+- does not start with `SELECT` or `WITH`,
+- contains a DML or DDL keyword (`INSERT`, `UPDATE`, `DELETE`, `DROP`, …),
+- references a schema other than `api` (`public`, `pg_catalog`,
+  `information_schema`, …). Unqualified table names resolve to `api`,
+- uses a `pg_*` identifier outside the small allowlist of introspection
+  helpers,
+- calls one of the mutating `api` schema functions by name (`update_document`,
+  `create_invoice_accounting_item`, `partner_company_mutation`, …), or
+- uses Postgres Unicode-escape syntax (`U&"…"` / `U&'…'`).
+
+The identifier scans (`pg_*` and the mutating `api` functions) run against the
+raw SQL text, so a rejected name matches even inside a string literal or a
+comment: `WHERE title ILIKE '%update_document%'` is rejected. Search for such
+text with `search_documents` or the `fulltext` filter of `list_documents`
+instead.
+
+If a query nonetheless manages to change the scope it runs in — the tenant,
+the `search_path`, the database role, or the statement timeout — the whole
+transaction is failed and its rows are discarded rather than returned.
+
 ## Resources
 
 The server advertises the `resources` capability via RFC 6570 URI templates.
@@ -200,6 +270,13 @@ Discover the OAuth protected-resource metadata (public, no auth):
 
 ```bash
 curl -s "https://domonda.app/api/mcp/.well-known/oauth-protected-resource" | jq .
+```
+
+Check that the auth challenge is wired — this is expected to answer `401` with
+a `WWW-Authenticate` header, see [`GET` on the base path](#get-on-the-base-path):
+
+```bash
+curl -s -D- -o /dev/null "https://domonda.app/api/mcp/"
 ```
 
 Initialize a session / verify a token:
@@ -229,11 +306,12 @@ curl -s -X POST "https://domonda.app/api/mcp/" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_tables","arguments":{}}}' | jq .
 ```
 
-Run a read-only SQL query:
+Run a read-only SQL query. Note the **OAuth** token: `execute_query` is not
+available to API-key callers, so `$DOMONDA_API_KEY` is rejected here:
 
 ```bash
 curl -s -X POST "https://domonda.app/api/mcp/" \
-  -H "Authorization: Bearer $DOMONDA_API_KEY" \
+  -H "Authorization: Bearer $DOMONDA_OAUTH_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"execute_query","arguments":{"sql":"SELECT id, title, document_date FROM api.document ORDER BY document_date DESC LIMIT 5"}}}' | jq .
 ```
