@@ -152,17 +152,25 @@ For the Option 1 connector, ChatGPT needs to register itself as an OAuth client
 with domonda's authorization server. domonda advertises everything ChatGPT
 checks for, so registration is automatic:
 
-- **CIMD (preferred).** ChatGPT uses an `https://` URL as its `client_id`;
-  domonda fetches that document and registers the client with Auth0 via DCR on
-  ChatGPT's behalf. Selected automatically because domonda's
-  authorization-server metadata advertises `"client_id_metadata_document_supported": true`
-  and `"none"` in `token_endpoint_auth_methods_supported`.
-- **DCR (fallback, RFC 7591).** ChatGPT calls domonda's `/register` endpoint
-  (proxied to Auth0) once per connector instance.
+- **CIMD (preferred, and the one that applies here).** ChatGPT uses an
+  `https://` URL as its `client_id` — one document per connector installation,
+  at `https://chatgpt.com/oauth/<connectorID>/client.json`. domonda fetches
+  that document and registers the client with Auth0 on ChatGPT's behalf.
+  Selected automatically because domonda's authorization-server metadata
+  advertises `"client_id_metadata_document_supported": true` and `"none"` in
+  `token_endpoint_auth_methods_supported`.
+- **DCR (RFC 7591)** is not a usable fallback for the app connector: domonda's
+  `/register` endpoint is unauthenticated and therefore accepts only loopback
+  and private-use-scheme callbacks, and ChatGPT's callback is an HTTPS URL.
+  See [Dynamic Client Registration](../README.md#dynamic-client-registration-register).
 - **PKCE (S256)** is mandatory and advertised via
   `"code_challenge_methods_supported": ["S256"]`.
 
-No client ID or secret is entered in the ChatGPT UI. See the
+No client ID or secret is entered in the ChatGPT UI. The registration is
+stored server-side and survives domonda restarts and redeployments, so a
+connector added once keeps working without a fresh sign-in; domonda advertises
+`offline_access`, so ChatGPT asks for a **refresh token** and renews an
+expired session by itself. See the
 [main README CIMD / DCR sections](../README.md#client-id-metadata-document-cimd)
 for the full flow.
 

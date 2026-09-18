@@ -293,9 +293,20 @@ secret for you to enter, and nothing to configure on your side:
    advertises **both** `"client_id_metadata_document_supported": true` and
    `"none"` in `token_endpoint_auth_methods_supported` (required for a public
    client). See the [main README CIMD section](../README.md#client-id-metadata-document-cimd).
-2. **Dynamic Client Registration (DCR, RFC 7591)** — *automatic fallback.*
-   Claude calls domonda's `/register` endpoint on each new connection. Used
-   automatically if the CIMD metadata above is ever missing.
+2. **Dynamic Client Registration (DCR, RFC 7591)** — *fallback, for native
+   clients only.* A client calls domonda's `/register` endpoint. Because that
+   endpoint is unauthenticated, it accepts only loopback and private-use-scheme
+   callbacks, so the web-hosted Custom Connector cannot use it — it registers
+   via CIMD. The `mcp-remote` bridge of Option 2 takes its callback on
+   localhost and can. See
+   [Dynamic Client Registration](../README.md#dynamic-client-registration-register).
+
+Once registered, your connector stays registered: the mapping is stored
+server-side and survives domonda restarts and redeployments, so you are not
+sent back through sign-in and consent because the server forgot the client.
+domonda also advertises `offline_access`, so Claude asks for a **refresh
+token** and renews an expired session by itself instead of reopening the
+browser.
 
 The server enforces:
 

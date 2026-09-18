@@ -25,6 +25,7 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
     - [Public endpoints](#public-endpoints)
     - [`GET` on the base path](#get-on-the-base-path)
   - [Client ID Metadata Document (CIMD)](#client-id-metadata-document-cimd)
+    - [Dynamic Client Registration (`/register`)](#dynamic-client-registration-register)
   - [API key flow](#api-key-flow)
 - [Client setup guides](#client-setup-guides)
 - [Tools](#tools)
@@ -101,6 +102,9 @@ requires authentication:
 | `/.well-known/mcp.json`                   | MCP server card                            |
 | `/authorize`, `/token`, `/register`       | OAuth endpoints, proxied to Auth0          |
 
+`/register` is public, but does not accept every callback — see
+[Dynamic Client Registration](#dynamic-client-registration-register).
+
 The four well-known documents are also the only paths that answer a CORS
 preflight and carry `Access-Control-Allow-Origin: *`, so a browser-based MCP
 client (the MCP Inspector, for example) can read them from its own origin.
@@ -133,9 +137,42 @@ The server supports the
 mechanism from the 2025-11-25 MCP authorization spec, used by clients that
 identify themselves with an `https://` URL as their `client_id` (e.g. Claude
 and ChatGPT). No client registration step is required on your side — the server
-advertises CIMD support and registers the client transparently. Clients that do
-not use CIMD fall back to OAuth 2.0 Dynamic Client Registration
-([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591)) automatically.
+advertises CIMD support and registers the client transparently.
+
+The registration is stored server-side and outlives restarts and
+redeployments, so a connector added once keeps working: you are not sent back
+through sign-in and consent because the server forgot the client. The
+authorization server metadata also lists `offline_access` in
+`scopes_supported`, so a client that follows it asks for a **refresh token**
+and renews an expired session on its own instead of opening the browser again.
+
+**Not usable by a client that binds a loopback port per session.** Claude Code
+declares `http://localhost/callback` in its document and then listens on a
+port picked at runtime. The proxy accepts that, but the callback registered
+with Auth0 carries no port and Auth0 matches callbacks exactly, so the
+authorization request is rejected one step later. Authenticate those clients
+with an [API key](#api-key-flow) — see the
+[Claude Code guide](./claude-code/).
+
+#### Dynamic Client Registration (`/register`)
+
+A client that does not use CIMD falls back to OAuth 2.0 Dynamic Client
+Registration ([RFC 7591](https://www.rfc-editor.org/rfc/rfc7591))
+automatically. That endpoint is unauthenticated — registration is what a
+client does before it holds any credential — so it only accepts the callbacks
+a **native** client receives on the user's own machine:
+
+- a loopback address on any port: `http://localhost/…`, `http://127.0.0.1/…`,
+  `http://[::1]/…`, or
+- a private-use URI scheme carrying a path
+  ([RFC 8252 section 7.1](https://www.rfc-editor.org/rfc/rfc8252#section-7.1)),
+  e.g. `cursor://callback`.
+
+Every other `redirect_uri` — `https://` included — is answered with
+`400 invalid_redirect_uri` and the reason, before the registration reaches
+Auth0. A client served from the web has a stable HTTPS origin and should
+publish a CIMD document instead, which is what claude.ai and chatgpt.com do.
+A registration listing more than 20 redirect URIs is rejected as well.
 
 ### API key flow
 

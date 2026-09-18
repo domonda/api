@@ -33,8 +33,9 @@ upload endpoint.
 
 - [Claude Code](https://claude.ai/claude-code) installed (CLI, Desktop app,
   Web app, or IDE extension — all share the same MCP config)
-- A domonda API key (JWT) — obtain from the domonda admin panel — or an
-  Auth0 OAuth access token for the MCP resource
+- A domonda API key (JWT) — obtain from the domonda admin panel. Interactive
+  OAuth sign-in is not usable from Claude Code, see
+  [below](#oauth-is-not-available-for-claude-code--use-an-api-key)
 
 ## Directory Structure
 
@@ -109,27 +110,33 @@ This is exactly what `claude mcp add --scope user` writes for you. The bearer
 token is stored in **plaintext** in `~/.claude.json` — prefer path 1 (CLI) or
 path 2 (project `.mcp.json` with env expansion) when possible.
 
-### OAuth instead of an API key
+### OAuth is not available for Claude Code — use an API key
 
-All three paths above assume a static JWT API key. If you'd rather sign in
-with your Auth0 account, **omit the `Authorization` header** — the domonda
-MCP server exposes RFC 9728 OAuth discovery metadata at
-`.well-known/oauth-protected-resource`, and Claude Code follows the
-`WWW-Authenticate` challenge to complete the flow in your browser on first
-use:
+> **Signing in with your domonda account does not currently work from Claude
+> Code.** Omitting the `Authorization` header starts OAuth discovery
+> correctly, and the browser flow opens, but the authorization request is
+> rejected before you get a token. Use one of the three API-key paths above.
 
-```bash
-claude mcp add --scope user --transport http domonda \
-  https://domonda.app/api/mcp/
-```
+Claude Code identifies itself with a
+[Client ID Metadata Document](../README.md#client-id-metadata-document-cimd)
+that declares `http://localhost/callback`, and then listens on a port it picks
+per session. domonda's OAuth proxy accepts the port-less form (RFC 8252
+section 7.3 requires that of a native client), but the callback it can
+register with Auth0 carries no port either, and Auth0 matches callbacks
+exactly — so `http://localhost:<port>/callback` is refused at Auth0's
+`/authorize`. Nothing you can configure on your side changes this; it is
+lifted once Auth0 handles CIMD itself.
 
-This avoids persisting a bearer token on disk and is the right choice for
-multi-company users who rely on the `X-Selected-Client-Company-ID` header.
+Other Claude surfaces are unaffected: **Claude Desktop, Cowork and claude.ai**
+take a fixed HTTPS callback and sign in normally — see
+[`../claude-desktop/`](../claude-desktop/).
 
-> Some Claude Code versions in the v2.1.85+ range have regressions in the
-> OAuth discovery flow
-> ([anthropics/claude-code#44830](https://github.com/anthropics/claude-code/issues/44830));
-> if OAuth gets stuck, fall back to the Bearer-token form above.
+The practical consequences of the API-key path: the token is persisted
+wherever you put it (prefer paths 1 and 2 above), the `execute_query` tool
+stays unavailable — it requires an admin, super-admin or accountant **OAuth**
+user — and the key is bound to a single client company, so
+`X-Selected-Client-Company-ID` has nothing to select. Use a separate server
+entry per company instead.
 
 ### Base URL: production vs local
 
@@ -215,10 +222,11 @@ authentication. Two token types are supported:
 2. **OAuth (Auth0 RS256)** — an Auth0 access token issued for the MCP resource.
    The token's Auth0 `sub` claim is mapped to a Domonda user, who must be
    enabled and have access to the target company. Supports the
-   `X-Selected-Client-Company-ID` header for multi-company users. Clients that
-   support OAuth discovery will be guided automatically via the
-   `WWW-Authenticate` header and the `.well-known/oauth-protected-resource`
-   metadata endpoint (RFC 9728).
+   `X-Selected-Client-Company-ID` header for multi-company users. Claude Code
+   **cannot obtain one interactively** — see
+   [OAuth is not available for Claude Code](#oauth-is-not-available-for-claude-code--use-an-api-key).
+   Pass a token you already hold in the `Authorization` header like an API
+   key; it expires like any access token.
 
 ```
 Authorization: Bearer <DOMONDA_API_KEY_OR_OAUTH_TOKEN>
@@ -250,9 +258,10 @@ The server enforces:
 | `.mcp.json` not picked up                     | Session opened at the wrong working directory, or trust denied | Open Claude Code at the repo root; approve the trust prompt                        |
 | `${DOMONDA_API_KEY}` literally in requests    | Env var not exported in the shell that launched Claude Code | `export DOMONDA_API_KEY=…` before starting Claude Code                                |
 | HTTP 401                                      | Invalid, expired, or blocked token                          | Verify your API key or OAuth token; contact admin if blocked                          |
+| OAuth sign-in opens the browser, then fails   | Claude Code's loopback callback cannot be registered        | Expected — use an API key, see [above](#oauth-is-not-available-for-claude-code--use-an-api-key) |
 | HTTP 403                                      | Forbidden company access or insufficient OAuth scopes       | Check the selected company or required scopes                                         |
 | HTTP 404                                      | Wrong endpoint URL                                          | Ensure the URL ends with `/mcp/` or `/mcp`                                            |
 | "MCP access is restricted to admin or accountant" | The signed-in user has neither role at the selected company | Sign in as an admin, super-admin, or accountant user                              |
 | Query returns no rows                         | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                 |
-| `execute_query` not available to API-key callers | The tool requires an admin/accountant OAuth user         | Switch that server entry to OAuth, or use the specialized tools with your API key     |
+| `execute_query` not available to API-key callers | The tool requires an admin/accountant OAuth user         | Use the specialized tools with your API key; Claude Code cannot sign in via OAuth      |
 | `execute_query` rejected                      | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)            |

@@ -575,7 +575,7 @@ Authorization: Bearer <your-api-key-or-oauth-token>
 
 An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate` header — that is the healthy response and it is what starts OAuth discovery, not an error to work around.
 
-**OAuth users must be an admin, super-admin, or accountant** at the selected client company; every tool call from any other user is refused with `Not allowed: MCP access is restricted to admin or accountant users`. Beyond that gate, OAuth calls are additionally filtered by the user's own document ACL and money-account role flags, while an API key represents the whole tenant.
+**OAuth users must be an admin, super-admin, or accountant** at the selected client company; every tool call from any other user is refused with `Not allowed: MCP access is restricted to admin or accountant users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
 
 ## Usage Tips
 
