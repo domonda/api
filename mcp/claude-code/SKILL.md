@@ -346,8 +346,11 @@ Rechnungsnummer, Mindest-/Maximalbetrag. Nutzen wenn der Benutzer nach
 "Rechnungen", "Eingangsrechnungen", "Ausgangsrechnungen", "ER", "AR",
 "Gutschriften", "offene Posten", "Forderungen", "Verbindlichkeiten",
 "unbezahlte Rechnungen", "Rechnungen von <Firma>", "Rechnung Nr. …" fragt.
-Eine bekannte Rechnungsnummer immer mit `invoice_number` suchen, nicht per
-Volltextsuche. Für einzelne Rechnungsdetails siehe `get_invoice`.
+Eine bekannte Rechnungsnummer zuerst mit `invoice_number` suchen, nicht per
+Volltextsuche. Findet `invoice_number` nichts (andere Schreibweise, Bestell-
+oder interne Nummer), mit `search_documents` nachsuchen. Rechnungen
+archivierter Dokumente werden nicht gelistet. Für einzelne Rechnungsdetails
+siehe `get_invoice`.
 
 | Parameter        | Type   | Required | Description                                                                                                  |
 |------------------|--------|----------|--------------------------------------------------------------------------------------------------------------|
@@ -356,7 +359,7 @@ Volltextsuche. Für einzelne Rechnungsdetails siehe `get_invoice`.
 | `from_date`      | string | no       | Lower bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
 | `until_date`     | string | no       | Upper bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
 | `partner_name`   | string | no       | Filter by partner company name (customer or supplier, case-insensitive partial match)                        |
-| `invoice_number` | string | no       | Exact invoice number, e.g. `RE-2026-0042`; no partial match, case-sensitive. Fast even on large tenants      |
+| `invoice_number` | string | no       | Exact invoice number (string, ≥ 3 chars), e.g. `RE-2026-0042`; case-sensitive. Fast even on large tenants    |
 | `min_total`      | number | no       | Only invoices with gross total ≥ this amount                                                                 |
 | `max_total`      | number | no       | Only invoices with gross total ≤ this amount                                                                 |
 
