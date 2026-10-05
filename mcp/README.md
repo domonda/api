@@ -228,7 +228,7 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 - **`add_document`** — *(write)* Upload a document into the authenticated company
 
 ### Invoices
-- **`list_invoices`** — List invoices with filtering (date range, partner, amounts)
+- **`list_invoices`** — List invoices with filtering (date range, partner, exact invoice number, amounts)
 - **`get_invoice`** — Invoice details with line items and matched payments
 
 ### Payments

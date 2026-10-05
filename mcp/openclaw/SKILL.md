@@ -175,7 +175,7 @@ All filter parameters are optional; omitting a parameter lets the server default
 |--------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------|
 | `limit`                  | number          | Maximum number of documents to return (default 50, max 1000)                                                              |
 | `offset`                 | number          | Number of documents to skip for pagination                                                                                |
-| `search_text`            | string          | Fulltext search over the extracted document content (OCR + structured data)                                               |
+| `search_text`            | string          | Fulltext search over the extracted document content (OCR + structured data); for invoice numbers use `list_invoices`      |
 | `archived`               | string enum     | `exclude` (default, only active), `only` (only archived), or `include` (both)                                             |
 | `has_warning`            | boolean         | `true`: only documents with a warning; `false`: only documents without                                                    |
 | `internal_number`        | string          | Filter by domonda-internal sequential document number                                                                     |
@@ -238,7 +238,8 @@ sortiert. Nutzen wenn der Benutzer etwas FINDEN will, statt gezielt zu
 filtern — z. B. "finde Beleg über Büromöbel", "such mir alles zu Projekt
 X", "gibt es eine Rechnung mit …", "wo taucht der Begriff … auf". Für
 strukturierte Filter (Datum, Partner, Status, Beträge) lieber
-`list_documents` verwenden.
+`list_documents` verwenden, für eine bekannte Rechnungsnummer
+`list_invoices` mit `invoice_number`.
 
 | Parameter | Type   | Required | Description                                          |
 |-----------|--------|----------|------------------------------------------------------|
@@ -324,21 +325,23 @@ Listet Rechnungen des Mandanten (Eingangs- und Ausgangsrechnungen, inkl.
 Gutschriften) mit Rechnungsnummer, Rechnungsdatum, Fälligkeitsdatum,
 Geschäftspartner, Netto, Brutto, Währung, USt-Satz, Zahlstatus, offenem
 Betrag und Buchungsstatus. Filter: Datumsbereich, Partner-Name,
-Mindest-/Maximalbetrag. Nutzen wenn der Benutzer nach "Rechnungen",
-"Eingangsrechnungen", "Ausgangsrechnungen", "ER", "AR", "Gutschriften",
-"offene Posten", "Forderungen", "Verbindlichkeiten", "unbezahlte
-Rechnungen", "Rechnungen von <Firma>" fragt. Für einzelne Rechnungsdetails
-siehe `get_invoice`.
+Rechnungsnummer, Mindest-/Maximalbetrag. Nutzen wenn der Benutzer nach
+"Rechnungen", "Eingangsrechnungen", "Ausgangsrechnungen", "ER", "AR",
+"Gutschriften", "offene Posten", "Forderungen", "Verbindlichkeiten",
+"unbezahlte Rechnungen", "Rechnungen von <Firma>", "Rechnung Nr. …" fragt.
+Eine bekannte Rechnungsnummer immer mit `invoice_number` suchen, nicht per
+Volltextsuche. Für einzelne Rechnungsdetails siehe `get_invoice`.
 
-| Parameter      | Type   | Required | Description                                                                                                  |
-|----------------|--------|----------|--------------------------------------------------------------------------------------------------------------|
-| `limit`        | number | no       | Maximum number of invoices to return (default: 50, max: 1000)                                                |
-| `offset`       | number | no       | Number of invoices to skip for pagination (default: 0)                                                       |
-| `from_date`    | string | no       | Lower bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
-| `until_date`   | string | no       | Upper bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
-| `partner_name` | string | no       | Filter by partner company name (customer or supplier, case-insensitive partial match)                        |
-| `min_total`    | number | no       | Only invoices with gross total ≥ this amount                                                                 |
-| `max_total`    | number | no       | Only invoices with gross total ≤ this amount                                                                 |
+| Parameter        | Type   | Required | Description                                                                                                  |
+|------------------|--------|----------|--------------------------------------------------------------------------------------------------------------|
+| `limit`          | number | no       | Maximum number of invoices to return (default: 50, max: 1000)                                                |
+| `offset`         | number | no       | Number of invoices to skip for pagination (default: 0)                                                       |
+| `from_date`      | string | no       | Lower bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
+| `until_date`     | string | no       | Upper bound (inclusive) for the invoice date (YYYY-MM-DD)                                                    |
+| `partner_name`   | string | no       | Filter by partner company name (customer or supplier, case-insensitive partial match)                        |
+| `invoice_number` | string | no       | Exact invoice number, e.g. `RE-2026-0042`; no partial match, case-sensitive. Fast even on large tenants      |
+| `min_total`      | number | no       | Only invoices with gross total ≥ this amount                                                                 |
+| `max_total`      | number | no       | Only invoices with gross total ≤ this amount                                                                 |
 
 #### `get_invoice`
 
