@@ -213,7 +213,7 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 
 ### SQL query
 - **`execute_query`** — Execute a read-only SQL query (api schema only).
-  Restricted to **admin, super-admin or accountant** OAuth users; API-key
+  Restricted to **admin or super-admin** OAuth users; API-key
   callers are rejected outright. See
   [What `execute_query` rejects](#what-execute_query-rejects).
 

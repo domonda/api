@@ -144,7 +144,7 @@ Unqualifizierte Tabellennamen werden ins `api`-Schema aufgelöst. Ergebnis:
 JSON-Array von Objekten, maximal 1000 Zeilen. Daten sind auf den
 angemeldeten Mandanten eingeschränkt, aber per-Benutzer-ACL wird NICHT
 angewendet — gibt Daten des gesamten Mandanten zurück. Deshalb nur für
-Admin-/Accountant-OAuth-Benutzer freigegeben; andere Benutzer und
+Admin- und Super-Admin-OAuth-Benutzer freigegeben; andere Benutzer und
 API-Key-Aufrufer erhalten einen Autorisierungsfehler. Für benutzergefilterte
 Listen stattdessen die spezialisierten Tools (`list_documents`,
 `list_invoices`, `list_money_transactions`, …) nutzen. Vorher `list_tables`
@@ -155,7 +155,7 @@ und `describe_table` nutzen, um das Schema zu erkunden.
 | `sql`     | string | yes      | The SQL query to execute. Must start with `SELECT` or `WITH`. Only the `api` schema is accessible. |
 
 **Access.** This tool is company-scoped but does not apply per-user ACL, so it
-is restricted to **admin, super-admin, or accountant** OAuth users at the
+is restricted to **admin or super-admin** OAuth users at the
 selected client company. API-key callers are rejected outright with
 `Tool execute_query is not available to API-key callers`.
 
@@ -591,13 +591,13 @@ Authorization: Bearer <your-api-key-or-oauth-token>
 
 An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate` header — that is the healthy response and it is what starts OAuth discovery, not an error to work around.
 
-**OAuth users must be an admin, super-admin, or accountant** at the selected client company; every tool call from any other user is refused with `Not allowed: MCP access is restricted to admin or accountant users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
+**OAuth users must be an admin or super-admin** at the selected client company; every tool call from any other user, accountants included, is refused with `Not allowed: MCP access is restricted to admin users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
 
 ## Usage Tips
 
 - Start with `get_my_company` to confirm connectivity and see which company you are authenticated as.
 - Use `list_tables` and `describe_table` for schema discovery before writing queries.
-- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case — it needs an admin/accountant OAuth user and is not available to API-key callers.
+- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case — it needs an admin or super-admin OAuth user and is not available to API-key callers.
 - All date parameters use `YYYY-MM-DD` format.
 - UUID parameters must be valid UUID strings.
 - Results are capped at 1000 rows — use `limit` and `offset` for pagination.

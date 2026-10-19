@@ -133,8 +133,8 @@ take a fixed HTTPS callback and sign in normally — see
 
 The practical consequences of the API-key path: the token is persisted
 wherever you put it (prefer paths 1 and 2 above), the `execute_query` tool
-stays unavailable — it requires an admin, super-admin or accountant **OAuth**
-user — and the key is bound to a single client company, so
+stays unavailable — it requires an admin or super-admin **OAuth** user —
+and the key is bound to a single client company, so
 `X-Selected-Client-Company-ID` has nothing to select. Use a separate server
 entry per company instead.
 
@@ -184,8 +184,8 @@ See `SKILL.md` for the complete tool reference with parameters.
    schema before writing queries.
 4. **`list_documents`** or **`list_invoices`** — Browse recent data.
 5. **`execute_query`** — Run ad-hoc read-only SQL for anything the specialized
-   tools don't cover. Requires an admin, super-admin, or accountant **OAuth**
-   user; API-key callers are rejected.
+   tools don't cover. Requires an admin or super-admin **OAuth** user;
+   API-key callers are rejected.
 
 ### Tool categories
 
@@ -239,9 +239,9 @@ The server enforces:
 - **Row limit** — max 1,000 rows per query
 - **Query timeout** — 30-second default
 - **Query length** — max 10,000 characters
-- **Admin/accountant requirement** — an OAuth user must be an admin,
-  super-admin, or accountant at the selected client company to use the MCP
-  server at all
+- **Admin requirement** — an OAuth user must be an admin or super-admin at
+  the selected client company to use the MCP server at all; accountants are
+  refused
 - **`execute_query` is further restricted** — it is company-scoped but does
   not apply per-user ACL, so API-key callers are rejected outright and OAuth
   callers need one of the roles above. Its SQL is validated before it reaches
@@ -261,7 +261,7 @@ The server enforces:
 | OAuth sign-in opens the browser, then fails   | Claude Code's loopback callback cannot be registered        | Expected — use an API key, see [above](#oauth-is-not-available-for-claude-code--use-an-api-key) |
 | HTTP 403                                      | Forbidden company access or insufficient OAuth scopes       | Check the selected company or required scopes                                         |
 | HTTP 404                                      | Wrong endpoint URL                                          | Ensure the URL ends with `/mcp/` or `/mcp`                                            |
-| "MCP access is restricted to admin or accountant" | The signed-in user has neither role at the selected company | Sign in as an admin, super-admin, or accountant user                              |
+| "MCP access is restricted to admin users"         | The signed-in user is not an admin at the selected company  | Sign in as an admin or super-admin user                                           |
 | Query returns no rows                         | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                 |
-| `execute_query` not available to API-key callers | The tool requires an admin/accountant OAuth user         | Use the specialized tools with your API key; Claude Code cannot sign in via OAuth      |
+| `execute_query` not available to API-key callers | The tool requires an admin or super-admin OAuth user     | Use the specialized tools with your API key; Claude Code cannot sign in via OAuth      |
 | `execute_query` rejected                      | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)            |
