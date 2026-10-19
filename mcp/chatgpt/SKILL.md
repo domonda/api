@@ -7,15 +7,7 @@ description: >
   HTTP with Bearer token authentication (API key or OAuth). All query tools
   are read-only; the only write tool is `add_document`, which uploads a file
   into the authenticated company's document pipeline.
-env:
-  - name: DOMONDA_API_KEY
-    required: true
-    secret: true
-    description: API key (HS256 JWT) or Auth0 OAuth access token for Bearer authentication
-  - name: DOMONDA_URL
-    required: false
-    secret: false
-    description: "Override domonda base URL (default: https://domonda.app)"
+compatibility: ChatGPT and OpenAI Responses API with remote MCP access
 ---
 
 # domonda MCP Skill
@@ -46,15 +38,19 @@ Query documents, invoices, payments, money transactions, companies, GL accounts,
 
 Pick one of:
 
-**a. ChatGPT developer-mode connector (recommended, OAuth):**
+**a. ChatGPT custom MCP plugin (OAuth):**
 
-1. A workspace **admin** enables developer mode / custom MCP connectors
-   (Settings → Connectors → Advanced → Developer mode).
-2. In ChatGPT: **Settings → Connectors → Add custom connector** (or **Create**).
-3. URL: `https://domonda.app/api/mcp/`
-4. Complete the Auth0 OAuth sign-in prompt — ChatGPT discovers the flow via
-   RFC 9728 metadata and registers itself via CIMD/DCR automatically. There is
-   **no** raw-API-key field in the ChatGPT UI; use path **b** for a static key.
+1. On ChatGPT web, a Business workspace admin/owner or an authorized
+   Enterprise/Edu user opens **Plugins → + → Add custom MCP server**.
+   Full MCP access is available on Business and Enterprise/Edu; Pro connections
+   are limited to read/fetch actions, so `add_document` is unavailable there.
+2. Enter the name `domonda` and URL `https://domonda.app/api/mcp/`, then
+   choose OAuth with **Client ID Metadata Document (CIMD)** registration and
+   public-client token authentication (`none`) if asked.
+3. Acknowledge the risk warning, select **Create as a plugin**, install it,
+   and complete the Auth0 sign-in. Use `@domonda` in a new chat. The UI has
+   no raw API-key field; use path **b** for a static key. No Developer Mode
+   switch is needed.
 
 **b. OpenAI Responses API / Agents SDK (programmatic, API key):**
 
@@ -66,7 +62,7 @@ Pass the domonda MCP endpoint as an `mcp` tool with a Bearer header:
   "server_label": "domonda",
   "server_url": "https://domonda.app/api/mcp/",
   "headers": { "Authorization": "Bearer YOUR_API_KEY_HERE" },
-  "require_approval": "never"
+  "require_approval": { "never": { "tool_names": ["list_capabilities", "list_tables", "describe_table", "execute_query", "list_documents", "get_document", "get_document_fulltext", "search_documents", "download_document_pdf", "get_document_thumbnail", "get_document_preview", "list_invoices", "get_invoice", "list_money_accounts", "list_money_transactions", "get_invoice_payments", "get_my_company", "list_document_categories", "list_gl_accounts", "list_partner_companies", "get_user", "list_document_workflows", "list_document_workflow_steps", "list_document_workflow_states", "get_app_urls", "get_document_urls", "get_document_selection_url"] } }
 }
 ```
 
@@ -77,6 +73,12 @@ Verify endpoint connectivity first with:
 ```
 
 See `README.md` for full setup, plans, and troubleshooting.
+
+Install this skill separately if your agent supports skills: package this
+file as `domonda/SKILL.md` with its companion `README.md` (the folder must
+match `name: domonda`), then ZIP the folder. In ChatGPT,
+open **Plugins → Skills → Create → Upload from your computer**. The skill
+provides instructions; the MCP plugin above provides the live tools.
 
 ## Available Tools
 
@@ -270,6 +272,8 @@ herunterladen", "Rechnung als PDF", "mit Audit-Trail" sagt.
 | `audit_trail`      | string  | no       | Audit-trail position in the PDF: `append`, `prepend`, `configured` (mandant setting), or `only` (audit trail only). Empty = no audit trail. |
 | `audit_trail_lang` | string  | no       | Language of the audit trail as ISO 639-1 code (default `de`)                       |
 | `inline`           | boolean | no       | `true` (default): return the PDF bytes inline as a base64-encoded resource. `false`: return an MCP `resource_link` to `document://{document_id}/pdf?...` that a resource-aware client loads via `resources/read`. |
+
+**Client limit:** Inline base64 PDFs can exceed the AI client's tool-output limit before the server's 10 MiB cap. Prefer `inline: false` when the client supports MCP resources; otherwise request a smaller document or use a direct download path.
 
 The PDF is also exposed as an MCP resource at `document://{document_id}/pdf{?audit_trail,audit_trail_lang}`, so resource-aware clients can fetch it via `resources/read`. The `configured` audit-trail value is resolved to `append`/`prepend` before a resource link is returned, so resource URIs are deterministic and cacheable.
 
@@ -581,7 +585,7 @@ Authorization: Bearer <your-api-key-or-oauth-token>
 
 An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate` header — that is the healthy response and it is what starts OAuth discovery, not an error to work around.
 
-**OAuth users must be an admin or super-admin** at the selected client company; every tool call from any other user, accountants included, is refused with `Not allowed: MCP access is restricted to admin users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
+**OAuth users must be an admin or super-admin** at the selected client company; every tool call and resource read from any other user, accountants included, is refused with `Not allowed: MCP access is restricted to admin users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
 
 ## Usage Tips
 

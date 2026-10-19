@@ -27,11 +27,12 @@ upload endpoint.
 ## Prerequisites
 
 - **Claude Desktop** app ([download](https://claude.ai/download)),
-  [**Cowork**](https://claude.com/product/cowork), or a paid plan on
-  [claude.ai](https://claude.ai/) (Free plan is limited to one custom
-  connector)
-- A domonda API key (JWT) — obtain from the domonda admin panel — or an
-  Auth0 OAuth access token for the MCP resource
+  [**Cowork**](https://claude.com/product/cowork), or an eligible plan on
+  [claude.ai](https://claude.ai/)
+- A Domonda admin/super-admin account for OAuth sign-in, or a domonda API key
+  (JWT) from the admin panel. For the Custom Connector UI, OAuth sign-in is
+  the usual path; request-header API keys are available on supported
+  organizations.
 - **For the stdio-bridge fallback only:** Node.js and `npx` (see the
   [What is `npx`?](#what-is-npx) section below for how to install them)
 
@@ -46,44 +47,55 @@ claude-desktop/
 └── README.md                            # This file
 ```
 
+To install the optional agent skill, package `SKILL.md` and this `README.md`
+inside a folder named `domonda`, ZIP that folder, and use **Customize → Skills → + → Create skill →
+Upload a skill**. The skill adds instructions; configure the connector below
+to provide live tools.
+
 ## Claude Desktop Setup
 
 Claude Desktop supports two paths. Use the **Custom Connector UI** for
-production; use the **`mcp-remote` stdio bridge** only when the UI path can't
-reach your endpoint (localhost) or when you need to inject a raw Bearer JWT
-without an OAuth flow.
+production; use the **`mcp-remote` stdio bridge** for a local endpoint that
+Anthropic's cloud cannot reach or for API-key access when the UI has no
+request-header option.
 
 ### Option 1 — Custom Connector UI (recommended)
 
-Available on Free, Pro, Max, Team, and Enterprise plans (Free is limited to
-one custom connector). Anthropic's cloud dials the MCP endpoint on your
+Available on eligible Claude plans; the current setup paths are Pro/Max and
+Team/Enterprise. Anthropic's cloud dials the MCP endpoint on your
 behalf — your machine does not need Node.js, and there is no config file to
 edit.
 
-1. Open **Settings → Connectors** (inside Claude Desktop or at
-   [claude.ai](https://claude.ai/) → Settings → Connectors).
-2. Scroll to **Add custom connector**.
-3. Enter the MCP URL: `https://domonda.app/api/mcp/`
-4. Complete the authentication prompt. domonda's MCP endpoint serves the
-   OAuth discovery metadata (`.well-known/oauth-protected-resource` per
-   RFC 9728) and proxies the `/authorize`, `/token` and `/register` endpoints
-   to Auth0, so the UI will redirect you to Auth0 to sign in.
-5. Confirm the tools appear in the tool picker (hammer icon) in a new chat.
+1. On Pro/Max, open **Customize → Connectors → + Add → Add custom connector**.
+   On Team/Enterprise, an owner first adds the web connector under
+   **Organization settings → Connectors → Add → Custom → Web**; members then
+   open **Customize → Connectors** and select **Connect**.
+2. Enter `https://domonda.app/api/mcp/` and review the detected
+   authentication settings.
+3. For OAuth, choose **Sign in now** or **Sign in when needed**, then choose
+   **Use Claude's published identity** under OAuth client. Do not choose
+   **Register automatically**: domonda's DCR endpoint rejects the HTTPS
+   callback Claude uses. Complete the Auth0 sign-in as a Domonda admin or
+   super-admin at the target company.
+4. If your connector setup offers request headers and you prefer an API key,
+   choose **No sign in** and set `Authorization: Bearer <your API key>` under
+   **Request headers**. On Team/Enterprise, this is a shared credential for
+   everyone using the connector, so scope it accordingly.
+5. In a new chat, use **+ → Connectors** to enable domonda.
 
 > **Doesn't work for localhost.** The connector originates from Anthropic's
 > cloud, not your machine, so `http://localhost:<port>/mcp/` is unreachable.
 > Use Option 2 for local development.
 >
-> **Plain API-key JWTs aren't supported here.** The UI drives an OAuth flow;
-> use Option 2 if you want to paste a raw `Authorization: Bearer <jwt>`
-> header instead.
+> **Request headers may be unavailable in some organizations.** If the UI
+> does not offer them, use OAuth or the Option 2 API-key bridge.
 
 ### Option 2 — `mcp-remote` stdio bridge (fallback)
 
-Use this when the Custom Connector UI doesn't fit: **localhost dev endpoints**
-or **raw Bearer JWT** authentication without OAuth. Claude Desktop talks
-stdio to the local `mcp-remote` process, which in turn speaks Streamable
-HTTP to the domonda server.
+Use this for a **localhost development endpoint**, where the MCP connection
+must originate from your machine, or for **API-key access** when the Custom
+Connector UI has no request-header option. Claude Desktop talks stdio to the
+local `mcp-remote` process, which in turn speaks Streamable HTTP to domonda.
 
 See [mcp-remote](https://www.npmjs.com/package/mcp-remote) for the upstream
 package.
@@ -139,17 +151,54 @@ template.
     "domonda": {
       "command": "npx",
       "args": [
+        "-y",
         "mcp-remote",
-        "https://domonda.app/api/mcp/",
-        "--header",
-        "Authorization: Bearer YOUR_API_KEY_HERE"
+        "https://domonda.app/api/mcp/"
       ]
     }
   }
 }
 ```
 
-Replace `YOUR_API_KEY_HERE` with your actual domonda JWT API key.
+With this configuration, `mcp-remote` handles the OAuth sign-in and stores
+its OAuth credentials locally. Sign in as a Domonda admin or super-admin at
+the target company.
+
+**API-key alternative:** If you use a domonda API key, store its HTTP header
+in a local file and pass the file path to `mcp-remote`. This also works when
+the Custom Connector UI does not offer request headers. Create a file outside
+the repository containing exactly one line:
+
+```text
+Authorization: Bearer <your domonda API key>
+```
+
+Keep the file private (for example, `chmod 600` on macOS/Linux), and replace
+the path below with its absolute path. On Windows, escape backslashes in the
+JSON path (for example, `C:\\Users\\you\\domonda-mcp.headers`).
+
+```json
+{
+  "mcpServers": {
+    "domonda": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://domonda.app/api/mcp/",
+        "--header-file",
+        "/absolute/path/to/domonda-mcp.headers"
+      ]
+    }
+  }
+}
+```
+
+The header file keeps the API key out of process arguments and the Claude
+Desktop JSON config. See the upstream
+[mcp-remote custom-header documentation](https://github.com/punkpeye/mcp-remote#custom-headers)
+for this option. API-key callers are scoped to the key's company and cannot
+use `execute_query`.
 
 > **Base URL.** The production MCP endpoint is
 > `https://domonda.app/api/mcp/` — note the `/api` prefix. A non-production
@@ -165,29 +214,31 @@ missing `/api` segment):
     "domonda": {
       "command": "npx",
       "args": [
+        "-y",
         "mcp-remote",
         "http://localhost:<port>/mcp/",
-        "--header",
-        "Authorization: Bearer YOUR_API_KEY_HERE"
+        "--allow-http"
       ]
     }
   }
 }
 ```
 
+The `--allow-http` flag is needed for a trusted local HTTP endpoint.
+
 #### 3. Restart Claude Desktop
 
 Quit and reopen Claude Desktop for the configuration to take effect.
-The domonda tools should appear in the tool picker (hammer icon).
+Start a new chat and confirm the domonda tools are available.
 
 ## Cowork and claude.ai
 
 [Claude Cowork](https://claude.com/product/cowork) and the
 [claude.ai](https://claude.ai/) web app use the same Custom Connector flow as
-Option 1. Open Settings → Connectors (direct link:
-[claude.ai/settings/connectors](https://claude.ai/settings/connectors)), click
-**Add custom connector**, paste `https://domonda.app/api/mcp/`, and complete
-the Auth0 OAuth prompt. Any connector you add at claude.ai is also available
+Option 1. Open **Customize → Connectors** (direct link:
+[claude.ai/customize/connectors](https://claude.ai/customize/connectors)), add
+`https://domonda.app/api/mcp/` with Claude's published OAuth identity, and
+complete the Auth0 sign-in. Any connector you add at claude.ai is also available
 inside Claude Desktop and Cowork on the same account.
 
 > See the [Claude custom connectors help article](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)
@@ -196,6 +247,9 @@ inside Claude Desktop and Cowork on the same account.
 ## Verify Connectivity
 
 ### Health check script
+
+The script below checks an API key independently of the OAuth connector. For
+OAuth, verify that `get_my_company` works in a Claude conversation.
 
 ```bash
  export DOMONDA_API_KEY="your-api-key-here"   # leading space keeps this out of shell history
@@ -269,7 +323,7 @@ authentication. Two token types are supported:
    programmatic access.
 2. **OAuth (Auth0 RS256)** — an Auth0 access token issued for the MCP resource.
    The token's Auth0 `sub` claim is mapped to a Domonda user, who must be
-   enabled and have access to the target company. Supports the
+   an admin or super-admin at the target company. Supports the
    `X-Selected-Client-Company-ID` header for multi-company users. Clients that
    support OAuth discovery will be guided automatically via the
    `WWW-Authenticate` header and the `.well-known/oauth-protected-resource`
@@ -281,15 +335,14 @@ Authorization: Bearer <DOMONDA_API_KEY_OR_OAUTH_TOKEN>
 
 ### OAuth client registration (CIMD, DCR)
 
-When you add domonda through the Custom Connector UI, Claude has to register
-itself as an OAuth client with domonda's authorization server before the
-sign-in flow can run. This happens automatically — there is no client ID or
-secret for you to enter, and nothing to configure on your side:
+When you add domonda through the Custom Connector UI, choose **Use Claude's
+published identity** so its CIMD document identifies the OAuth client. There
+is no client ID or secret for you to enter:
 
-1. **Client ID Metadata Document (CIMD)** — *preferred, automatic.* Claude
+1. **Client ID Metadata Document (CIMD)** — *the supported connector path.* Claude
    uses an `https://` URL as its `client_id`, and domonda's server fetches
-   that document and registers the client on Claude's behalf. Claude selects
-   CIMD automatically because domonda's authorization-server metadata
+   that document and registers the client on Claude's behalf. Choose Claude's
+   published identity because domonda's authorization-server metadata
    advertises **both** `"client_id_metadata_document_supported": true` and
    `"none"` in `token_endpoint_auth_methods_supported` (required for a public
    client). See the [main README CIMD section](../README.md#client-id-metadata-document-cimd).
@@ -330,7 +383,7 @@ The server enforces:
 | Symptom                                             | Cause                                                       | Fix                                                                                       |
 |-----------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | Custom Connector can't reach `localhost:…`          | Connector dials from Anthropic's cloud, not your machine    | Switch to Option 2 (`mcp-remote` stdio bridge)                                            |
-| OAuth redirect fails / no OAuth prompt              | Using a local / non-public URL, or plan doesn't support it  | Use Option 2 with a raw JWT in the `Authorization` header                                 |
+| OAuth redirect fails / no OAuth prompt              | Using a local / non-public URL, or incorrect client identity | Use Option 2 for localhost; for the connector select Claude's published identity         |
 | Tools don't appear (Option 2) in Claude Desktop     | Config file not found or malformed JSON                     | Verify the path and validate JSON syntax                                                  |
 | `npx` not found (Option 2)                          | Node.js not installed, or terminal opened before install    | See [What is `npx`?](#what-is-npx); install Node.js and restart the terminal              |
 | `mcp-remote` connection error (Option 2)            | Network or firewall issue                                   | Check internet connectivity; run `./scripts/health_check.sh`                              |

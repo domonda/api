@@ -1,4 +1,4 @@
-# domonda MCP — OpenClaw Skill & Plugin
+# domonda MCP — OpenClaw Skill & MCP Connection
 
 This directory contains an [OpenClaw](https://openclaw.ai) skill that connects
 AI agents to the [domonda](https://domonda.app) financial data platform via its
@@ -22,8 +22,8 @@ which uploads a file into the authenticated company's document pipeline.
 
 ## Prerequisites
 
-- An OpenClaw account and a configured agent
-- A domonda API key (JWT) or an Auth0 OAuth access token for the MCP resource
+- OpenClaw installed with an agent configured
+- A domonda API key (JWT), or a Domonda admin/super-admin account for OAuth
 - `curl` (for the health check script)
 
 ## Directory Structure
@@ -42,77 +42,92 @@ openclaw/
 
 ### 1. Register the skill in OpenClaw
 
-Add the `domonda` skill to your OpenClaw agent. Point it at the `SKILL.md`
-file in this directory — OpenClaw reads the YAML frontmatter to discover the
-skill name, description, and required environment variables.
+Copy `SKILL.md` into `<workspace>/skills/domonda/SKILL.md` or
+`~/.openclaw/skills/domonda/SKILL.md`. OpenClaw discovers skills from those
+directories; the `domonda` folder must match the skill name in its frontmatter.
+The skill supplies instructions, while the MCP server entry below supplies
+the live tools.
 
 ### 2. Set up environment variables
 
-Copy the example and fill in your API key:
+For an API-key connection, add the key to `~/.openclaw/.env` (or the Gateway
+process environment). Use `.env.example` as a template, but do not put the
+credential in the skill folder:
 
 ```bash
-cp .env.example .env
+mkdir -p ~/.openclaw
+chmod 700 ~/.openclaw
 ```
 
-Edit `.env`:
+Edit `~/.openclaw/.env`:
 
 ```
-DOMONDA_API_KEY=eyJhbGciOiJSUzI1NiIs...    # your JWT API key
+DOMONDA_API_KEY=eyJhbGciOiJIUzI1NiIs...    # your JWT API key
 ```
 
-| Variable          | Required | Description                                              |
-|-------------------|----------|----------------------------------------------------------|
-| `DOMONDA_API_KEY` | yes      | JWT API key for Bearer token authentication              |
-| `DOMONDA_URL`     | no       | Override base URL (default: `https://domonda.app`)       |
+| Variable          | Required     | Description                                           |
+|-------------------|--------------|-------------------------------------------------------|
+| `DOMONDA_API_KEY` | API key path | JWT API key for Bearer token authentication           |
+| `DOMONDA_MCP_URL` | no           | Full URL for the health check (default: production)   |
 
-> **Security:** Never commit `.env` to version control. The `.env` file is
-> listed in `.gitignore`. The API key is a secret and must not be logged,
-> displayed, or passed as a CLI argument.
+> **Security:** Keep `~/.openclaw/.env` private (`chmod 600 ~/.openclaw/.env`).
+> The API key is a secret and must not be committed, logged, displayed, or
+> passed as a CLI argument. Skip the key entirely if you use OAuth below.
 
 ### 3. Configure the MCP server connection
 
-Copy the example configuration:
-
-```bash
-cp openclaw.json.example openclaw.json
-```
-
-The default configuration connects to the production domonda MCP endpoint:
+Merge the `domonda` entry from `openclaw.json.example` into
+`~/.openclaw/openclaw.json`. OpenClaw loads that config path by default; a
+copy in this skill directory is not loaded. The production entry is:
 
 ```json
 {
-  "mcpServers": {
-    "domonda": {
-      "url": "https://domonda.app/api/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${DOMONDA_API_KEY}"
+  "mcp": {
+    "servers": {
+      "domonda": {
+        "url": "https://domonda.app/api/mcp/",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${DOMONDA_API_KEY}"
+        }
       }
     }
   }
 }
 ```
 
-OpenClaw substitutes `${DOMONDA_API_KEY}` from the environment at runtime.
+OpenClaw substitutes `${DOMONDA_API_KEY}` from its process environment or
+global `.env` at runtime. `transport` is required here: omitting it selects
+SSE. Do not use the old top-level `mcpServers` key.
 
-For local development, set `DOMONDA_URL` in your `.env` and update the `url`
-field accordingly:
+For local development, replace the `url` value with the full local MCP URL,
+for example `http://localhost:<port>/mcp/`. Set `DOMONDA_MCP_URL` to that full
+URL in `~/.openclaw/.env` if you also want to use the health check script;
+OpenClaw's config uses the literal production URL above unless you edit it.
+
+For OAuth, use this server entry instead of the API-key `headers` entry:
 
 ```json
 {
-  "mcpServers": {
-    "domonda": {
-      "url": "${DOMONDA_URL}/api/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${DOMONDA_API_KEY}"
+  "mcp": {
+    "servers": {
+      "domonda": {
+        "url": "https://domonda.app/api/mcp/",
+        "transport": "streamable-http",
+        "auth": "oauth"
       }
     }
   }
 }
 ```
+
+Then run `openclaw mcp login domonda` and sign in as a Domonda admin or
+super-admin. OAuth also enables `execute_query`; API-key access does not.
 
 ### 4. Verify connectivity
 
-Run the included health check:
+Run `openclaw mcp doctor domonda --probe` to test the saved MCP connection.
+For an API-key connection, you can also run the included health check:
 
 ```bash
 ./scripts/health_check.sh
@@ -125,8 +140,10 @@ Checking https://domonda.app/api/mcp/ ...
 OK (HTTP 200)
 ```
 
-The script sources `.env` automatically, sends an MCP `initialize` request,
-and reports the HTTP status code.
+The script reads `~/.openclaw/.env` if the key is not already exported, sends
+an MCP `initialize` request, and reports the HTTP status code. It checks an
+API key independently of OpenClaw; use `openclaw mcp doctor domonda --probe`
+for OAuth.
 
 ## Usage
 
@@ -179,7 +196,7 @@ authentication. Two token types are supported:
    programmatic access.
 2. **OAuth (Auth0 RS256)** — an Auth0 access token issued for the MCP resource.
    The token's Auth0 `sub` claim is mapped to a Domonda user, who must be
-   enabled and have access to the target company. Supports the
+   an admin or super-admin at the target company. Supports the
    `X-Selected-Client-Company-ID` header for multi-company users. Clients that
    support OAuth discovery will be guided automatically via the
    `WWW-Authenticate` header and the `.well-known/oauth-protected-resource`
@@ -204,7 +221,7 @@ The server enforces:
 
 | Symptom                         | Cause                                      | Fix                                                  |
 |---------------------------------|--------------------------------------------|------------------------------------------------------|
-| `Error: DOMONDA_API_KEY is not set` | Missing API key                        | Set `DOMONDA_API_KEY` in `.env` or your environment  |
+| `Error: DOMONDA_API_KEY is not set` | Missing API key for the health check   | Set `DOMONDA_API_KEY` in `~/.openclaw/.env` or your environment |
 | HTTP 401                        | Invalid, expired, or blocked token         | Verify your API key or OAuth token; contact admin if blocked |
 | HTTP 403                        | Forbidden company access or insufficient OAuth scopes | Check the selected company or required scopes        |
 | HTTP 404                        | Wrong endpoint URL                         | Ensure the URL ends with `/api/mcp/` or `/api/mcp`             |
