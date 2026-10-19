@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source .env if present
-ENV_FILE="${SCRIPT_DIR}/../.env"
-if [ -f "$ENV_FILE" ]; then
+OPENCLAW_ENV_FILE="${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/.env"
+if [ -z "${DOMONDA_API_KEY:-}" ] && [ -f "$OPENCLAW_ENV_FILE" ]; then
   # shellcheck disable=SC1090
-  source "$ENV_FILE"
+  source "$OPENCLAW_ENV_FILE"
 fi
 
 DOMONDA_URL="${DOMONDA_URL:-https://domonda.app}"
-MCP_ENDPOINT="${DOMONDA_URL}/api/mcp/"
+MCP_ENDPOINT="${DOMONDA_MCP_URL:-${DOMONDA_URL}/api/mcp/}"
 
 if [ -z "${DOMONDA_API_KEY:-}" ]; then
   echo "Error: DOMONDA_API_KEY is not set."
-  echo "Set it in your environment or in .env"
+  echo "Set it in your environment or in ~/.openclaw/.env"
   exit 1
 fi
 

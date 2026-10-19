@@ -7,15 +7,7 @@ description: >
   HTTP with Bearer token authentication (API key or OAuth). All query tools
   are read-only; the only write tool is `add_document`, which uploads a file
   into the authenticated company's document pipeline.
-env:
-  - name: DOMONDA_API_KEY
-    required: true
-    secret: true
-    description: API key (HS256 JWT) or Auth0 OAuth access token for Bearer authentication
-  - name: DOMONDA_URL
-    required: false
-    secret: false
-    description: "Override domonda base URL (default: https://domonda.app)"
+compatibility: Claude Code with a remote Streamable HTTP MCP server
 ---
 
 # domonda MCP Skill
@@ -44,16 +36,17 @@ Query documents, invoices, payments, money transactions, companies, GL accounts,
 
 ## Quick Start
 
-1. Get your domonda API key from the domonda admin panel.
+1. For API-key paths **a** and **b**, get your domonda API key from the admin
+   panel and set `DOMONDA_API_KEY` in Claude Code's process environment.
 
 2. Register the server with Claude Code — pick one of:
 
-   **a. CLI (recommended, user scope):**
+   **a. CLI (user scope):**
 
    ```bash
    claude mcp add --scope user --transport http domonda \
      https://domonda.app/api/mcp/ \
-     --header "Authorization: Bearer $DOMONDA_API_KEY"
+     --header 'Authorization: Bearer ${DOMONDA_API_KEY}'
    ```
 
    **b. Project scope (`.mcp.json` at the repo root):**
@@ -75,18 +68,25 @@ Query documents, invoices, payments, money transactions, companies, GL accounts,
    Env-variable expansion (`${DOMONDA_API_KEY}`) is supported in `.mcp.json`,
    so the file is safe to commit.
 
-   **c. OAuth instead of an API key:** omit the `Authorization` header — the
-   server advertises OAuth discovery (RFC 9728), and Claude Code will open an
-   Auth0 sign-in flow on first use.
+   **c. OAuth (for `execute_query`):** Add domonda as a custom connector at
+   **claude.ai → Customize → Connectors**, sign in with an admin or super-admin
+   account, then use Claude Code with the same claude.ai account. The connected
+   server appears in `/mcp` automatically. Direct Claude Code OAuth sign-in
+   currently fails at the Auth0 loopback redirect; use the claude.ai connector.
 
-3. Start (or restart) your Claude Code session so it loads the new config.
-   Verify with `claude mcp list`.
+3. Start (or restart) Claude Code. For **a** or **b**, verify with
+   `claude mcp list`; for the claude.ai connector **c**, inspect `/mcp` in
+   an interactive session.
 
-4. Run the health check to verify endpoint connectivity:
+4. For an API key, run the health check to verify endpoint connectivity:
 
    ```bash
    ./scripts/health_check.sh
    ```
+
+Install this skill at `~/.claude/skills/domonda/SKILL.md` or
+`.claude/skills/domonda/SKILL.md` in a project. Copy the file into a
+`domonda` folder so its path matches `name: domonda`.
 
 ## Available Tools
 
@@ -280,6 +280,8 @@ herunterladen", "Rechnung als PDF", "mit Audit-Trail" sagt.
 | `audit_trail`      | string  | no       | Audit-trail position in the PDF: `append`, `prepend`, `configured` (mandant setting), or `only` (audit trail only). Empty = no audit trail. |
 | `audit_trail_lang` | string  | no       | Language of the audit trail as ISO 639-1 code (default `de`)                       |
 | `inline`           | boolean | no       | `true` (default): return the PDF bytes inline as a base64-encoded resource. `false`: return an MCP `resource_link` to `document://{document_id}/pdf?...` that a resource-aware client loads via `resources/read`. |
+
+**Client limit:** Claude Code warns above 10,000 MCP output tokens and defaults to a 25,000-token limit. A PDF returned inline as base64 can hit that limit before the server's 10 MiB cap. Prefer `inline: false` when the client supports MCP resources; otherwise request a smaller document or use a direct download path.
 
 The PDF is also exposed as an MCP resource at `document://{document_id}/pdf{?audit_trail,audit_trail_lang}`, so resource-aware clients can fetch it via `resources/read`. The `configured` audit-trail value is resolved to `append`/`prepend` before a resource link is returned, so resource URIs are deterministic and cacheable.
 
@@ -591,7 +593,7 @@ Authorization: Bearer <your-api-key-or-oauth-token>
 
 An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate` header — that is the healthy response and it is what starts OAuth discovery, not an error to work around.
 
-**OAuth users must be an admin or super-admin** at the selected client company; every tool call from any other user, accountants included, is refused with `Not allowed: MCP access is restricted to admin users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
+**OAuth users must be an admin or super-admin** at the selected client company; every tool call and resource read from any other user, accountants included, is refused with `Not allowed: MCP access is restricted to admin users`. Beyond that gate, the single-document tools and the document resources enforce the OAuth user's own document read permission, and the money tools require the `ViewMoneyAccounts` / `ViewMoneyTransactions` role flags. An API key represents the whole tenant.
 
 ## Usage Tips
 

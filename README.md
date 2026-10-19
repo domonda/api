@@ -1317,7 +1317,8 @@ over Streamable HTTP at:
 
 **Authentication** uses the same Bearer API key as the GraphQL and REST APIs
 (see [Authentication](#authentication)), or an interactive OAuth sign-in for AI
-clients that support it. All query tools are read-only; the only write tool is
+clients that support it. OAuth users must be admins or super-admins at the
+target company. All query tools are read-only; the only write tool is
 `add_document`, which uploads a file through the same pipeline as the public
 REST upload endpoint.
 

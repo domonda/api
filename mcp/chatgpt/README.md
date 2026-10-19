@@ -1,17 +1,14 @@
 # domonda MCP — ChatGPT & OpenAI API
 
 This directory contains setup instructions and configuration for connecting
-**ChatGPT** (developer-mode custom MCP connectors, sometimes surfaced as
-"apps") and the **OpenAI Responses API / Agents SDK** to the
-[domonda](https://domonda.app) financial data platform via its
+**ChatGPT** (custom MCP plugins) and the **OpenAI Responses API / Agents SDK**
+to the [domonda](https://domonda.app) financial data platform via its
 [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server.
 
-domonda's MCP server already implements everything ChatGPT requires of a remote
-MCP server — OAuth 2.1 with PKCE, RFC 9728 protected-resource metadata, RFC 8414
-authorization-server metadata, Client ID Metadata Documents (CIMD), and Dynamic
-Client Registration (DCR) — so **no server-side changes are needed** to connect
-ChatGPT. See the [main README](../README.md#authentication) for the protocol
-details.
+domonda advertises OAuth 2.1 with PKCE, RFC 9728 protected-resource metadata,
+RFC 8414 authorization-server metadata, and Client ID Metadata Documents
+(CIMD). See the [main README](../README.md#authentication) for the protocol
+details and test the connection in ChatGPT before sharing it.
 
 All query operations are **read-only**. The server exposes 28 tools covering
 documents, invoices, payments, money transactions, companies, GL accounts,
@@ -32,13 +29,12 @@ upload endpoint.
 
 ## Prerequisites
 
-- **For the ChatGPT app connector (Option 1):** a paid ChatGPT plan (Plus,
-  Pro, Business, Enterprise, or Edu) with **developer mode / custom MCP
-  connectors enabled**. On Business/Enterprise/Edu workspaces a workspace
-  owner or admin must enable it first. Authentication is **OAuth only** — the
-  ChatGPT UI has no field for pasting a static API key. See the
-  [OpenAI help article](https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta)
-  for the current plan-by-plan availability, as the UI changes frequently.
+- **For the ChatGPT plugin (Option 1):** ChatGPT on the web. Full MCP access,
+  including `add_document`, is available on Business and Enterprise/Edu.
+  Business admins/owners can create the plugin; Enterprise/Edu admins/owners
+  can grant selected members creation permission. Pro connections are limited
+  to read/fetch actions. ChatGPT's UI uses OAuth and has no field for a static
+  API key. See the [current OpenAI help article](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt).
 - **For the OpenAI Responses API / Agents SDK (Options 2 & 3):** an OpenAI API
   key, plus either a domonda API key (JWT — obtain from the domonda admin
   panel) or an Auth0 OAuth access token for the MCP resource.
@@ -58,27 +54,32 @@ chatgpt/
 > The ChatGPT app connector (Option 1) is configured entirely in the ChatGPT
 > UI, so it has no config file. The `.example` file is for the API path only.
 
+The optional `SKILL.md` is an agent instruction file, separate from the live
+MCP connection. To install it in ChatGPT, place `SKILL.md` and this `README.md`
+in a folder named `domonda`, ZIP that folder, then use **Plugins → Skills → Create → Upload from
+your computer**. The folder name must match `name: domonda` in the file.
+For Codex, copy the same folder to `~/.agents/skills/domonda/`.
+
 ## Setup — pick one of three paths
 
-### Option 1 — ChatGPT developer-mode connector (recommended, OAuth)
+### Option 1 — ChatGPT custom MCP plugin (OAuth)
 
 The connector originates from OpenAI's cloud and dials the MCP endpoint on your
 behalf — so it needs a **publicly reachable** URL and drives an OAuth sign-in.
 
-1. **Enable developer mode.** On Plus/Pro: **Settings → Connectors → Advanced →
-   Developer mode**. On Business/Enterprise/Edu: a workspace owner/admin enables
-   it under workspace settings (Permissions & Roles → Connected data → custom
-   MCP connectors), then individual members enable it under their own
-   **Settings → Connectors → Advanced**.
-2. Open **Settings → Connectors → Add custom connector** (labelled **Create** in
-   some builds).
-3. Enter the MCP URL: `https://domonda.app/api/mcp/`
-4. Complete the authentication prompt. domonda serves the Auth0 OAuth discovery
-   metadata (`.well-known/oauth-protected-resource` per RFC 9728), so ChatGPT
-   redirects you to Auth0 to sign in and registers itself via CIMD (preferred)
-   or DCR automatically — no client ID or secret to enter.
-5. Start a new chat and confirm the domonda tools appear in the connector / tool
-   picker.
+1. Open **Plugins → + → Add custom MCP server** in ChatGPT on the web. Your
+   workspace must allow **Create plugins with MCPs**; a workspace admin can
+   grant this permission where supported. Developer Mode is not required.
+2. Name it `domonda` and enter `https://domonda.app/api/mcp/` as the public
+   HTTPS endpoint.
+3. Configure OAuth and select **CIMD** for client registration. domonda's
+   `/register` endpoint does not accept ChatGPT's HTTPS callback, so DCR does
+   not work here. Select public-client token authentication (`none`) if asked.
+4. Review the risk warning, select **Create as a plugin**, and inspect the
+   discovered tools. Install the plugin and complete the Auth0 sign-in as a
+   Domonda admin or super-admin for the company you want to access.
+5. In a new chat, type `@` and select the domonda plugin. Try
+   `get_my_company` to verify the connection.
 
 > **Doesn't work for localhost.** Because the connector dials from OpenAI's
 > cloud, `http://localhost:<port>/mcp/` is unreachable. Use Option 2 or 3 against
@@ -101,20 +102,35 @@ import os
 client = OpenAI()  # reads OPENAI_API_KEY
 
 response = client.responses.create(
-    model="gpt-5",
+    model="gpt-6-astra",
     tools=[
         {
             "type": "mcp",
             "server_label": "domonda",
             "server_url": "https://domonda.app/api/mcp/",
             "headers": {"Authorization": f"Bearer {os.environ['DOMONDA_API_KEY']}"},
-            "require_approval": "never",
+            "require_approval": {"never": {"tool_names": [
+                "list_capabilities", "list_tables", "describe_table", "execute_query",
+                "list_documents", "get_document", "get_document_fulltext",
+                "search_documents", "download_document_pdf", "get_document_thumbnail",
+                "get_document_preview", "list_invoices", "get_invoice",
+                "list_money_accounts", "list_money_transactions", "get_invoice_payments",
+                "get_my_company", "list_document_categories", "list_gl_accounts",
+                "list_partner_companies", "get_user", "list_document_workflows",
+                "list_document_workflow_steps", "list_document_workflow_states",
+                "get_app_urls", "get_document_urls", "get_document_selection_url",
+            ]}},
         },
     ],
     input="Show me the 5 most recent invoices over €1,000.",
 )
 print(response.output_text)
 ```
+
+This exempts the read-only tools from approval. `add_document` still requires
+an MCP approval response before the API executes it; handle any
+`mcp_approval_request` returned by the first call. The example does not
+auto-approve uploads.
 
 > OpenAI discards the header values after each request, so the
 > `Authorization` header must be included with **every** API call. A domonda
@@ -124,6 +140,7 @@ print(response.output_text)
 ### Option 3 — OpenAI Agents SDK (programmatic)
 
 ```python
+import asyncio
 import os
 from agents import Agent, Runner
 from agents.mcp import MCPServerStreamableHttp
@@ -136,6 +153,7 @@ async def main():
             "headers": {"Authorization": f"Bearer {os.environ['DOMONDA_API_KEY']}"},
         },
         cache_tools_list=True,
+        require_approval={"always": {"tool_names": ["add_document"]}},
     ) as server:
         agent = Agent(
             name="Assistant",
@@ -144,7 +162,12 @@ async def main():
         )
         result = await Runner.run(agent, "Which GL accounts are in use?")
         print(result.final_output)
+
+asyncio.run(main())
 ```
+
+If the agent calls `add_document`, handle the SDK's human approval pause before
+resuming the run. This example asks only a read question and does not upload.
 
 ## How ChatGPT registers as an OAuth client
 
@@ -152,13 +175,13 @@ For the Option 1 connector, ChatGPT needs to register itself as an OAuth client
 with domonda's authorization server. domonda advertises everything ChatGPT
 checks for, so registration is automatic:
 
-- **CIMD (preferred, and the one that applies here).** ChatGPT uses an
-  `https://` URL as its `client_id` — one document per connector installation,
-  at `https://chatgpt.com/oauth/<connectorID>/client.json`. domonda fetches
+- **CIMD (the one that applies here).** ChatGPT uses an `https://` URL as its
+  `client_id`, either the stable `https://chatgpt.com/oauth/client.json` or a
+  callback-specific document. domonda fetches
   that document and registers the client with Auth0 on ChatGPT's behalf.
-  Selected automatically because domonda's authorization-server metadata
-  advertises `"client_id_metadata_document_supported": true` and `"none"` in
-  `token_endpoint_auth_methods_supported`.
+  Select CIMD when configuring the plugin. domonda's authorization-server
+  metadata advertises `"client_id_metadata_document_supported": true` and
+  `"none"` in `token_endpoint_auth_methods_supported`.
 - **DCR (RFC 7591)** is not a usable fallback for the app connector: domonda's
   `/register` endpoint is unauthenticated and therefore accepts only loopback
   and private-use-scheme callbacks, and ChatGPT's callback is an HTTPS URL.
@@ -259,7 +282,7 @@ authentication. Two token types are supported:
    accept it.
 2. **OAuth (Auth0 RS256)** — an Auth0 access token issued for the MCP resource.
    The token's Auth0 `sub` claim is mapped to a Domonda user, who must be
-   enabled and have access to the target company. This is what the ChatGPT app
+   an admin or super-admin at the target company. This is what the ChatGPT app
    connector (Option 1) obtains automatically. Supports the
    `X-Selected-Client-Company-ID` header for multi-company users.
 
@@ -288,7 +311,7 @@ The server enforces:
 
 | Symptom                                          | Cause                                                        | Fix                                                                                  |
 |--------------------------------------------------|--------------------------------------------------------------|--------------------------------------------------------------------------------------|
-| No "Add custom connector" / "Create" option      | Developer mode not enabled, or plan/workspace doesn't allow it | Enable developer mode (Settings → Connectors → Advanced); on workspaces ask an admin |
+| No "Add custom MCP server" option                | Workspace permission or plan does not allow creation          | Ask a workspace admin about **Create plugins with MCPs** and check plan availability |
 | Connector can't reach `localhost:…`              | Connector dials from OpenAI's cloud, not your machine        | Use Option 2/3, or expose the local server over HTTPS via a tunnel                    |
 | No place to paste an API key in ChatGPT          | The app connector UI is OAuth-only                           | Use the Responses API / Agents SDK (Options 2 & 3) for a static Bearer JWT            |
 | OAuth sign-in loops or fails                     | Client registration or the authorization round-trip failed   | Retry adding the connector; if it persists, contact domonda support                  |

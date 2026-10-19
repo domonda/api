@@ -1,9 +1,12 @@
 {
-  "mcpServers": {
-    "domonda": {
-      "url": "https://domonda.app/api/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${DOMONDA_API_KEY}"
+  "mcp": {
+    "servers": {
+      "domonda": {
+        "url": "https://domonda.app/api/mcp/",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${DOMONDA_API_KEY}"
+        }
       }
     }
   }

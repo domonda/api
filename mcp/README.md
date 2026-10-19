@@ -42,8 +42,8 @@ signing in via OAuth. Then jump to the guide for your client:
 
 - **[Claude Code](./claude-code/)** — Anthropic's CLI / IDE agent (native HTTP MCP)
 - **[Claude Desktop, Cowork & claude.ai](./claude-desktop/)** — Custom Connector UI
-- **[ChatGPT & OpenAI API](./chatgpt/)** — developer-mode connector + Responses API
-- **[OpenClaw](./openclaw/)** — OpenClaw skill / plugin
+- **[ChatGPT & OpenAI API](./chatgpt/)** — custom MCP plugin + Responses API
+- **[OpenClaw](./openclaw/)** — OpenClaw skill and MCP connection
 
 ## Authentication
 
@@ -56,8 +56,8 @@ supported:
    claim identifies the client company directly. This is the simplest option
    for programmatic access.
 2. **OAuth** — an access token obtained by signing in with your Domonda
-   account. The token is mapped to a Domonda user, who must be enabled and have
-   access to the target company. This is what interactive AI clients (Claude
+   account. The token is mapped to an enabled Domonda user who must be an admin
+   or super-admin at the target company. This is what interactive AI clients (Claude
    Desktop, ChatGPT, …) obtain automatically.
 
 ```
@@ -87,7 +87,8 @@ OAuth 2.0 Protected Resource Metadata flow ([RFC 9728](https://www.rfc-editor.or
 
 To act on a client company other than your default, set the
 `X-Selected-Client-Company-ID` header to the target company UUID. The server
-verifies you have access before proceeding.
+verifies your admin or super-admin role at the selected company before
+proceeding; super-admins count as admins.
 
 #### Public endpoints
 
@@ -146,12 +147,13 @@ authorization server metadata also lists `offline_access` in
 `scopes_supported`, so a client that follows it asks for a **refresh token**
 and renews an expired session on its own instead of opening the browser again.
 
-**Not usable by a client that binds a loopback port per session.** Claude Code
-declares `http://localhost/callback` in its document and then listens on a
+**Claude Code direct OAuth caveat.** Claude Code declares
+`http://localhost/callback` in its CIMD document and then listens on a
 port picked at runtime. The proxy accepts that, but the callback registered
 with Auth0 carries no port and Auth0 matches callbacks exactly, so the
-authorization request is rejected one step later. Authenticate those clients
-with an [API key](#api-key-flow) — see the
+authorization request is rejected one step later. Claude Code users can use a
+Domonda connector signed in on claude.ai with the same account, or authenticate
+a directly configured server with an [API key](#api-key-flow). See the
 [Claude Code guide](./claude-code/).
 
 #### Dynamic Client Registration (`/register`)
@@ -192,8 +194,8 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 
 - [`claude-code/`](./claude-code/) — Claude Code CLI / IDE (native HTTP MCP, no bridge)
 - [`claude-desktop/`](./claude-desktop/) — Claude Desktop, Cowork, and claude.ai (Custom Connector UI, with an `mcp-remote` fallback)
-- [`chatgpt/`](./chatgpt/) — ChatGPT developer-mode connector and the OpenAI Responses API / Agents SDK
-- [`openclaw/`](./openclaw/) — OpenClaw skill and plugin
+- [`chatgpt/`](./chatgpt/) — ChatGPT custom MCP plugin and the OpenAI Responses API / Agents SDK
+- [`openclaw/`](./openclaw/) — OpenClaw skill and MCP connection
 
 > **Tool descriptions are in German.** The tool and parameter descriptions the
 > server surfaces at runtime are written in German with Domonda domain

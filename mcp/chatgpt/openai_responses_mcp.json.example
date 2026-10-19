@@ -5,5 +5,19 @@
   "headers": {
     "Authorization": "Bearer ${DOMONDA_API_KEY}"
   },
-  "require_approval": "never"
+  "require_approval": {
+    "never": {
+      "tool_names": [
+        "list_capabilities", "list_tables", "describe_table", "execute_query",
+        "list_documents", "get_document", "get_document_fulltext",
+        "search_documents", "download_document_pdf", "get_document_thumbnail",
+        "get_document_preview", "list_invoices", "get_invoice",
+        "list_money_accounts", "list_money_transactions", "get_invoice_payments",
+        "get_my_company", "list_document_categories", "list_gl_accounts",
+        "list_partner_companies", "get_user", "list_document_workflows",
+        "list_document_workflow_steps", "list_document_workflow_states",
+        "get_app_urls", "get_document_urls", "get_document_selection_url"
+      ]
+    }
+  }
 }
