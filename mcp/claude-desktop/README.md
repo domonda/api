@@ -27,9 +27,8 @@ upload endpoint.
 ## Prerequisites
 
 - **Claude Desktop** app ([download](https://claude.ai/download)),
-  [**Cowork**](https://claude.com/product/cowork), or a paid plan on
-  [claude.ai](https://claude.ai/) (Free plan is limited to one custom
-  connector)
+  [**Cowork**](https://claude.com/product/cowork), or an eligible plan on
+  [claude.ai](https://claude.ai/)
 - A Domonda admin/super-admin account for OAuth sign-in, or a domonda API key
   (JWT) from the admin panel. For the Custom Connector UI, OAuth sign-in is
   the usual path; request-header API keys are available on supported
@@ -57,7 +56,8 @@ to provide live tools.
 
 Claude Desktop supports two paths. Use the **Custom Connector UI** for
 production; use the **`mcp-remote` stdio bridge** for a local endpoint that
-Anthropic's cloud cannot reach.
+Anthropic's cloud cannot reach or for API-key access when the UI has no
+request-header option.
 
 ### Option 1 — Custom Connector UI (recommended)
 
@@ -88,13 +88,14 @@ edit.
 > Use Option 2 for local development.
 >
 > **Request headers may be unavailable in some organizations.** If the UI
-> does not offer them, use OAuth or Option 2 for a local endpoint.
+> does not offer them, use OAuth or the Option 2 API-key bridge.
 
 ### Option 2 — `mcp-remote` stdio bridge (fallback)
 
 Use this for a **localhost development endpoint**, where the MCP connection
-must originate from your machine. Claude Desktop talks stdio to the local
-`mcp-remote` process, which in turn speaks Streamable HTTP to domonda.
+must originate from your machine, or for **API-key access** when the Custom
+Connector UI has no request-header option. Claude Desktop talks stdio to the
+local `mcp-remote` process, which in turn speaks Streamable HTTP to domonda.
 
 See [mcp-remote](https://www.npmjs.com/package/mcp-remote) for the upstream
 package.
@@ -159,8 +160,45 @@ template.
 }
 ```
 
-`mcp-remote` handles the OAuth sign-in and stores its OAuth credentials
-locally. Sign in as a Domonda admin or super-admin at the target company.
+With this configuration, `mcp-remote` handles the OAuth sign-in and stores
+its OAuth credentials locally. Sign in as a Domonda admin or super-admin at
+the target company.
+
+**API-key alternative:** If you use a domonda API key, store its HTTP header
+in a local file and pass the file path to `mcp-remote`. This also works when
+the Custom Connector UI does not offer request headers. Create a file outside
+the repository containing exactly one line:
+
+```text
+Authorization: Bearer <your domonda API key>
+```
+
+Keep the file private (for example, `chmod 600` on macOS/Linux), and replace
+the path below with its absolute path. On Windows, escape backslashes in the
+JSON path (for example, `C:\\Users\\you\\domonda-mcp.headers`).
+
+```json
+{
+  "mcpServers": {
+    "domonda": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://domonda.app/api/mcp/",
+        "--header-file",
+        "/absolute/path/to/domonda-mcp.headers"
+      ]
+    }
+  }
+}
+```
+
+The header file keeps the API key out of process arguments and the Claude
+Desktop JSON config. See the upstream
+[mcp-remote custom-header documentation](https://github.com/punkpeye/mcp-remote#custom-headers)
+for this option. API-key callers are scoped to the key's company and cannot
+use `execute_query`.
 
 > **Base URL.** The production MCP endpoint is
 > `https://domonda.app/api/mcp/` — note the `/api` prefix. A non-production

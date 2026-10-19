@@ -50,7 +50,7 @@ Pick one of:
    For an API key where request headers are available, choose **No sign in**
    and set request header `Authorization: Bearer <your API key>` instead.
 
-**b. `mcp-remote` stdio bridge (local development, OAuth):**
+**b. `mcp-remote` stdio bridge (local development or API key):**
 
 Edit `claude_desktop_config.json` and add:
 
@@ -69,8 +69,13 @@ Edit `claude_desktop_config.json` and add:
 }
 ```
 
-Restart Claude Desktop and complete the OAuth sign-in. Verify endpoint
-connectivity with an API key, if you have one, using:
+For OAuth, restart Claude Desktop and complete the sign-in. To use an API key
+instead, create a private local file containing
+`Authorization: Bearer <your domonda API key>` and add `"--header-file"` and
+the file's absolute path after the MCP URL in `args`. Keep this file outside
+the repository and restrict its permissions. The key stays out of process
+arguments and the Claude Desktop JSON config. See `README.md` for a complete
+example. Verify endpoint connectivity with an API key, if you have one, using:
 
 ```bash
 ./scripts/health_check.sh
