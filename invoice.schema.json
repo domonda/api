@@ -32,7 +32,6 @@
       "oneOf": [
         {
           "type": "string",
-          "maxLength": 16,
           "minLength": 4
         },
         {
