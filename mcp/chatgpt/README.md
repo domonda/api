@@ -244,8 +244,8 @@ for the complete tool reference with parameters.
    schema before writing queries.
 4. **`list_documents`** or **`list_invoices`** — Browse recent data.
 5. **`execute_query`** — Run ad-hoc read-only SQL for anything the specialized
-   tools don't cover. Requires an admin or super-admin **OAuth** user;
-   API-key callers are rejected.
+   tools don't cover. Available with an API key or an admin or super-admin
+   **OAuth** user.
 
 ### Tool categories
 
@@ -300,10 +300,10 @@ The server enforces:
 - **Admin requirement** — an OAuth user must be an admin or super-admin at
   the selected client company to use the MCP server at all; accountants are
   refused
-- **`execute_query` is further restricted** — it is company-scoped but does
-  not apply per-user ACL, so API-key callers are rejected outright and OAuth
-  callers need one of the roles above. Its SQL is validated before it reaches
-  the database; see [what it rejects](../README.md#what-execute_query-rejects)
+- **`execute_query` reads the whole company** — it is company-scoped but does
+  not apply per-user ACL, so OAuth callers need one of the roles above; an API
+  key already represents the whole company and can use it. Its SQL is
+  validated before it reaches the database; see [what it rejects](../README.md#what-execute_query-rejects)
 - **Writes are limited to `add_document`** — processed through the same OCR,
   duplicate-detection, and category-ownership checks as the public API
 
@@ -320,5 +320,4 @@ The server enforces:
 | HTTP 404                                         | Wrong endpoint URL                                           | Ensure the URL ends with `/mcp/` or `/mcp` (production: `/api/mcp/`)                  |
 | "MCP access is restricted to admin users"         | The signed-in user is not an admin at the selected company  | Sign in as an admin or super-admin user                                             |
 | Query returns no rows                            | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                |
-| `execute_query` not available to API-key callers | The tool requires an admin or super-admin OAuth user        | Use Option 1 (OAuth), or use the specialized tools with your API key                 |
 | `execute_query` rejected                         | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)           |
