@@ -68,7 +68,7 @@ Query documents, invoices, payments, money transactions, companies, GL accounts,
    Env-variable expansion (`${DOMONDA_API_KEY}`) is supported in `.mcp.json`,
    so the file is safe to commit.
 
-   **c. OAuth (for `execute_query`):** Add domonda as a custom connector at
+   **c. OAuth:** Add domonda as a custom connector at
    **claude.ai → Customize → Connectors**, sign in with an admin or super-admin
    account, then use Claude Code with the same claude.ai account. The connected
    server appears in `/mcp` automatically. Direct Claude Code OAuth sign-in
@@ -144,8 +144,8 @@ Unqualifizierte Tabellennamen werden ins `api`-Schema aufgelöst. Ergebnis:
 JSON-Array von Objekten, maximal 1000 Zeilen. Daten sind auf den
 angemeldeten Mandanten eingeschränkt, aber per-Benutzer-ACL wird NICHT
 angewendet — gibt Daten des gesamten Mandanten zurück. Deshalb nur für
-Admin- und Super-Admin-OAuth-Benutzer freigegeben; andere Benutzer und
-API-Key-Aufrufer erhalten einen Autorisierungsfehler. Für benutzergefilterte
+API-Key-Aufrufer sowie Admin- und Super-Admin-OAuth-Benutzer freigegeben;
+andere OAuth-Benutzer erhalten einen Autorisierungsfehler. Für benutzergefilterte
 Listen stattdessen die spezialisierten Tools (`list_documents`,
 `list_invoices`, `list_money_transactions`, …) nutzen. Vorher `list_tables`
 und `describe_table` nutzen, um das Schema zu erkunden.
@@ -154,10 +154,11 @@ und `describe_table` nutzen, um das Schema zu erkunden.
 |-----------|--------|----------|----------------------------------------------------------------------------------------------------|
 | `sql`     | string | yes      | The SQL query to execute. Must start with `SELECT` or `WITH`. Only the `api` schema is accessible. |
 
-**Access.** This tool is company-scoped but does not apply per-user ACL, so it
-is restricted to **admin or super-admin** OAuth users at the
-selected client company. API-key callers are rejected outright with
-`Tool execute_query is not available to API-key callers`.
+**Access.** This tool is company-scoped but does not apply per-user ACL, so
+OAuth callers need the **admin or super-admin** role at the selected client
+company. API-key callers can use it: a key represents the whole company and
+already reads every `api` view through the GraphQL API. Each API-key call is
+logged with the key's non-secret preview, so it can be traced to that key.
 
 **Rejected before the query reaches the database.** A query is refused when it
 does not start with `SELECT` or `WITH`, contains a DML/DDL keyword, references
@@ -599,7 +600,7 @@ An unauthenticated `GET` of the base URL answers `401` with a `WWW-Authenticate`
 
 - Start with `get_my_company` to confirm connectivity and see which company you are authenticated as.
 - Use `list_tables` and `describe_table` for schema discovery before writing queries.
-- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case — it needs an admin or super-admin OAuth user and is not available to API-key callers.
+- Use `execute_query` for ad-hoc SQL queries when the specialized tools don't cover your use case — it works with an API key or an admin or super-admin OAuth user.
 - All date parameters use `YYYY-MM-DD` format.
 - UUID parameters must be valid UUID strings.
 - Results are capped at 1000 rows — use `limit` and `offset` for pagination.
