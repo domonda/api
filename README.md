@@ -83,8 +83,17 @@ https://www.youtube.com/watch?v=L5bzHzqUn9M
 
 ### Basic GraphQL usage
 
-You can find all GraphQL query types in the generated documentation:
+The complete schema of the API is in [schema.graphql](schema.graphql),
+in the GraphQL schema definition language (SDL) that editors, code generators
+and AI assistants can read directly.
+You can browse all GraphQL query types in the generated documentation:
 <https://domonda.github.io/api/doc/schema/query.doc.html>
+and the mutations at:
+<https://domonda.github.io/api/doc/schema/mutation.doc.html>
+
+Both are generated from the live API with
+[gen-graphql-schema/update.sh](gen-graphql-schema/update.sh) (needs Node.js).
+Graph*i*QL always shows the current schema, even before they are regenerated.
 
 Referenced fields always have an extra field for querying the actual data behind them.
 
