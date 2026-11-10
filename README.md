@@ -758,8 +758,8 @@ as a new document.
 See Go SDK with the package
 [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda).
 
-Using this Go package to make API requests has the benefit of basic
-client side validation of the data before sending the request
+Using this Go package to make API requests saves building the multipart
+request by hand (`UploadDocument` does not validate the files before sending them)
 and the client package will always be kept up to date
 with the API server implementation.
 
@@ -1026,6 +1026,7 @@ For those endpoints, we also provide a Go SDK with the package
 
 Using this Go package to make API requests has the benefit of basic
 client-side validation of the data before sending the request
+(except for `PostPartners`, see [Error Handling](#error-handling))
 and the client package will always be kept up to date
 with the API server implementation.
 
@@ -1377,6 +1378,7 @@ Full package documentation is available at: https://pkg.go.dev/github.com/domond
 - **Client-Side Validation**: GL account, bank account and real estate object data is validated before sending requests to reduce errors
 - **Automatic JSON Handling**: Structs are automatically marshaled to/from JSON
 - **Error Handling**: Clear error messages for validation and API errors
+- **Always Up-to-Date**: The SDK is updated together with the server API
 
 ### Usage Examples
 
