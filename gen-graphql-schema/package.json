@@ -1,0 +1,15 @@
+{
+  "name": "gen-graphql-schema",
+  "private": true,
+  "description": "Generates schema.graphql and the HTML docs in doc/schema from the live domonda GraphQL API, see update.sh",
+  "type": "module",
+  "devDependencies": {
+    "@2fd/graphdoc": "2.4.0",
+    "graphql": "16.11.0"
+  },
+  "graphdoc": {
+    "endpoint": "https://domonda.app/api/public/graphql",
+    "output": "../doc/schema",
+    "logo": "<img style=\"margin-bottom:20px;\" src=\"img/domonda_logo_schriftzug.png\"/>"
+  }
+}

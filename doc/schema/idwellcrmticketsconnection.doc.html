@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="./styles/graphdoc.css" />
+    <title>IdwellCrmTicketsConnection</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet"><link type="text/css" rel="stylesheet" href="./assets/code.css" /><link type="text/css" rel="stylesheet" href="./assets/require-by.css" />
+</head>
+<body class="slds-scrollable--y">
+    <nav class="slds-grid slds-grid--vertical slds-col--rule-right">
+        <header class="slds-p-around--medium slds-col slds-shrik slds-grow-none">
+            <button class="slds-button slds-button--icon slds-float--right js-toggle-navigation less-than-medium">
+                <i class="material-icons">close</i>
+            </button>
+                <img style="margin-bottom:20px;" src="img/domonda_logo_schriftzug.png"/>
+            <div class="slds-p-top--small">
+                <input id="type-search" type="text" placeholder="Search a type" autofocus="" class="slds-input" />
+            </div>
+        </header>
+        <div id="navication-scroll" class="slds-scrollable--y slds-col slds-grow">
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Schema</h4>
+    <ul>
+        <li  title="Query">
+            <a href="query.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Query
+            </a>
+        </li>
+        <li  title="Mutation">
+            <a href="mutation.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Mutation
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Scalars</h4>
+    <ul>
+        <li  title="AccountNo">
+            <a href="accountno.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountNo
+            </a>
+        </li>
+        <li  title="BankBic">
+            <a href="bankbic.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankBic
+            </a>
+        </li>
+        <li  title="BankIban">
+            <a href="bankiban.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankIban
+            </a>
+        </li>
+        <li  title="BigInt">
+            <a href="bigint.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BigInt
+            </a>
+        </li>
+        <li  title="Boolean">
+            <a href="boolean.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Boolean
+            </a>
+        </li>
+        <li  title="CountryCode">
+            <a href="countrycode.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CountryCode
+            </a>
+        </li>
+        <li  title="CreatedTime">
+            <a href="createdtime.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreatedTime
+            </a>
+        </li>
+        <li  title="CurrencyCode">
+            <a href="currencycode.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyCode
+            </a>
+        </li>
+        <li  title="Cursor">
+            <a href="cursor.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Cursor
+            </a>
+        </li>
+        <li  title="Date">
+            <a href="date.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Date
+            </a>
+        </li>
+        <li  title="Datetime">
+            <a href="datetime.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Datetime
+            </a>
+        </li>
+        <li  title="EmailAddr">
+            <a href="emailaddr.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                EmailAddr
+            </a>
+        </li>
+        <li  title="EmailAlias">
+            <a href="emailalias.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                EmailAlias
+            </a>
+        </li>
+        <li  title="Float">
+            <a href="float.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Float
+            </a>
+        </li>
+        <li  title="ID">
+            <a href="id.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ID
+            </a>
+        </li>
+        <li  title="Int">
+            <a href="int.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Int
+            </a>
+        </li>
+        <li  title="JSON">
+            <a href="json.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                JSON
+            </a>
+        </li>
+        <li  title="LanguageCode">
+            <a href="languagecode.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                LanguageCode
+            </a>
+        </li>
+        <li  title="NonEmptyText">
+            <a href="nonemptytext.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                NonEmptyText
+            </a>
+        </li>
+        <li  title="String">
+            <a href="string.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                String
+            </a>
+        </li>
+        <li  title="TrimmedText">
+            <a href="trimmedtext.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                TrimmedText
+            </a>
+        </li>
+        <li  title="UpdatedTime">
+            <a href="updatedtime.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdatedTime
+            </a>
+        </li>
+        <li  title="UUID">
+            <a href="uuid.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UUID
+            </a>
+        </li>
+        <li  title="VatId">
+            <a href="vatid.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                VatId
+            </a>
+        </li>
+        <li  title="VersionTime">
+            <a href="versiontime.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                VersionTime
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Enums</h4>
+    <ul>
+        <li  title="AccountingCompaniesOrderBy">
+            <a href="accountingcompaniesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingCompaniesOrderBy
+            </a>
+        </li>
+        <li  title="AccountingInstructionsOrderBy">
+            <a href="accountinginstructionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingInstructionsOrderBy
+            </a>
+        </li>
+        <li  title="AccountingSystem">
+            <a href="accountingsystem.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingSystem
+            </a>
+        </li>
+        <li  title="AuditTrailPos">
+            <a href="audittrailpos.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AuditTrailPos
+            </a>
+        </li>
+        <li  title="BankAccountsOrderBy">
+            <a href="bankaccountsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccountsOrderBy
+            </a>
+        </li>
+        <li  title="BankAccountType">
+            <a href="bankaccounttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccountType
+            </a>
+        </li>
+        <li  title="BankTransactionsOrderBy">
+            <a href="banktransactionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransactionsOrderBy
+            </a>
+        </li>
+        <li  title="BankTransactionType">
+            <a href="banktransactiontype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransactionType
+            </a>
+        </li>
+        <li  title="BookingType">
+            <a href="bookingtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BookingType
+            </a>
+        </li>
+        <li  title="ClientCompaniesOrderBy">
+            <a href="clientcompaniesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompaniesOrderBy
+            </a>
+        </li>
+        <li  title="ClientCompanyCostCentersOrderBy">
+            <a href="clientcompanycostcentersorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostCentersOrderBy
+            </a>
+        </li>
+        <li  title="ClientCompanyCostUnitsOrderBy">
+            <a href="clientcompanycostunitsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostUnitsOrderBy
+            </a>
+        </li>
+        <li  title="ClientCompanyPurchasesOrderBy">
+            <a href="clientcompanypurchasesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyPurchasesOrderBy
+            </a>
+        </li>
+        <li  title="ClientCompanyTagsOrderBy">
+            <a href="clientcompanytagsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyTagsOrderBy
+            </a>
+        </li>
+        <li  title="CompaniesOrderBy">
+            <a href="companiesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompaniesOrderBy
+            </a>
+        </li>
+        <li  title="CompanyLocationsOrderBy">
+            <a href="companylocationsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyLocationsOrderBy
+            </a>
+        </li>
+        <li  title="CreditCardAccountsOrderBy">
+            <a href="creditcardaccountsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardAccountsOrderBy
+            </a>
+        </li>
+        <li  title="CreditCardTransactionsOrderBy">
+            <a href="creditcardtransactionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransactionsOrderBy
+            </a>
+        </li>
+        <li  title="CreditCardTransactionType">
+            <a href="creditcardtransactiontype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransactionType
+            </a>
+        </li>
+        <li  title="CreditCardType">
+            <a href="creditcardtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardType
+            </a>
+        </li>
+        <li  title="CurrencyRatesOrderBy">
+            <a href="currencyratesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyRatesOrderBy
+            </a>
+        </li>
+        <li  title="DeletedDocumentsOrderBy">
+            <a href="deleteddocumentsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeletedDocumentsOrderBy
+            </a>
+        </li>
+        <li  title="DeliveryNoteItemsOrderBy">
+            <a href="deliverynoteitemsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteItemsOrderBy
+            </a>
+        </li>
+        <li  title="DeliveryNotesOrderBy">
+            <a href="deliverynotesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNotesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentCategoriesOrderBy">
+            <a href="documentcategoriesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoriesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentCategoryInternalNumberMode">
+            <a href="documentcategoryinternalnumbermode.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryInternalNumberMode
+            </a>
+        </li>
+        <li  title="DocumentCategoryObjectInstancesOrderBy">
+            <a href="documentcategoryobjectinstancesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryObjectInstancesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentCommentLikesOrderBy">
+            <a href="documentcommentlikesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentLikesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentCommentSeensOrderBy">
+            <a href="documentcommentseensorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentSeensOrderBy
+            </a>
+        </li>
+        <li  title="DocumentCommentsOrderBy">
+            <a href="documentcommentsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentMoneyTransactionsOrderBy">
+            <a href="documentmoneytransactionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentMoneyTransactionsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentPaymentStatus">
+            <a href="documentpaymentstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentPaymentStatus
+            </a>
+        </li>
+        <li  title="DocumentsOrderBy">
+            <a href="documentsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentState">
+            <a href="documentstate.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentState
+            </a>
+        </li>
+        <li  title="DocumentTagsOrderBy">
+            <a href="documenttagsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentTagsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentType">
+            <a href="documenttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentType
+            </a>
+        </li>
+        <li  title="DocumentVersionFilesOrderBy">
+            <a href="documentversionfilesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionFilesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentVersionsOrderBy">
+            <a href="documentversionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentWorkflowsOrderBy">
+            <a href="documentworkflowsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowsOrderBy
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStatesOrderBy">
+            <a href="documentworkflowstatesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStatesOrderBy
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStepsOrderBy">
+            <a href="documentworkflowstepsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStepsOrderBy
+            </a>
+        </li>
+        <li  title="ExportDocumentsOrderBy">
+            <a href="exportdocumentsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportDocumentsOrderBy
+            </a>
+        </li>
+        <li  title="ExportsOrderBy">
+            <a href="exportsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportsOrderBy
+            </a>
+        </li>
+        <li  title="FilterDocumentsDateFilterType">
+            <a href="filterdocumentsdatefiltertype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterDocumentsDateFilterType
+            </a>
+        </li>
+        <li  title="FilterDocumentsExportStatus">
+            <a href="filterdocumentsexportstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterDocumentsExportStatus
+            </a>
+        </li>
+        <li  title="FilterDocumentsOrderBy">
+            <a href="filterdocumentsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterDocumentsOrderBy
+            </a>
+        </li>
+        <li  title="FilterDocumentsPaidStatus">
+            <a href="filterdocumentspaidstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterDocumentsPaidStatus
+            </a>
+        </li>
+        <li  title="FilterOpenItemsOrderBy">
+            <a href="filteropenitemsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterOpenItemsOrderBy
+            </a>
+        </li>
+        <li  title="GeneralLedgerAccountsOrderBy">
+            <a href="generalledgeraccountsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GeneralLedgerAccountsOrderBy
+            </a>
+        </li>
+        <li  title="GerClause35AKind">
+            <a href="gerclause35akind.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GerClause35AKind
+            </a>
+        </li>
+        <li  title="IdwellCrmTicketsOrderBy">
+            <a href="idwellcrmticketsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                IdwellCrmTicketsOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemAmountType">
+            <a href="invoiceaccountingitemamounttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemAmountType
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemBookingType">
+            <a href="invoiceaccountingitembookingtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemBookingType
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostCentersOrderBy">
+            <a href="invoiceaccountingitemcostcentersorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostCentersOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostUnitsOrderBy">
+            <a href="invoiceaccountingitemcostunitsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostUnitsOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemsOrderBy">
+            <a href="invoiceaccountingitemsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemsOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceCompletenessDetail">
+            <a href="invoicecompletenessdetail.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCompletenessDetail
+            </a>
+        </li>
+        <li  title="InvoiceCostCentersOrderBy">
+            <a href="invoicecostcentersorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostCentersOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceCostUnitsOrderBy">
+            <a href="invoicecostunitsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostUnitsOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceDeliveryNotesOrderBy">
+            <a href="invoicedeliverynotesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceDeliveryNotesOrderBy
+            </a>
+        </li>
+        <li  title="InvoiceItemsOrderBy">
+            <a href="invoiceitemsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceItemsOrderBy
+            </a>
+        </li>
+        <li  title="InvoicePaymentStatus">
+            <a href="invoicepaymentstatus.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoicePaymentStatus
+            </a>
+        </li>
+        <li  title="InvoicesOrderBy">
+            <a href="invoicesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoicesOrderBy
+            </a>
+        </li>
+        <li  title="LegalForm">
+            <a href="legalform.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                LegalForm
+            </a>
+        </li>
+        <li  title="MoneyAccountsOrderBy">
+            <a href="moneyaccountsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccountsOrderBy
+            </a>
+        </li>
+        <li  title="MoneyAccountType">
+            <a href="moneyaccounttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccountType
+            </a>
+        </li>
+        <li  title="MoneyCategoriesOrderBy">
+            <a href="moneycategoriesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyCategoriesOrderBy
+            </a>
+        </li>
+        <li  title="MoneyTransactionsOrderBy">
+            <a href="moneytransactionsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransactionsOrderBy
+            </a>
+        </li>
+        <li  title="MoneyTransactionType">
+            <a href="moneytransactiontype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransactionType
+            </a>
+        </li>
+        <li  title="ObjectClassPropsOrderBy">
+            <a href="objectclasspropsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectClassPropsOrderBy
+            </a>
+        </li>
+        <li  title="ObjectInstancesOrderBy">
+            <a href="objectinstancesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectInstancesOrderBy
+            </a>
+        </li>
+        <li  title="OpenItemsType">
+            <a href="openitemstype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpenItemsType
+            </a>
+        </li>
+        <li  title="OpHealthChecksOrderBy">
+            <a href="ophealthchecksorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpHealthChecksOrderBy
+            </a>
+        </li>
+        <li  title="OtherDocumentContractType">
+            <a href="otherdocumentcontracttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OtherDocumentContractType
+            </a>
+        </li>
+        <li  title="PartnerAccountsOrderBy">
+            <a href="partneraccountsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccountsOrderBy
+            </a>
+        </li>
+        <li  title="PartnerAccountType">
+            <a href="partneraccounttype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccountType
+            </a>
+        </li>
+        <li  title="PartnerCompaniesOrderBy">
+            <a href="partnercompaniesorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerCompaniesOrderBy
+            </a>
+        </li>
+        <li  title="ProcessingFrequency">
+            <a href="processingfrequency.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ProcessingFrequency
+            </a>
+        </li>
+        <li  title="PropType">
+            <a href="proptype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PropType
+            </a>
+        </li>
+        <li  title="RealEstateObjectsOrderBy">
+            <a href="realestateobjectsorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RealEstateObjectsOrderBy
+            </a>
+        </li>
+        <li  title="UsersOrderBy">
+            <a href="usersorderby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UsersOrderBy
+            </a>
+        </li>
+        <li  title="ValueAddedTaxType">
+            <a href="valueaddedtaxtype.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ValueAddedTaxType
+            </a>
+        </li>
+        <li  title="VatDeclarationFrequency">
+            <a href="vatdeclarationfrequency.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                VatDeclarationFrequency
+            </a>
+        </li>
+        <li  title="__DirectiveLocation">
+            <a href="directivelocation.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __DirectiveLocation
+            </a>
+        </li>
+        <li  title="__TypeKind">
+            <a href="typekind.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __TypeKind
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Interfaces</h4>
+    <ul>
+        <li  title="Node">
+            <a href="node.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Node
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Objects</h4>
+    <ul>
+        <li  title="AccountingCompaniesConnection">
+            <a href="accountingcompaniesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingCompaniesConnection
+            </a>
+        </li>
+        <li  title="AccountingCompaniesEdge">
+            <a href="accountingcompaniesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingCompaniesEdge
+            </a>
+        </li>
+        <li  title="AccountingCompany">
+            <a href="accountingcompany.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingCompany
+            </a>
+        </li>
+        <li  title="AccountingInstruction">
+            <a href="accountinginstruction.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingInstruction
+            </a>
+        </li>
+        <li  title="AccountingInstructionsConnection">
+            <a href="accountinginstructionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingInstructionsConnection
+            </a>
+        </li>
+        <li  title="AccountingInstructionsEdge">
+            <a href="accountinginstructionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingInstructionsEdge
+            </a>
+        </li>
+        <li  title="AddInvoiceAccountingItemCostCenterPayload">
+            <a href="addinvoiceaccountingitemcostcenterpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AddInvoiceAccountingItemCostCenterPayload
+            </a>
+        </li>
+        <li  title="AddInvoiceAccountingItemCostUnitPayload">
+            <a href="addinvoiceaccountingitemcostunitpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AddInvoiceAccountingItemCostUnitPayload
+            </a>
+        </li>
+        <li  title="BankAccount">
+            <a href="bankaccount.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccount
+            </a>
+        </li>
+        <li  title="BankAccountsConnection">
+            <a href="bankaccountsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccountsConnection
+            </a>
+        </li>
+        <li  title="BankAccountsEdge">
+            <a href="bankaccountsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccountsEdge
+            </a>
+        </li>
+        <li  title="BankTransaction">
+            <a href="banktransaction.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransaction
+            </a>
+        </li>
+        <li  title="BankTransactionsConnection">
+            <a href="banktransactionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransactionsConnection
+            </a>
+        </li>
+        <li  title="BankTransactionsEdge">
+            <a href="banktransactionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransactionsEdge
+            </a>
+        </li>
+        <li  title="ClientCompaniesConnection">
+            <a href="clientcompaniesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompaniesConnection
+            </a>
+        </li>
+        <li  title="ClientCompaniesEdge">
+            <a href="clientcompaniesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompaniesEdge
+            </a>
+        </li>
+        <li  title="ClientCompany">
+            <a href="clientcompany.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompany
+            </a>
+        </li>
+        <li  title="ClientCompanyCostCenter">
+            <a href="clientcompanycostcenter.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostCenter
+            </a>
+        </li>
+        <li  title="ClientCompanyCostCentersConnection">
+            <a href="clientcompanycostcentersconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostCentersConnection
+            </a>
+        </li>
+        <li  title="ClientCompanyCostCentersEdge">
+            <a href="clientcompanycostcentersedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostCentersEdge
+            </a>
+        </li>
+        <li  title="ClientCompanyCostUnit">
+            <a href="clientcompanycostunit.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostUnit
+            </a>
+        </li>
+        <li  title="ClientCompanyCostUnitsConnection">
+            <a href="clientcompanycostunitsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostUnitsConnection
+            </a>
+        </li>
+        <li  title="ClientCompanyCostUnitsEdge">
+            <a href="clientcompanycostunitsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostUnitsEdge
+            </a>
+        </li>
+        <li  title="ClientCompanyPurchase">
+            <a href="clientcompanypurchase.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyPurchase
+            </a>
+        </li>
+        <li  title="ClientCompanyPurchasesConnection">
+            <a href="clientcompanypurchasesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyPurchasesConnection
+            </a>
+        </li>
+        <li  title="ClientCompanyPurchasesEdge">
+            <a href="clientcompanypurchasesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyPurchasesEdge
+            </a>
+        </li>
+        <li  title="ClientCompanyTag">
+            <a href="clientcompanytag.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyTag
+            </a>
+        </li>
+        <li  title="ClientCompanyTagsConnection">
+            <a href="clientcompanytagsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyTagsConnection
+            </a>
+        </li>
+        <li  title="ClientCompanyTagsEdge">
+            <a href="clientcompanytagsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyTagsEdge
+            </a>
+        </li>
+        <li  title="CompaniesConnection">
+            <a href="companiesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompaniesConnection
+            </a>
+        </li>
+        <li  title="CompaniesEdge">
+            <a href="companiesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompaniesEdge
+            </a>
+        </li>
+        <li  title="Company">
+            <a href="company.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Company
+            </a>
+        </li>
+        <li  title="CompanyLocation">
+            <a href="companylocation.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyLocation
+            </a>
+        </li>
+        <li  title="CompanyLocationsConnection">
+            <a href="companylocationsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyLocationsConnection
+            </a>
+        </li>
+        <li  title="CompanyLocationsEdge">
+            <a href="companylocationsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyLocationsEdge
+            </a>
+        </li>
+        <li  title="CreateClientCompanyPurchasePayload">
+            <a href="createclientcompanypurchasepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateClientCompanyPurchasePayload
+            </a>
+        </li>
+        <li  title="CreateClientCompanyTagPayload">
+            <a href="createclientcompanytagpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateClientCompanyTagPayload
+            </a>
+        </li>
+        <li  title="CreateDocumentCommentPayload">
+            <a href="createdocumentcommentpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateDocumentCommentPayload
+            </a>
+        </li>
+        <li  title="CreateDocumentTagPayload">
+            <a href="createdocumenttagpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateDocumentTagPayload
+            </a>
+        </li>
+        <li  title="CreateInvoiceAccountingItemPayload">
+            <a href="createinvoiceaccountingitempayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateInvoiceAccountingItemPayload
+            </a>
+        </li>
+        <li  title="CreditCardAccount">
+            <a href="creditcardaccount.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardAccount
+            </a>
+        </li>
+        <li  title="CreditCardAccountsConnection">
+            <a href="creditcardaccountsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardAccountsConnection
+            </a>
+        </li>
+        <li  title="CreditCardAccountsEdge">
+            <a href="creditcardaccountsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardAccountsEdge
+            </a>
+        </li>
+        <li  title="CreditCardTransaction">
+            <a href="creditcardtransaction.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransaction
+            </a>
+        </li>
+        <li  title="CreditCardTransactionsConnection">
+            <a href="creditcardtransactionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransactionsConnection
+            </a>
+        </li>
+        <li  title="CreditCardTransactionsEdge">
+            <a href="creditcardtransactionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransactionsEdge
+            </a>
+        </li>
+        <li  title="CurrencyRate">
+            <a href="currencyrate.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyRate
+            </a>
+        </li>
+        <li  title="CurrencyRatesConnection">
+            <a href="currencyratesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyRatesConnection
+            </a>
+        </li>
+        <li  title="CurrencyRatesEdge">
+            <a href="currencyratesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyRatesEdge
+            </a>
+        </li>
+        <li  title="DeleteClientCompanyPurchasePayload">
+            <a href="deleteclientcompanypurchasepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteClientCompanyPurchasePayload
+            </a>
+        </li>
+        <li  title="DeleteClientCompanyTagPayload">
+            <a href="deleteclientcompanytagpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteClientCompanyTagPayload
+            </a>
+        </li>
+        <li  title="DeletedDocument">
+            <a href="deleteddocument.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeletedDocument
+            </a>
+        </li>
+        <li  title="DeletedDocumentsConnection">
+            <a href="deleteddocumentsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeletedDocumentsConnection
+            </a>
+        </li>
+        <li  title="DeletedDocumentsEdge">
+            <a href="deleteddocumentsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeletedDocumentsEdge
+            </a>
+        </li>
+        <li  title="DeleteDocumentCommentPayload">
+            <a href="deletedocumentcommentpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteDocumentCommentPayload
+            </a>
+        </li>
+        <li  title="DeleteDocumentTagPayload">
+            <a href="deletedocumenttagpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteDocumentTagPayload
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemCostCenterPayload">
+            <a href="deleteinvoiceaccountingitemcostcenterpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemCostCenterPayload
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemCostUnitPayload">
+            <a href="deleteinvoiceaccountingitemcostunitpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemCostUnitPayload
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemPayload">
+            <a href="deleteinvoiceaccountingitempayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemPayload
+            </a>
+        </li>
+        <li  title="DeliveryNote">
+            <a href="deliverynote.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNote
+            </a>
+        </li>
+        <li  title="DeliveryNoteItem">
+            <a href="deliverynoteitem.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteItem
+            </a>
+        </li>
+        <li  title="DeliveryNoteItemsConnection">
+            <a href="deliverynoteitemsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteItemsConnection
+            </a>
+        </li>
+        <li  title="DeliveryNoteItemsEdge">
+            <a href="deliverynoteitemsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteItemsEdge
+            </a>
+        </li>
+        <li  title="DeliveryNotesConnection">
+            <a href="deliverynotesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNotesConnection
+            </a>
+        </li>
+        <li  title="DeliveryNotesEdge">
+            <a href="deliverynotesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNotesEdge
+            </a>
+        </li>
+        <li  title="Document">
+            <a href="document.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Document
+            </a>
+        </li>
+        <li  title="DocumentCategoriesConnection">
+            <a href="documentcategoriesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoriesConnection
+            </a>
+        </li>
+        <li  title="DocumentCategoriesEdge">
+            <a href="documentcategoriesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoriesEdge
+            </a>
+        </li>
+        <li  title="DocumentCategory">
+            <a href="documentcategory.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategory
+            </a>
+        </li>
+        <li  title="DocumentCategoryObjectInstance">
+            <a href="documentcategoryobjectinstance.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryObjectInstance
+            </a>
+        </li>
+        <li  title="DocumentCategoryObjectInstancesConnection">
+            <a href="documentcategoryobjectinstancesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryObjectInstancesConnection
+            </a>
+        </li>
+        <li  title="DocumentCategoryObjectInstancesEdge">
+            <a href="documentcategoryobjectinstancesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryObjectInstancesEdge
+            </a>
+        </li>
+        <li  title="DocumentComment">
+            <a href="documentcomment.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentComment
+            </a>
+        </li>
+        <li  title="DocumentCommentLike">
+            <a href="documentcommentlike.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentLike
+            </a>
+        </li>
+        <li  title="DocumentCommentLikesConnection">
+            <a href="documentcommentlikesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentLikesConnection
+            </a>
+        </li>
+        <li  title="DocumentCommentLikesEdge">
+            <a href="documentcommentlikesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentLikesEdge
+            </a>
+        </li>
+        <li  title="DocumentCommentMessagePart">
+            <a href="documentcommentmessagepart.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentMessagePart
+            </a>
+        </li>
+        <li  title="DocumentCommentMessagePartsConnection">
+            <a href="documentcommentmessagepartsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentMessagePartsConnection
+            </a>
+        </li>
+        <li  title="DocumentCommentMessagePartsEdge">
+            <a href="documentcommentmessagepartsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentMessagePartsEdge
+            </a>
+        </li>
+        <li  title="DocumentCommentsConnection">
+            <a href="documentcommentsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentsConnection
+            </a>
+        </li>
+        <li  title="DocumentCommentsEdge">
+            <a href="documentcommentsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentsEdge
+            </a>
+        </li>
+        <li  title="DocumentCommentSeen">
+            <a href="documentcommentseen.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentSeen
+            </a>
+        </li>
+        <li  title="DocumentCommentSeensConnection">
+            <a href="documentcommentseensconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentSeensConnection
+            </a>
+        </li>
+        <li  title="DocumentCommentSeensEdge">
+            <a href="documentcommentseensedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentSeensEdge
+            </a>
+        </li>
+        <li  title="DocumentMoneyTransaction">
+            <a href="documentmoneytransaction.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentMoneyTransaction
+            </a>
+        </li>
+        <li  title="DocumentMoneyTransactionsConnection">
+            <a href="documentmoneytransactionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentMoneyTransactionsConnection
+            </a>
+        </li>
+        <li  title="DocumentMoneyTransactionsEdge">
+            <a href="documentmoneytransactionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentMoneyTransactionsEdge
+            </a>
+        </li>
+        <li  title="DocumentsConnection">
+            <a href="documentsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentsConnection
+            </a>
+        </li>
+        <li  title="DocumentsEdge">
+            <a href="documentsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentsEdge
+            </a>
+        </li>
+        <li  title="DocumentTag">
+            <a href="documenttag.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentTag
+            </a>
+        </li>
+        <li  title="DocumentTagsConnection">
+            <a href="documenttagsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentTagsConnection
+            </a>
+        </li>
+        <li  title="DocumentTagsEdge">
+            <a href="documenttagsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentTagsEdge
+            </a>
+        </li>
+        <li  title="DocumentVersion">
+            <a href="documentversion.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersion
+            </a>
+        </li>
+        <li  title="DocumentVersionFile">
+            <a href="documentversionfile.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionFile
+            </a>
+        </li>
+        <li  title="DocumentVersionFilesConnection">
+            <a href="documentversionfilesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionFilesConnection
+            </a>
+        </li>
+        <li  title="DocumentVersionFilesEdge">
+            <a href="documentversionfilesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionFilesEdge
+            </a>
+        </li>
+        <li  title="DocumentVersionsConnection">
+            <a href="documentversionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionsConnection
+            </a>
+        </li>
+        <li  title="DocumentVersionsEdge">
+            <a href="documentversionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionsEdge
+            </a>
+        </li>
+        <li  title="DocumentWorkflow">
+            <a href="documentworkflow.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflow
+            </a>
+        </li>
+        <li  title="DocumentWorkflowsConnection">
+            <a href="documentworkflowsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowsConnection
+            </a>
+        </li>
+        <li  title="DocumentWorkflowsEdge">
+            <a href="documentworkflowsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowsEdge
+            </a>
+        </li>
+        <li  title="DocumentWorkflowState">
+            <a href="documentworkflowstate.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowState
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStatesConnection">
+            <a href="documentworkflowstatesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStatesConnection
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStatesEdge">
+            <a href="documentworkflowstatesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStatesEdge
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStep">
+            <a href="documentworkflowstep.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStep
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStepsConnection">
+            <a href="documentworkflowstepsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStepsConnection
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStepsEdge">
+            <a href="documentworkflowstepsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStepsEdge
+            </a>
+        </li>
+        <li  title="Export">
+            <a href="export.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Export
+            </a>
+        </li>
+        <li  title="ExportDocument">
+            <a href="exportdocument.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportDocument
+            </a>
+        </li>
+        <li  title="ExportDocumentsConnection">
+            <a href="exportdocumentsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportDocumentsConnection
+            </a>
+        </li>
+        <li  title="ExportDocumentsEdge">
+            <a href="exportdocumentsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportDocumentsEdge
+            </a>
+        </li>
+        <li  title="ExportsConnection">
+            <a href="exportsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportsConnection
+            </a>
+        </li>
+        <li  title="ExportsEdge">
+            <a href="exportsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportsEdge
+            </a>
+        </li>
+        <li  title="FilterDocumentsStatisticsResult">
+            <a href="filterdocumentsstatisticsresult.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                FilterDocumentsStatisticsResult
+            </a>
+        </li>
+        <li  title="GeneralLedgerAccount">
+            <a href="generalledgeraccount.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GeneralLedgerAccount
+            </a>
+        </li>
+        <li  title="GeneralLedgerAccountsConnection">
+            <a href="generalledgeraccountsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GeneralLedgerAccountsConnection
+            </a>
+        </li>
+        <li  title="GeneralLedgerAccountsEdge">
+            <a href="generalledgeraccountsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GeneralLedgerAccountsEdge
+            </a>
+        </li>
+        <li  title="IdwellCrmTicket">
+            <a href="idwellcrmticket.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                IdwellCrmTicket
+            </a>
+        </li>
+        <li class="slds-is-active" title="IdwellCrmTicketsConnection">
+            <a href="idwellcrmticketsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                IdwellCrmTicketsConnection
+            </a>
+        </li>
+        <li  title="IdwellCrmTicketsEdge">
+            <a href="idwellcrmticketsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                IdwellCrmTicketsEdge
+            </a>
+        </li>
+        <li  title="Invoice">
+            <a href="invoice.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                Invoice
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItem">
+            <a href="invoiceaccountingitem.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItem
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostCenter">
+            <a href="invoiceaccountingitemcostcenter.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostCenter
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostCentersConnection">
+            <a href="invoiceaccountingitemcostcentersconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostCentersConnection
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostCentersEdge">
+            <a href="invoiceaccountingitemcostcentersedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostCentersEdge
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostUnit">
+            <a href="invoiceaccountingitemcostunit.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostUnit
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostUnitsConnection">
+            <a href="invoiceaccountingitemcostunitsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostUnitsConnection
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostUnitsEdge">
+            <a href="invoiceaccountingitemcostunitsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostUnitsEdge
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemsConnection">
+            <a href="invoiceaccountingitemsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemsConnection
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemsEdge">
+            <a href="invoiceaccountingitemsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemsEdge
+            </a>
+        </li>
+        <li  title="InvoiceCostCenter">
+            <a href="invoicecostcenter.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostCenter
+            </a>
+        </li>
+        <li  title="InvoiceCostCentersConnection">
+            <a href="invoicecostcentersconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostCentersConnection
+            </a>
+        </li>
+        <li  title="InvoiceCostCentersEdge">
+            <a href="invoicecostcentersedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostCentersEdge
+            </a>
+        </li>
+        <li  title="InvoiceCostUnit">
+            <a href="invoicecostunit.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostUnit
+            </a>
+        </li>
+        <li  title="InvoiceCostUnitsConnection">
+            <a href="invoicecostunitsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostUnitsConnection
+            </a>
+        </li>
+        <li  title="InvoiceCostUnitsEdge">
+            <a href="invoicecostunitsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostUnitsEdge
+            </a>
+        </li>
+        <li  title="InvoiceDeliveryNote">
+            <a href="invoicedeliverynote.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceDeliveryNote
+            </a>
+        </li>
+        <li  title="InvoiceDeliveryNotesConnection">
+            <a href="invoicedeliverynotesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceDeliveryNotesConnection
+            </a>
+        </li>
+        <li  title="InvoiceDeliveryNotesEdge">
+            <a href="invoicedeliverynotesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceDeliveryNotesEdge
+            </a>
+        </li>
+        <li  title="InvoiceItem">
+            <a href="invoiceitem.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceItem
+            </a>
+        </li>
+        <li  title="InvoiceItemsConnection">
+            <a href="invoiceitemsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceItemsConnection
+            </a>
+        </li>
+        <li  title="InvoiceItemsEdge">
+            <a href="invoiceitemsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceItemsEdge
+            </a>
+        </li>
+        <li  title="InvoicesConnection">
+            <a href="invoicesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoicesConnection
+            </a>
+        </li>
+        <li  title="InvoicesEdge">
+            <a href="invoicesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoicesEdge
+            </a>
+        </li>
+        <li  title="MarkDocumentsAsBookedPayload">
+            <a href="markdocumentsasbookedpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MarkDocumentsAsBookedPayload
+            </a>
+        </li>
+        <li  title="MoneyAccount">
+            <a href="moneyaccount.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccount
+            </a>
+        </li>
+        <li  title="MoneyAccountsConnection">
+            <a href="moneyaccountsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccountsConnection
+            </a>
+        </li>
+        <li  title="MoneyAccountsEdge">
+            <a href="moneyaccountsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccountsEdge
+            </a>
+        </li>
+        <li  title="MoneyCategoriesConnection">
+            <a href="moneycategoriesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyCategoriesConnection
+            </a>
+        </li>
+        <li  title="MoneyCategoriesEdge">
+            <a href="moneycategoriesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyCategoriesEdge
+            </a>
+        </li>
+        <li  title="MoneyCategory">
+            <a href="moneycategory.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyCategory
+            </a>
+        </li>
+        <li  title="MoneyTransaction">
+            <a href="moneytransaction.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransaction
+            </a>
+        </li>
+        <li  title="MoneyTransactionsConnection">
+            <a href="moneytransactionsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransactionsConnection
+            </a>
+        </li>
+        <li  title="MoneyTransactionsEdge">
+            <a href="moneytransactionsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransactionsEdge
+            </a>
+        </li>
+        <li  title="ObjectClassProp">
+            <a href="objectclassprop.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectClassProp
+            </a>
+        </li>
+        <li  title="ObjectClassPropsConnection">
+            <a href="objectclasspropsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectClassPropsConnection
+            </a>
+        </li>
+        <li  title="ObjectClassPropsEdge">
+            <a href="objectclasspropsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectClassPropsEdge
+            </a>
+        </li>
+        <li  title="ObjectInstance">
+            <a href="objectinstance.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectInstance
+            </a>
+        </li>
+        <li  title="ObjectInstancesConnection">
+            <a href="objectinstancesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectInstancesConnection
+            </a>
+        </li>
+        <li  title="ObjectInstancesEdge">
+            <a href="objectinstancesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectInstancesEdge
+            </a>
+        </li>
+        <li  title="OpenItemsStatistic">
+            <a href="openitemsstatistic.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpenItemsStatistic
+            </a>
+        </li>
+        <li  title="OpHealthCheck">
+            <a href="ophealthcheck.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpHealthCheck
+            </a>
+        </li>
+        <li  title="OpHealthChecksConnection">
+            <a href="ophealthchecksconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpHealthChecksConnection
+            </a>
+        </li>
+        <li  title="OpHealthChecksEdge">
+            <a href="ophealthchecksedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpHealthChecksEdge
+            </a>
+        </li>
+        <li  title="PageInfo">
+            <a href="pageinfo.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PageInfo
+            </a>
+        </li>
+        <li  title="PartnerAccount">
+            <a href="partneraccount.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccount
+            </a>
+        </li>
+        <li  title="PartnerAccountsConnection">
+            <a href="partneraccountsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccountsConnection
+            </a>
+        </li>
+        <li  title="PartnerAccountsEdge">
+            <a href="partneraccountsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccountsEdge
+            </a>
+        </li>
+        <li  title="PartnerCompaniesConnection">
+            <a href="partnercompaniesconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerCompaniesConnection
+            </a>
+        </li>
+        <li  title="PartnerCompaniesEdge">
+            <a href="partnercompaniesedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerCompaniesEdge
+            </a>
+        </li>
+        <li  title="PartnerCompany">
+            <a href="partnercompany.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerCompany
+            </a>
+        </li>
+        <li  title="RealEstateObject">
+            <a href="realestateobject.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RealEstateObject
+            </a>
+        </li>
+        <li  title="RealEstateObjectsConnection">
+            <a href="realestateobjectsconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RealEstateObjectsConnection
+            </a>
+        </li>
+        <li  title="RealEstateObjectsEdge">
+            <a href="realestateobjectsedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RealEstateObjectsEdge
+            </a>
+        </li>
+        <li  title="UpdateClientCompanyPurchasePayload">
+            <a href="updateclientcompanypurchasepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateClientCompanyPurchasePayload
+            </a>
+        </li>
+        <li  title="UpdateClientCompanyTagPayload">
+            <a href="updateclientcompanytagpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateClientCompanyTagPayload
+            </a>
+        </li>
+        <li  title="UpdateDocumentPayload">
+            <a href="updatedocumentpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateDocumentPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemCostCenterPayload">
+            <a href="updateinvoiceaccountingitemcostcenterpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemCostCenterPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemCostUnitPayload">
+            <a href="updateinvoiceaccountingitemcostunitpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemCostUnitPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemPayload">
+            <a href="updateinvoiceaccountingitempayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceDatePayload">
+            <a href="updateinvoicedatepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceDatePayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceDeliveryNoteNumbersPayload">
+            <a href="updateinvoicedeliverynotenumberspayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceDeliveryNoteNumbersPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceInternalNumberPayload">
+            <a href="updateinvoiceinternalnumberpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceInternalNumberPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceNumberPayload">
+            <a href="updateinvoicenumberpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceNumberPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOpenItemsNumberPayload">
+            <a href="updateinvoiceopenitemsnumberpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOpenItemsNumberPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOrderDatePayload">
+            <a href="updateinvoiceorderdatepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOrderDatePayload
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOrderNumberPayload">
+            <a href="updateinvoiceordernumberpayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOrderNumberPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoicePaymentStatusPayload">
+            <a href="updateinvoicepaymentstatuspayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoicePaymentStatusPayload
+            </a>
+        </li>
+        <li  title="UpdateInvoicePurchasePayload">
+            <a href="updateinvoicepurchasepayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoicePurchasePayload
+            </a>
+        </li>
+        <li  title="UpdatePartnerCompanyPayload">
+            <a href="updatepartnercompanypayload.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdatePartnerCompanyPayload
+            </a>
+        </li>
+        <li  title="User">
+            <a href="user.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                User
+            </a>
+        </li>
+        <li  title="UsersConnection">
+            <a href="usersconnection.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UsersConnection
+            </a>
+        </li>
+        <li  title="UsersEdge">
+            <a href="usersedge.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UsersEdge
+            </a>
+        </li>
+        <li  title="__Directive">
+            <a href="directive.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Directive
+            </a>
+        </li>
+        <li  title="__EnumValue">
+            <a href="enumvalue.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __EnumValue
+            </a>
+        </li>
+        <li  title="__Field">
+            <a href="field.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Field
+            </a>
+        </li>
+        <li  title="__InputValue">
+            <a href="inputvalue.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __InputValue
+            </a>
+        </li>
+        <li  title="__Schema">
+            <a href="schema.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Schema
+            </a>
+        </li>
+        <li  title="__Type">
+            <a href="type.spec.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                __Type
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Input Objects</h4>
+    <ul>
+        <li  title="AccountingCompanyCondition">
+            <a href="accountingcompanycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingCompanyCondition
+            </a>
+        </li>
+        <li  title="AccountingInstructionCondition">
+            <a href="accountinginstructioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AccountingInstructionCondition
+            </a>
+        </li>
+        <li  title="AddInvoiceAccountingItemCostCenterInput">
+            <a href="addinvoiceaccountingitemcostcenterinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AddInvoiceAccountingItemCostCenterInput
+            </a>
+        </li>
+        <li  title="AddInvoiceAccountingItemCostUnitInput">
+            <a href="addinvoiceaccountingitemcostunitinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                AddInvoiceAccountingItemCostUnitInput
+            </a>
+        </li>
+        <li  title="BankAccountCondition">
+            <a href="bankaccountcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankAccountCondition
+            </a>
+        </li>
+        <li  title="BankTransactionCondition">
+            <a href="banktransactioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                BankTransactionCondition
+            </a>
+        </li>
+        <li  title="ClientCompanyCondition">
+            <a href="clientcompanycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCondition
+            </a>
+        </li>
+        <li  title="ClientCompanyCostCenterCondition">
+            <a href="clientcompanycostcentercondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostCenterCondition
+            </a>
+        </li>
+        <li  title="ClientCompanyCostUnitCondition">
+            <a href="clientcompanycostunitcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyCostUnitCondition
+            </a>
+        </li>
+        <li  title="ClientCompanyPurchaseCondition">
+            <a href="clientcompanypurchasecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyPurchaseCondition
+            </a>
+        </li>
+        <li  title="ClientCompanyTagCondition">
+            <a href="clientcompanytagcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ClientCompanyTagCondition
+            </a>
+        </li>
+        <li  title="CompanyCondition">
+            <a href="companycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyCondition
+            </a>
+        </li>
+        <li  title="CompanyLocationCondition">
+            <a href="companylocationcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CompanyLocationCondition
+            </a>
+        </li>
+        <li  title="CreateClientCompanyPurchaseInput">
+            <a href="createclientcompanypurchaseinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateClientCompanyPurchaseInput
+            </a>
+        </li>
+        <li  title="CreateClientCompanyTagInput">
+            <a href="createclientcompanytaginput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateClientCompanyTagInput
+            </a>
+        </li>
+        <li  title="CreateDocumentCommentInput">
+            <a href="createdocumentcommentinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateDocumentCommentInput
+            </a>
+        </li>
+        <li  title="CreateDocumentTagInput">
+            <a href="createdocumenttaginput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateDocumentTagInput
+            </a>
+        </li>
+        <li  title="CreateInvoiceAccountingItemInput">
+            <a href="createinvoiceaccountingiteminput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreateInvoiceAccountingItemInput
+            </a>
+        </li>
+        <li  title="CreditCardAccountCondition">
+            <a href="creditcardaccountcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardAccountCondition
+            </a>
+        </li>
+        <li  title="CreditCardTransactionCondition">
+            <a href="creditcardtransactioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CreditCardTransactionCondition
+            </a>
+        </li>
+        <li  title="CurrencyRateCondition">
+            <a href="currencyratecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                CurrencyRateCondition
+            </a>
+        </li>
+        <li  title="DeleteClientCompanyPurchaseInput">
+            <a href="deleteclientcompanypurchaseinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteClientCompanyPurchaseInput
+            </a>
+        </li>
+        <li  title="DeleteClientCompanyTagInput">
+            <a href="deleteclientcompanytaginput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteClientCompanyTagInput
+            </a>
+        </li>
+        <li  title="DeletedDocumentCondition">
+            <a href="deleteddocumentcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeletedDocumentCondition
+            </a>
+        </li>
+        <li  title="DeleteDocumentCommentInput">
+            <a href="deletedocumentcommentinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteDocumentCommentInput
+            </a>
+        </li>
+        <li  title="DeleteDocumentTagInput">
+            <a href="deletedocumenttaginput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteDocumentTagInput
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemCostCenterInput">
+            <a href="deleteinvoiceaccountingitemcostcenterinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemCostCenterInput
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemCostUnitInput">
+            <a href="deleteinvoiceaccountingitemcostunitinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemCostUnitInput
+            </a>
+        </li>
+        <li  title="DeleteInvoiceAccountingItemInput">
+            <a href="deleteinvoiceaccountingiteminput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeleteInvoiceAccountingItemInput
+            </a>
+        </li>
+        <li  title="DeliveryNoteCondition">
+            <a href="deliverynotecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteCondition
+            </a>
+        </li>
+        <li  title="DeliveryNoteItemCondition">
+            <a href="deliverynoteitemcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DeliveryNoteItemCondition
+            </a>
+        </li>
+        <li  title="DocumentCategoryCondition">
+            <a href="documentcategorycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryCondition
+            </a>
+        </li>
+        <li  title="DocumentCategoryObjectInstanceCondition">
+            <a href="documentcategoryobjectinstancecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCategoryObjectInstanceCondition
+            </a>
+        </li>
+        <li  title="DocumentCommentCondition">
+            <a href="documentcommentcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentCondition
+            </a>
+        </li>
+        <li  title="DocumentCommentLikeCondition">
+            <a href="documentcommentlikecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentLikeCondition
+            </a>
+        </li>
+        <li  title="DocumentCommentSeenCondition">
+            <a href="documentcommentseencondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCommentSeenCondition
+            </a>
+        </li>
+        <li  title="DocumentCondition">
+            <a href="documentcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentCondition
+            </a>
+        </li>
+        <li  title="DocumentMoneyTransactionCondition">
+            <a href="documentmoneytransactioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentMoneyTransactionCondition
+            </a>
+        </li>
+        <li  title="DocumentTagCondition">
+            <a href="documenttagcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentTagCondition
+            </a>
+        </li>
+        <li  title="DocumentVersionCondition">
+            <a href="documentversioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionCondition
+            </a>
+        </li>
+        <li  title="DocumentVersionFileCondition">
+            <a href="documentversionfilecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentVersionFileCondition
+            </a>
+        </li>
+        <li  title="DocumentWorkflowCondition">
+            <a href="documentworkflowcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowCondition
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStateCondition">
+            <a href="documentworkflowstatecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStateCondition
+            </a>
+        </li>
+        <li  title="DocumentWorkflowStepCondition">
+            <a href="documentworkflowstepcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                DocumentWorkflowStepCondition
+            </a>
+        </li>
+        <li  title="ExportCondition">
+            <a href="exportcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportCondition
+            </a>
+        </li>
+        <li  title="ExportDocumentCondition">
+            <a href="exportdocumentcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ExportDocumentCondition
+            </a>
+        </li>
+        <li  title="GeneralLedgerAccountCondition">
+            <a href="generalledgeraccountcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                GeneralLedgerAccountCondition
+            </a>
+        </li>
+        <li  title="IdwellCrmTicketCondition">
+            <a href="idwellcrmticketcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                IdwellCrmTicketCondition
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCondition">
+            <a href="invoiceaccountingitemcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCondition
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostCenterCondition">
+            <a href="invoiceaccountingitemcostcentercondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostCenterCondition
+            </a>
+        </li>
+        <li  title="InvoiceAccountingItemCostUnitCondition">
+            <a href="invoiceaccountingitemcostunitcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceAccountingItemCostUnitCondition
+            </a>
+        </li>
+        <li  title="InvoiceCondition">
+            <a href="invoicecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCondition
+            </a>
+        </li>
+        <li  title="InvoiceCostCenterCondition">
+            <a href="invoicecostcentercondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostCenterCondition
+            </a>
+        </li>
+        <li  title="InvoiceCostUnitCondition">
+            <a href="invoicecostunitcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceCostUnitCondition
+            </a>
+        </li>
+        <li  title="InvoiceDeliveryNoteCondition">
+            <a href="invoicedeliverynotecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceDeliveryNoteCondition
+            </a>
+        </li>
+        <li  title="InvoiceItemCondition">
+            <a href="invoiceitemcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                InvoiceItemCondition
+            </a>
+        </li>
+        <li  title="MarkDocumentsAsBookedInput">
+            <a href="markdocumentsasbookedinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MarkDocumentsAsBookedInput
+            </a>
+        </li>
+        <li  title="MoneyAccountCondition">
+            <a href="moneyaccountcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyAccountCondition
+            </a>
+        </li>
+        <li  title="MoneyCategoryCondition">
+            <a href="moneycategorycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyCategoryCondition
+            </a>
+        </li>
+        <li  title="MoneyTransactionCondition">
+            <a href="moneytransactioncondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                MoneyTransactionCondition
+            </a>
+        </li>
+        <li  title="ObjectClassPropCondition">
+            <a href="objectclasspropcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectClassPropCondition
+            </a>
+        </li>
+        <li  title="ObjectInstanceCondition">
+            <a href="objectinstancecondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                ObjectInstanceCondition
+            </a>
+        </li>
+        <li  title="OpHealthCheckCondition">
+            <a href="ophealthcheckcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                OpHealthCheckCondition
+            </a>
+        </li>
+        <li  title="PartnerAccountCondition">
+            <a href="partneraccountcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerAccountCondition
+            </a>
+        </li>
+        <li  title="PartnerCompanyCondition">
+            <a href="partnercompanycondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                PartnerCompanyCondition
+            </a>
+        </li>
+        <li  title="RealEstateObjectCondition">
+            <a href="realestateobjectcondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                RealEstateObjectCondition
+            </a>
+        </li>
+        <li  title="UpdateClientCompanyPurchaseInput">
+            <a href="updateclientcompanypurchaseinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateClientCompanyPurchaseInput
+            </a>
+        </li>
+        <li  title="UpdateClientCompanyTagInput">
+            <a href="updateclientcompanytaginput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateClientCompanyTagInput
+            </a>
+        </li>
+        <li  title="UpdateDocumentInput">
+            <a href="updatedocumentinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateDocumentInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemCostCenterInput">
+            <a href="updateinvoiceaccountingitemcostcenterinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemCostCenterInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemCostUnitInput">
+            <a href="updateinvoiceaccountingitemcostunitinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemCostUnitInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceAccountingItemInput">
+            <a href="updateinvoiceaccountingiteminput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceAccountingItemInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceDateInput">
+            <a href="updateinvoicedateinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceDateInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceDeliveryNoteNumbersInput">
+            <a href="updateinvoicedeliverynotenumbersinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceDeliveryNoteNumbersInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceInternalNumberInput">
+            <a href="updateinvoiceinternalnumberinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceInternalNumberInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceNumberInput">
+            <a href="updateinvoicenumberinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceNumberInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOpenItemsNumberInput">
+            <a href="updateinvoiceopenitemsnumberinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOpenItemsNumberInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOrderDateInput">
+            <a href="updateinvoiceorderdateinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOrderDateInput
+            </a>
+        </li>
+        <li  title="UpdateInvoiceOrderNumberInput">
+            <a href="updateinvoiceordernumberinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoiceOrderNumberInput
+            </a>
+        </li>
+        <li  title="UpdateInvoicePaymentStatusInput">
+            <a href="updateinvoicepaymentstatusinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoicePaymentStatusInput
+            </a>
+        </li>
+        <li  title="UpdateInvoicePurchaseInput">
+            <a href="updateinvoicepurchaseinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdateInvoicePurchaseInput
+            </a>
+        </li>
+        <li  title="UpdatePartnerCompanyInput">
+            <a href="updatepartnercompanyinput.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UpdatePartnerCompanyInput
+            </a>
+        </li>
+        <li  title="UserCondition">
+            <a href="usercondition.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                UserCondition
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+    <h4 class="slds-text-title--caps slds-p-around--medium">Directives</h4>
+    <ul>
+        <li  title="deprecated">
+            <a href="deprecated.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                deprecated
+            </a>
+        </li>
+        <li  title="include">
+            <a href="include.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                include
+            </a>
+        </li>
+        <li  title="skip">
+            <a href="skip.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                skip
+            </a>
+        </li>
+        <li  title="specifiedBy">
+            <a href="specifiedby.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
+                specifiedBy
+            </a>
+        </li>
+    </ul>
+</div>
+        </div>
+    </nav>
+    <main><section class="title slds-theme--inverse">
+    <div class="container slds-grid">
+        <div>
+        <button class="slds-button js-toggle-navigation less-than-medium">
+            <i class="material-icons slds-button__icon slds-button__icon--left">menu</i>
+            <span class="slds-text-title--caps">Types<span>
+        </button>
+        </div>
+        </div>
+    </div>
+    <div class="container">
+        <p class="slds-text-title--caps slds-text-color--weak">OBJECT</p>
+        <h1 class="slds-text-heading--large">IdwellCrmTicketsConnection</h1>
+        <div class="slds-text-body--regular"><p>A connection to a list of <code>IdwellCrmTicket</code> values.</p>
+</div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <h2 id="graphql-schema-definition" class="graphdoc-section__title slds-text-heading--medium slds-m-top--small">
+            <a href="#graphql-schema-definition">
+                <i class="material-icons">link</i>
+            </a>
+            GraphQL Schema definition
+        </h2>
+        <code class="highlight"><ul class="code" style="padding-left:42px"><li><span class="keyword operator ts">type</span> <span class="identifier">IdwellCrmTicketsConnection</span> {</li><li></li><li><span class="tab"><span class="comment line">#   A list of `IdwellCrmTicket` objects.</span></span></li><li><span class="tab"><span class="meta">nodes</span>: [<a class="support type" href="idwellcrmticket.doc.html">IdwellCrmTicket</a>!]! </span></li><li></li><li><span class="tab"><span class="comment line">#   A list of edges which contains the `IdwellCrmTicket` and cursor to aid in </span></span></li><li><span class="tab"><span class="comment line">#   pagination.</span></span></li><li><span class="tab"><span class="meta">edges</span>: [<a class="support type" href="idwellcrmticketsedge.doc.html">IdwellCrmTicketsEdge</a>!]! </span></li><li></li><li><span class="tab"><span class="comment line">#   Information to aid in pagination.</span></span></li><li><span class="tab"><span class="meta">pageInfo</span>: <a class="support type" href="pageinfo.doc.html">PageInfo</a>! </span></li><li></li><li><span class="tab"><span class="comment line">#   The count of *all* `IdwellCrmTicket` you could get from the connection.</span></span></li><li><span class="tab"><span class="meta">totalCount</span>: <a class="support type" href="int.doc.html">Int</a>! </span></li><li>}</li></ul></code>
+    </div>
+</section>
+<section>
+    <div class="container">
+        <h2 id="require-by" class="graphdoc-section__title slds-text-heading--medium slds-m-top--small">
+            <a href="#require-by">
+                <i class="material-icons">link</i>
+            </a>
+            Require by
+        </h2>
+        <ul class="require-by"><li><a href="query.doc.html" title="Query - The root query type which gives access points into the data universe.">Query<em>The root query type which gives access points into the data universe.</em></a><li></ul>
+    </div>
+</section>
+<footer>
+<div class="container slds-p-around--large">
+    <p class="slds-text-align--right slds-text-title--caps">
+        Generated with <a href="https://github.com/2fd/graphdoc#readme" target="_blank">graphdoc 2.4.0</a>
+    </p>
+</div>
+</footer>
+</main>
+    <script src="./scripts/focus-active.js"></script>
+    <script src="./scripts/filter-types.js"></script>
+    <script src="./scripts/toggle-navigation.js"></script>
+</body>

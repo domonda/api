@@ -277,7 +277,7 @@ rejected — with the reason in the error message — when it:
 The identifier scans (`pg_*` and the mutating `api` functions) run against the
 raw SQL text, so a rejected name matches even inside a string literal or a
 comment: `WHERE title ILIKE '%update_document%'` is rejected. Search for such
-text with `search_documents` or the `fulltext` filter of `list_documents`
+text with `search_documents` or the `search_text` filter of `list_documents`
 instead.
 
 A query that tries to escape the scope it was given is failed outright and its
@@ -351,7 +351,7 @@ available to API-key callers, so `$DOMONDA_API_KEY` is rejected here:
 curl -s -X POST "https://domonda.app/api/mcp/" \
   -H "Authorization: Bearer $DOMONDA_OAUTH_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"execute_query","arguments":{"sql":"SELECT id, title, document_date FROM api.document ORDER BY document_date DESC LIMIT 5"}}}' | jq .
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"execute_query","arguments":{"sql":"SELECT id, title, imported_at FROM api.document ORDER BY imported_at DESC LIMIT 5"}}}' | jq .
 ```
 
 List recent invoices:

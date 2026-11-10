@@ -159,7 +159,7 @@ allowlist, calls a mutating `api` function by name (`update_document`,
 Postgres Unicode-escape syntax (`U&"…"` / `U&'…'`). The identifier scans run
 against the raw SQL text, so a rejected name matches inside string literals
 and comments too — `WHERE title ILIKE '%update_document%'` fails. Use
-`search_documents` or the `fulltext` filter of `list_documents` for such text
+`search_documents` or the `search_text` filter of `list_documents` for such text
 searches.
 
 ### Document Tools

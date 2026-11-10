@@ -83,8 +83,25 @@ https://www.youtube.com/watch?v=L5bzHzqUn9M
 
 ### Basic GraphQL usage
 
-You can find all GraphQL query types in the generated documentation:
+The complete schema of the API is in [schema.graphql](schema.graphql),
+in the GraphQL schema definition language (SDL) that editors, code generators
+and AI assistants can read directly.
+You can browse all GraphQL query types in the generated documentation:
 <https://domonda.github.io/api/doc/schema/query.doc.html>
+and the mutations at:
+<https://domonda.github.io/api/doc/schema/mutation.doc.html>
+
+Both are generated from the live API with
+[gen-graphql-schema/update.sh](gen-graphql-schema/update.sh) (needs Node.js).
+Graph*i*QL always shows the current schema, even before they are regenerated.
+
+A connection field (one returning `nodes`) needs a `first` or `last` argument
+of at most 1000; the API rejects a query without one.
+Only a selection of nothing but `totalCount` works without it.
+To read more rows, request `pageInfo { hasNextPage endCursor }` and pass
+`endCursor` as the `after` argument of the next query.
+A query whose computed cost exceeds 30000 is rejected too;
+keep the page sizes of nested connections small.
 
 Referenced fields always have an extra field for querying the actual data behind them.
 
@@ -119,7 +136,7 @@ field `userByImportedBy`, which gets you the associated user.
 ```gql
 {
   query {
-    allDocuments {
+    allDocuments(first: 100) {
       nodes {
         rowId
         userByImportedBy {
@@ -138,7 +155,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  allDocumentCategories {
+  allDocumentCategories(first: 100) {
     nodes {
       rowId
       documentType
@@ -156,7 +173,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  allDocuments {
+  allDocuments(first: 100) {
     nodes {
       rowId
       categoryRowId
@@ -180,7 +197,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  allInvoices {
+  allInvoices(first: 100) {
     nodes {
       documentRowId
       partnerName
@@ -214,7 +231,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  filterDocuments(dateFilterType: INVOICE_DATE, fromDate: "2022-06-01", untilDate: "2022-07-01", documentTypes: [INCOMING_INVOICE], orderBys: [INVOICE_DATE_ASC]) {
+  filterDocuments(first: 100, dateFilterType: INVOICE_DATE, fromDate: "2022-06-01", untilDate: "2022-07-01", documentTypes: [INCOMING_INVOICE], orderBys: [INVOICE_DATE_ASC]) {
     nodes {
       rowId
       documentCategoryByCategoryRowId {
@@ -222,7 +239,7 @@ field `userByImportedBy`, which gets you the associated user.
       }
       tags
       paymentStatus
-      documentMoneyTransactionsByDocumentRowId {
+      documentMoneyTransactionsByDocumentRowId(first: 10) {
         nodes {
           moneyTransactionByMoneyTransactionRowId {
             bookingDate
@@ -237,7 +254,7 @@ field `userByImportedBy`, which gets you the associated user.
         total
         paymentStatus
         paidDate
-        invoiceCostCentersByInvoiceDocumentRowId {
+        invoiceCostCentersByInvoiceDocumentRowId(first: 10) {
           nodes {
             clientCompanyCostCenterByClientCompanyCostCenterRowId {
               number
@@ -275,7 +292,7 @@ field `userByImportedBy`, which gets you the associated user.
   invoiceByDocumentRowId(
     documentRowId: "035bda2e-a5a1-445d-a712-6943e803f108"
   ) {
-    invoiceAccountingItemsByInvoiceDocumentRowId {
+    invoiceAccountingItemsByInvoiceDocumentRowId(first: 100) {
       nodes {
         title
         amount
@@ -294,7 +311,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  allDeliveryNotes {
+  allDeliveryNotes(first: 100) {
     nodes {
       documentRowId
       partnerCompanyRowId
@@ -313,7 +330,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  allDeliveryNoteItems {
+  allDeliveryNoteItems(first: 100) {
     nodes {
       deliveryNoteDocumentRowId
       posNo
@@ -331,7 +348,7 @@ field `userByImportedBy`, which gets you the associated user.
 
 ```gql
 {
-  filterMoneyTransactions(searchText: "My Transaction Reference") {
+  filterMoneyTransactions(first: 100, searchText: "My Transaction Reference") {
     nodes {
       rowId
       accountRowId
@@ -372,59 +389,66 @@ field `userByImportedBy`, which gets you the associated user.
 
    function lastMonthImportedInvoices() {
      var lastMonth = Moment.moment(new Date()).subtract(1, "months");
-     var options = {
-       method: "POST",
-       headers: { Authorization: "Bearer " + API_TOKEN },
-       contentType: "application/json",
-       payload: JSON.stringify({
-         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
-         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
-            filterDocuments(dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
-              nodes {
-                invoice: invoiceByDocumentRowId {
-                  partnerName
-                  partnerVatID: partnerVatRowIdNo
-                  invoiceDate
-                  invoiceNumber
-                  totalInEur
+     var invoices = [];
+     var after = null;
+     // read the documents in pages of at most 1000
+     do {
+       var options = {
+         method: "POST",
+         headers: { Authorization: "Bearer " + API_TOKEN },
+         contentType: "application/json",
+         payload: JSON.stringify({
+           // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
+           query: `query lastMonthImportedInvoices($from: Date!, $until: Date!, $after: Cursor) {
+              filterDocuments(first: 1000, after: $after, dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
+                pageInfo {
+                  hasNextPage
+                  endCursor
+                }
+                nodes {
+                  invoice: invoiceByDocumentRowId {
+                    partnerName
+                    partnerVatID: partnerVatRowIdNo
+                    invoiceDate
+                    invoiceNumber
+                    totalInEur
+                  }
                 }
               }
-            }
-          }`,
-         variables: {
-           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
-           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
-         },
-       }),
-     };
+            }`,
+           variables: {
+             from: lastMonth.startOf("month").format("YYYY-MM-DD"),
+             until: lastMonth.endOf("month").format("YYYY-MM-DD"),
+             after: after,
+           },
+         }),
+       };
 
-     var response = UrlFetchApp.fetch(DOMONDA_API, options);
+       var response = UrlFetchApp.fetch(DOMONDA_API, options);
 
-     var json = JSON.parse(response.getContentText());
-     var invoices = json.data.filterDocuments.nodes.map(
-       ({ invoice }) => invoice
-     );
+       var json = JSON.parse(response.getContentText());
+       var page = json.data.filterDocuments;
+       for (const { invoice } of page.nodes) {
+         invoices.push(invoice);
+       }
+       after = page.pageInfo.hasNextPage ? page.pageInfo.endCursor : null;
+     } while (after);
 
      var rows = [];
      for (const invoice of invoices) {
        // skip non-invoices
        if (!invoice) continue;
 
-       const row = [];
-
-       // when rows is empty, start by creating the header
+       // when rows is empty, start with a header row of the invoice's keys
        if (rows.length === 0) {
-         for (const key of Object.keys(invoice)) {
-           row.push(key);
-         }
-         rows.push(row);
-         continue;
+         rows.push(Object.keys(invoice));
        }
 
        // first row is always header
        const header = rows[0];
 
        // add data rows following the header
+       const row = [];
        for (const key of header) {
          row.push(invoice[key]);
        }
@@ -678,7 +702,7 @@ Example GraphQL query:
 
 ```gql
 {
-  allDocumentCategories {
+  allDocumentCategories(first: 100) {
     nodes {
       rowId
       documentType
@@ -712,7 +736,7 @@ The body of the response will be a JSON object with the following format:
 
 If content-hash duplicates are uploaded as overlapping requests where the first request
 hasn't had enough time yet to create a document with an ID in the database
-then the filename of the first still processing upload is returned as `processingFileName``:
+then the filename of the first still processing upload is returned as `processingFileName`:
 
 ```json
 {
@@ -734,8 +758,8 @@ as a new document.
 See Go SDK with the package
 [github.com/domonda/api/golang/domonda](https://pkg.go.dev/github.com/domonda/api/golang/domonda).
 
-Using this Go package to make API requests has the benefit of basic
-client side validation of the data before sending the request
+Using this Go package to make API requests saves building the multipart
+request by hand (`UploadDocument` does not validate the files before sending them)
 and the client package will always be kept up to date
 with the API server implementation.
 
@@ -857,7 +881,7 @@ Example using the CURL command-line tool with a `documentCategory` ID and multip
 curl -X POST \
   -H "Authorization: Bearer ${DOMONDA_API_KEY}" \
   -H "Content-Type: multipart/form-data" \
-  -F "uuid=01505320-42f7-4cff-a930-4669eeb5e999"
+  -F "uuid=01505320-42f7-4cff-a930-4669eeb5e999" \
   -F "documentCategory=fe110406-e38d-416a-a8d8-29f0a20f1c8d" \
   -F "document=@example/invoice.pdf" \
   -F "invoice=@example/invoice.jsonc" \
@@ -868,7 +892,8 @@ curl -X POST \
   https://domonda.app/api/public/upload
 ```
 
-Example with `documentType`, `bookingType`, `bookingCategory`, and `waitForExtraction`:
+Example with `documentType`, `bookingType`, `bookingCategory`, `waitForExtraction`
+and an ebInterface XML file (replace `my-ebinterface-invoice.xml` with your own file):
 
 ```sh
 curl -X POST \
@@ -878,7 +903,7 @@ curl -X POST \
   -F "bookingType=CLEARING_ACCOUNT" \
   -F "bookingCategory=VKxx" \
   -F "document=@example/invoice.pdf" \
-  -F "ebInterface=@example/invoice.xml" \
+  -F "ebInterface=@my-ebinterface-invoice.xml" \
   -F "allowDuplicateDeleted=false" \
   -F "waitForExtraction=true" \
   -o - \
@@ -894,7 +919,6 @@ curl -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "documentType=OUTGOING_INVOICE" \
   -F "document=@example/invoice.pdf" \
-  -F "ebInterface=@example/invoice.xml" \
   -F "allowDuplicateDeleted=false" \
   -F "waitForExtraction=true" \
   -o - \
@@ -1002,6 +1026,7 @@ For those endpoints, we also provide a Go SDK with the package
 
 Using this Go package to make API requests has the benefit of basic
 client-side validation of the data before sending the request
+(except for `PostPartners`, see [Error Handling](#error-handling))
 and the client package will always be kept up to date
 with the API server implementation.
 
@@ -1084,7 +1109,7 @@ Example:
   },
   {
     "Number": "9/100",
-    "Name": "Other costs",
+    "Name": "Other costs"
   }
 ]
 ```
@@ -1177,6 +1202,8 @@ Go function: https://pkg.go.dev/github.com/domonda/api/golang/domonda#PostBankAc
 API endpoint: https://domonda.app/api/public/masterdata/bank-accounts
 
 Optional URL query parameters:
+* `failOnInvalid`: pass `true` to fail if any account data is invalid
+* `allOrNone`: pass `true` to run the import in a Postgres transaction where any error will undo all other actions
 * `source`: string describing the source of the data; use your company or service name
 
 The request body is JSON array with objects matching the struct:
@@ -1238,6 +1265,9 @@ const (
 	RealEstateObjectTypeKREIS   RealEstateObjectType = "KREIS"
 	RealEstateObjectTypeMANDANT RealEstateObjectType = "MANDANT"
 	RealEstateObjectTypeMRG     RealEstateObjectType = "MRG" // Objekt unterliegt dem Mietrechtsgesetz (MRG)
+	RealEstateObjectTypeMHV     RealEstateObjectType = "MHV" // Miethausverwaltung
+	RealEstateObjectTypeSEV     RealEstateObjectType = "SEV" // Sondereigentumsverwaltung
+	RealEstateObjectTypeHBH     RealEstateObjectType = "HBH" // Hauptbuchhaltung
 )
 ```
 
@@ -1263,7 +1293,7 @@ The properties of a class can be queried with the GraphQL API using the followin
 
 ```graphql
 {
-  objectClassProps(className: "RealEstateObject") {
+  objectClassProps(first: 100, className: "RealEstateObject") {
     nodes {
       rowId
       name
@@ -1328,7 +1358,7 @@ ChatGPT, OpenClaw), the tool reference, and curl examples are in
 
 ## Go SDK
 
-The Domonda API provides a Go SDK that offers type-safe access to all REST API endpoints with built-in client-side validation. The SDK is automatically kept in sync with the server implementation, ensuring compatibility.
+The Domonda API provides a Go SDK that offers type-safe access to the document upload and master data REST API endpoints, with client-side validation for most of them.
 
 ### Installation
 
@@ -1345,10 +1375,10 @@ Full package documentation is available at: https://pkg.go.dev/github.com/domond
 ### Key Features
 
 - **Type Safety**: All API requests use strongly-typed structs
-- **Client-Side Validation**: Data is validated before sending requests to reduce errors
+- **Client-Side Validation**: GL account, bank account and real estate object data is validated before sending requests to reduce errors
 - **Automatic JSON Handling**: Structs are automatically marshaled to/from JSON
 - **Error Handling**: Clear error messages for validation and API errors
-- **Always Up-to-Date**: SDK is maintained in the same repository as the server implementation
+- **Always Up-to-Date**: The SDK is updated together with the server API
 
 ### Usage Examples
 
@@ -1365,7 +1395,7 @@ import (
 func uploadDocument() error {
     ctx := context.Background()
     apiKey := "YOUR_API_KEY"
-    categoryID := uu.IDFromString("YOUR_CATEGORY_ID")
+    categoryID := uu.IDMustFromString("YOUR_CATEGORY_ID")
 
     documentFile := fs.File("invoice.pdf")
     invoiceFile := fs.File("invoice.json")
@@ -1383,7 +1413,7 @@ func uploadDocument() error {
     }
 
     // Use documentID for further operations
-    println("Uploaded document:", documentID)
+    println("Uploaded document:", documentID.String())
     return nil
 }
 ```
@@ -1559,6 +1589,7 @@ import (
     "github.com/domonda/go-types/account"
     "github.com/domonda/go-types/country"
     "github.com/domonda/go-types/notnull"
+    "github.com/domonda/go-types/nullable"
 )
 
 func importRealEstateObjects() error {
@@ -1594,7 +1625,10 @@ func importRealEstateObjects() error {
 
 ### Error Handling
 
-All SDK functions return errors that should be checked. Validation errors are returned before any network request is made, ensuring fast feedback:
+All SDK functions return errors that should be checked.
+`PostGLAccounts`, `PostBankAccounts` and `PostRealEstateObjects` validate their input
+and return validation errors before any network request is made.
+`PostPartners` sends the partners without validating them, so call `Partner.Validate()` yourself:
 
 ```go
 partner := &domonda.Partner{
@@ -1604,7 +1638,7 @@ partner := &domonda.Partner{
 err := partner.Validate()
 if err != nil {
     // Handle validation error before making API call
-    println("Validation error:", err)
+    println("Validation error:", err.Error())
 }
 ```
 
