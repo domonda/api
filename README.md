@@ -95,8 +95,9 @@ Both are generated from the live API with
 [gen-graphql-schema/update.sh](gen-graphql-schema/update.sh) (needs Node.js).
 Graph*i*QL always shows the current schema, even before they are regenerated.
 
-Every connection field (the ones returning `nodes`) needs a `first` or `last`
-argument of at most 1000; the API rejects a query without one.
+A connection field (one returning `nodes`) needs a `first` or `last` argument
+of at most 1000 when you select its `nodes` or `edges`; the API rejects a query
+without one. A query selecting only `totalCount` doesn't need it.
 To read more rows, request `pageInfo { hasNextPage endCursor }` and pass
 `endCursor` as the `after` argument of the next query.
 A query whose computed cost exceeds 30000 is rejected too;
@@ -388,38 +389,50 @@ field `userByImportedBy`, which gets you the associated user.
 
    function lastMonthImportedInvoices() {
      var lastMonth = Moment.moment(new Date()).subtract(1, "months");
-     var options = {
-       method: "POST",
-       headers: { Authorization: "Bearer " + API_TOKEN },
-       contentType: "application/json",
-       payload: JSON.stringify({
-         // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
-         query: `query lastMonthImportedInvoices($from: Date!, $until: Date!) {
-            filterDocuments(first: 1000, dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
-              nodes {
-                invoice: invoiceByDocumentRowId {
-                  partnerName
-                  partnerVatID: partnerVatRowIdNo
-                  invoiceDate
-                  invoiceNumber
-                  totalInEur
+     var invoices = [];
+     var after = null;
+     // read the documents in pages of at most 1000
+     do {
+       var options = {
+         method: "POST",
+         headers: { Authorization: "Bearer " + API_TOKEN },
+         contentType: "application/json",
+         payload: JSON.stringify({
+           // Use our interactive API explorer here https://domonda.app/api/public/graphiql to get the most out of your data.
+           query: `query lastMonthImportedInvoices($from: Date!, $until: Date!, $after: Cursor) {
+              filterDocuments(first: 1000, after: $after, dateFilterType: IMPORT_DATE, fromDate: $from, untilDate: $until) {
+                pageInfo {
+                  hasNextPage
+                  endCursor
+                }
+                nodes {
+                  invoice: invoiceByDocumentRowId {
+                    partnerName
+                    partnerVatID: partnerVatRowIdNo
+                    invoiceDate
+                    invoiceNumber
+                    totalInEur
+                  }
                 }
               }
-            }
-          }`,
-         variables: {
-           from: lastMonth.startOf("month").format("YYYY-MM-DD"),
-           until: lastMonth.endOf("month").format("YYYY-MM-DD"),
-         },
-       }),
-     };
+            }`,
+           variables: {
+             from: lastMonth.startOf("month").format("YYYY-MM-DD"),
+             until: lastMonth.endOf("month").format("YYYY-MM-DD"),
+             after: after,
+           },
+         }),
+       };
 
-     var response = UrlFetchApp.fetch(DOMONDA_API, options);
+       var response = UrlFetchApp.fetch(DOMONDA_API, options);
 
-     var json = JSON.parse(response.getContentText());
-     var invoices = json.data.filterDocuments.nodes.map(
-       ({ invoice }) => invoice
-     );
+       var json = JSON.parse(response.getContentText());
+       var page = json.data.filterDocuments;
+       for (const { invoice } of page.nodes) {
+         invoices.push(invoice);
+       }
+       after = page.pageInfo.hasNextPage ? page.pageInfo.endCursor : null;
+     } while (after);
 
      var rows = [];
      for (const invoice of invoices) {

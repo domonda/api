@@ -7,6 +7,8 @@ cd "$(dirname "$0")"
 
 npm ci --no-audit --no-fund --ignore-scripts
 
+# Don't leave a partial schema behind when print-schema.mjs fails
+trap 'rm -f ../schema.graphql.tmp' EXIT
 node print-schema.mjs > ../schema.graphql.tmp
 mv ../schema.graphql.tmp ../schema.graphql
 
