@@ -96,8 +96,8 @@ Both are generated from the live API with
 Graph*i*QL always shows the current schema, even before they are regenerated.
 
 A connection field (one returning `nodes`) needs a `first` or `last` argument
-of at most 1000 when you select its `nodes` or `edges`; the API rejects a query
-without one. A query selecting only `totalCount` doesn't need it.
+of at most 1000; the API rejects a query without one.
+Only a selection of nothing but `totalCount` works without it.
 To read more rows, request `pageInfo { hasNextPage endCursor }` and pass
 `endCursor` as the `after` argument of the next query.
 A query whose computed cost exceeds 30000 is rejected too;
