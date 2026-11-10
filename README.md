@@ -193,6 +193,11 @@ field `userByImportedBy`, which gets you the associated user.
 }
 ```
 
+The `fulltext` field of a document contains the text extracted (OCR) from its pages.
+For documents with more than 50 pages only the text of the first 50 pages is included,
+and the `searchText` of `filterDocuments` does not find text on later pages.
+[Download the PDF](#document-pdf-download) for the complete content.
+
 #### Query all invoices:
 
 ```gql
@@ -1308,7 +1313,8 @@ The properties of a class can be queried with the GraphQL API using the followin
 
 ### GET document's custom fields
 
-Returns custom document fields parsed from the document's fulltext.
+Returns custom document fields parsed from the document's fulltext,
+which covers only the first 50 pages of a document.
 
 
 ### Example

@@ -222,8 +222,8 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 ### Documents
 - **`list_documents`** — List documents with filtering (archived, category, fulltext, dates, amounts, status, …)
 - **`get_document`** — Get a single document by ID (excludes `fulltext`)
-- **`get_document_fulltext`** — Get the extracted fulltext (OCR) of a document. **Can be very large.**
-- **`search_documents`** — Fulltext search across documents
+- **`get_document_fulltext`** — Get the extracted fulltext (OCR) of a document, only of its first 50 pages; the PDF has all pages. **Can be large.**
+- **`search_documents`** — Fulltext search across the first 50 pages of all documents
 - **`download_document_pdf`** — Download a document PDF (optional audit trail)
 - **`get_document_thumbnail`** — Default JPEG thumbnail (256-wide)
 - **`get_document_preview`** — Preview image (964×1364 JPEG)

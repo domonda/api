@@ -4266,6 +4266,10 @@ type Document implements Node {
   sourceRowId: String!
   sourceFile: String!
   sourceFileHash: String!
+
+  """
+  Text extracted (OCR) from the pages of the document. For documents with more than 50 pages only the text of the first 50 pages is included, and the `searchText` of `filterDocuments` does not find text on later pages. The PDF of the document contains all pages.
+  """
   fulltext: String!
   archived: Boolean!
   supersedes: UUID
