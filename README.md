@@ -64,6 +64,11 @@ curl -X POST \
   https://domonda.app/api/public/graphql
 ```
 
+The GraphQL endpoint answers a key it does not accept with
+`401 Unauthorized` and an empty body, whatever the reason, for example
+a malformed key, an expired or revoked key, or a deleted client-company.
+A new API key resolves each of these.
+
 
 ## GraphQL API
 
@@ -102,6 +107,12 @@ To read more rows, request `pageInfo { hasNextPage endCursor }` and pass
 `endCursor` as the `after` argument of the next query.
 A query whose computed cost exceeds 30000 is rejected too;
 keep the page sizes of nested connections small.
+A query nested deeper than 16 levels is rejected as well.
+
+The API reports a rejected query, and a field that failed while the rest
+of the query ran, in the `errors` array of the response.
+A failed field is `null` in `data`, so one response can carry both:
+check `errors` on every response before using `data`.
 
 Referenced fields always have an extra field for querying the actual data behind them.
 
