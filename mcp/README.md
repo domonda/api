@@ -136,17 +136,16 @@ up.
 
 #### Token endpoint (`/token`)
 
-`/token` accepts the two grants the authorization server metadata lists in
-`grant_types_supported`: `authorization_code` and `refresh_token`. A request
-with any other `grant_type` is answered with `400 unsupported_grant_type`, and
-one without a `grant_type` with `400 invalid_request`.
-
-Send the parameters form-encoded (`application/x-www-form-urlencoded`), as
+`/token` takes its parameters form-encoded
+(`application/x-www-form-urlencoded`), as
 [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749#section-4.1.3) requires, and
-each of them only once
-([section 3.2](https://www.rfc-editor.org/rfc/rfc6749#section-3.2)). A form
-that does not parse, or that repeats `grant_type` or `client_id`, is answered
-with `400 invalid_request`.
+accepts the two grants the authorization server metadata lists in
+`grant_types_supported`: `authorization_code` and `refresh_token`. A form with
+any other `grant_type` is answered with `400 unsupported_grant_type`, and one
+without a `grant_type` with `400 invalid_request`. A form that does not parse,
+or that repeats `grant_type` or `client_id`, is answered with
+`400 invalid_request` as well: RFC 6749 allows each parameter only once
+([section 3.2](https://www.rfc-editor.org/rfc/rfc6749#section-3.2)).
 
 **Enterprise-managed authorization is not supported.** On Claude Team and
 Enterprise plans, an admin can set up managed authorization for a connector,
