@@ -24,6 +24,7 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
   - [OAuth flow](#oauth-flow)
     - [Public endpoints](#public-endpoints)
     - [`GET` on the base path](#get-on-the-base-path)
+    - [Token endpoint (`/token`)](#token-endpoint-token)
   - [Client ID Metadata Document (CIMD)](#client-id-metadata-document-cimd)
     - [Dynamic Client Registration (`/register`)](#dynamic-client-registration-register)
   - [API key flow](#api-key-flow)
@@ -105,6 +106,8 @@ requires authentication:
 
 `/register` is public, but does not accept every callback — see
 [Dynamic Client Registration](#dynamic-client-registration-register).
+`/token` accepts only the grants the authorization server metadata lists — see
+[Token endpoint](#token-endpoint-token).
 
 The four well-known documents are also the only paths that answer a CORS
 preflight and carry `Access-Control-Allow-Origin: *`, so a browser-based MCP
@@ -130,6 +133,29 @@ curl -H 'Accept: text/html' https://domonda.app/api/mcp/
 The stream is long-lived and kept alive with a 30-second heartbeat, so a
 client that disappears without closing its connection is noticed and cleaned
 up.
+
+#### Token endpoint (`/token`)
+
+`/token` accepts the two grants the authorization server metadata lists in
+`grant_types_supported`: `authorization_code` and `refresh_token`. A request
+with any other `grant_type` is answered with `400 unsupported_grant_type`, and
+one without a `grant_type` with `400 invalid_request`.
+
+Send the parameters form-encoded (`application/x-www-form-urlencoded`), as
+[RFC 6749](https://www.rfc-editor.org/rfc/rfc6749#section-4.1.3) requires, and
+each of them only once
+([section 3.2](https://www.rfc-editor.org/rfc/rfc6749#section-3.2)). A form
+that does not parse, or that repeats `grant_type` or `client_id`, is answered
+with `400 invalid_request`.
+
+**Enterprise-managed authorization is not supported.** On Claude Team and
+Enterprise plans, an admin can set up managed authorization for a connector,
+so that members are signed in through the organization's identity provider
+instead of signing in themselves. Claude then presents an identity assertion
+at `/token` with the `urn:ietf:params:oauth:grant-type:jwt-bearer` grant, and
+domonda refuses it with `400 unsupported_grant_type`. Leave managed
+authorization off for the domonda connector and let each member sign in with
+OAuth, or use an [API key](#api-key-flow).
 
 ### Client ID Metadata Document (CIMD)
 

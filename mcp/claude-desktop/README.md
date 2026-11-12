@@ -69,7 +69,9 @@ edit.
 1. On Pro/Max, open **Customize → Connectors → + Add → Add custom connector**.
    On Team/Enterprise, an owner first adds the web connector under
    **Organization settings → Connectors → Add → Custom → Web**; members then
-   open **Customize → Connectors** and select **Connect**.
+   open **Customize → Connectors** and select **Connect**. Do not set up
+   managed authorization for the domonda connector: domonda does not support
+   it, see [Token endpoint](../README.md#token-endpoint-token).
 2. Enter `https://domonda.app/api/mcp/` and review the detected
    authentication settings.
 3. For OAuth, choose **Sign in now** or **Sign in when needed**, then choose
@@ -392,6 +394,7 @@ The server enforces:
 | HTTP 403                                            | Forbidden company access or insufficient OAuth scopes       | Check the selected company or required scopes                                             |
 | HTTP 404                                            | Wrong endpoint URL                                          | Ensure the URL ends with `/mcp/` or `/mcp`                                                |
 | "MCP access is restricted to admin users"           | The signed-in user is not an admin at the selected company  | Sign in as an admin or super-admin user                                                   |
+| Connector fails with managed authorization set up   | domonda refuses its grant (`unsupported_grant_type`)        | Turn managed authorization off for domonda; members sign in with OAuth                    |
 | Query returns no rows                               | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                     |
 | `execute_query` not available to API-key callers    | The tool requires an admin or super-admin OAuth user        | Use Option 1 (OAuth), or use the specialized tools with your API key                      |
 | `execute_query` rejected                            | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)               |
