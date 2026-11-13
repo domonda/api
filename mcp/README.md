@@ -240,8 +240,8 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 
 ### SQL query
 - **`execute_query`** — Execute a read-only SQL query (api schema only).
-  Restricted to **admin or super-admin** OAuth users; API-key
-  callers are rejected outright. See
+  Available to API-key callers and to **admin or super-admin** OAuth users;
+  other OAuth users are refused. See
   [What `execute_query` rejects](#what-execute_query-rejects).
 
 ### Documents
@@ -369,12 +369,11 @@ curl -s -X POST "https://domonda.app/api/mcp/" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_tables","arguments":{}}}' | jq .
 ```
 
-Run a read-only SQL query. Note the **OAuth** token: `execute_query` is not
-available to API-key callers, so `$DOMONDA_API_KEY` is rejected here:
+Run a read-only SQL query:
 
 ```bash
 curl -s -X POST "https://domonda.app/api/mcp/" \
-  -H "Authorization: Bearer $DOMONDA_OAUTH_TOKEN" \
+  -H "Authorization: Bearer $DOMONDA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"execute_query","arguments":{"sql":"SELECT id, title, imported_at FROM api.document ORDER BY imported_at DESC LIMIT 5"}}}' | jq .
 ```

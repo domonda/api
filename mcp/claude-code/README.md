@@ -127,10 +127,10 @@ Add domonda at **claude.ai → Customize → Connectors** using the
 [Claude connector setup](../claude-desktop/#option-1--custom-connector-ui-recommended).
 Choose **Use Claude's published identity** for OAuth and sign in as a Domonda
 admin or super-admin. When Claude Code uses the same claude.ai subscription
-login, that connector appears automatically in `/mcp`. This route gives
-`execute_query` access. If it does not appear, check `/status` for the active
-login method and restart Claude Code. A directly configured server at the
-same URL takes precedence, so remove it if you want the connector instead.
+login, that connector appears automatically in `/mcp`. If it does not appear,
+check `/status` for the active login method and restart Claude Code. A
+directly configured server at the same URL takes precedence, so remove it if
+you want the connector instead.
 
 Direct OAuth from a server added with `claude mcp add` or `.mcp.json` still
 has a callback limitation for domonda. Omitting the `Authorization` header
@@ -151,8 +151,7 @@ Other Claude surfaces are unaffected: **Claude Desktop, Cowork and claude.ai**
 take a fixed HTTPS callback and sign in normally — see
 [`../claude-desktop/`](../claude-desktop/).
 
-For the API-key path, `execute_query` stays unavailable — it requires an
-admin or super-admin **OAuth** user — and the key is bound to one company, so
+For the API-key path, the key is bound to one company, so
 `X-Selected-Client-Company-ID` has nothing to select. Use a separate server
 entry per company instead.
 
@@ -202,8 +201,8 @@ See `SKILL.md` for the complete tool reference with parameters.
    schema before writing queries.
 4. **`list_documents`** or **`list_invoices`** — Browse recent data.
 5. **`execute_query`** — Run ad-hoc read-only SQL for anything the specialized
-   tools don't cover. Requires an admin or super-admin **OAuth** user;
-   API-key callers are rejected.
+   tools don't cover. Available with an API key or an admin or super-admin
+   **OAuth** user.
 
 ### Tool categories
 
@@ -258,10 +257,10 @@ The server enforces:
 - **Admin requirement** — an OAuth user must be an admin or super-admin at
   the selected client company to use the MCP server at all; accountants are
   refused
-- **`execute_query` is further restricted** — it is company-scoped but does
-  not apply per-user ACL, so API-key callers are rejected outright and OAuth
-  callers need one of the roles above. Its SQL is validated before it reaches
-  the database; see [what it rejects](../README.md#what-execute_query-rejects)
+- **`execute_query` reads the whole company** — it is company-scoped but does
+  not apply per-user ACL, so OAuth callers need one of the roles above; an API
+  key already represents the whole company and can use it. Its SQL is
+  validated before it reaches the database; see [what it rejects](../README.md#what-execute_query-rejects)
 - **Writes are limited to `add_document`** — processed through the same OCR,
   duplicate-detection, and category-ownership checks as the public API
 
@@ -279,5 +278,4 @@ The server enforces:
 | HTTP 404                                      | Wrong endpoint URL                                          | Ensure the URL ends with `/mcp/` or `/mcp`                                            |
 | "MCP access is restricted to admin users"         | The signed-in user is not an admin at the selected company  | Sign in as an admin or super-admin user                                           |
 | Query returns no rows                         | Company scoping — data belongs to another company           | Confirm `get_my_company` returns the expected company                                 |
-| `execute_query` not available to API-key callers | The tool requires an admin or super-admin OAuth user     | Use the signed-in claude.ai connector or specialized tools with your API key           |
 | `execute_query` rejected                      | SQL validation failed                                       | See [what `execute_query` rejects](../README.md#what-execute_query-rejects)            |
