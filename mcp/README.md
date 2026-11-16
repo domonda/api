@@ -31,6 +31,7 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
 - [Client setup guides](#client-setup-guides)
 - [Tools](#tools)
   - [What `execute_query` rejects](#what-execute_query-rejects)
+  - [Why `execute_query`: two measured examples](#why-execute_query-two-measured-examples)
 - [Resources](#resources)
 - [curl examples](#curl-examples)
 - [Why access is limited](#why-access-is-limited)
@@ -242,7 +243,9 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 - **`execute_query`** — Execute a read-only SQL query (api schema only).
   Restricted to **admin or super-admin** OAuth users; API-key
   callers are rejected outright. See
-  [What `execute_query` rejects](#what-execute_query-rejects).
+  [What `execute_query` rejects](#what-execute_query-rejects), and
+  [Why `execute_query`: two measured examples](#why-execute_query-two-measured-examples)
+  for what it answers that the filter tools cannot.
 
 ### Documents
 - **`list_documents`** — List documents with filtering (archived, category, fulltext, dates, amounts, status, …)
@@ -307,6 +310,131 @@ instead.
 
 A query that tries to escape the scope it was given is failed outright and its
 rows discarded, rather than answered.
+
+### Why `execute_query`: two measured examples
+
+The filter tools (`list_invoices`, `list_documents`, `list_money_transactions`,
+`get_invoice_payments`, …) return whole rows from one entity at a time. A
+question that needs a join, an aggregate or an anti-join therefore makes the
+agent fetch every candidate row into its context and do the database's work
+itself. `execute_query` runs the question where the data is and returns only
+the answer.
+
+Both examples were measured on 2026-11-16 against production
+(`https://domonda.app/api/mcp/`) on a small tenant: 967
+invoices, 970 documents, 7,055 money transactions, 356 invoice–payment matches.
+Bytes are the JSON-RPC response bodies the client receives; times are curl's
+`time_total` per call, summed. The time the model spends reading the rows and
+calling the next tool comes on top and is not counted. Each `execute_query`
+was run three times; the times are the repeat runs.
+
+| | Example 1: supplier spend in EUR | Example 2: payments without receipt |
+|---|---|---|
+| Filter tools: calls | 8 | 969, and the answer is still incomplete |
+| Filter tools: bytes | 226,311 | 1,652,883 |
+| Filter tools: time | 2.4 s | 198 s |
+| `execute_query`: calls | 1 | 1 |
+| `execute_query`: bytes | 514 | 842 |
+| `execute_query`: time | 0.19 s | 0.20 s |
+| Reduction | 440× fewer bytes, 8× fewer calls | 1,960× fewer bytes, 969× fewer calls |
+
+The filter-tool bytes grow with the tenant; the `execute_query` bytes grow only
+with the size of the answer. A tenant 100 times larger needs 100 times the
+pages and the `get_invoice_payments` calls, while both queries still return
+one row per partner or per month.
+
+#### Example 1: supplier spend per partner in EUR for 2025
+
+*"How much did we spend per supplier in 2025, in EUR?"*
+
+```sql
+WITH inv AS (
+  SELECT i.partner_company_id,
+         CASE WHEN i.credit_memo THEN -i.total ELSE i.total END
+         / CASE WHEN i.currency = 'EUR' THEN 1
+                ELSE COALESCE(i.conversion_rate, (
+                  SELECT r.rate FROM api.currency_rate r
+                  WHERE r.currency = i.currency AND r.date <= i.invoice_date
+                  ORDER BY r.date DESC LIMIT 1))
+           END AS total_eur
+  FROM api.invoice i
+    JOIN api.document d ON d.id = i.document_id
+  WHERE d.type = 'INCOMING_INVOICE'
+    AND i.invoice_date >= '2025-01-01' AND i.invoice_date < '2026-01-01'
+)
+SELECT p.name AS partner, count(*) AS invoices, round(sum(inv.total_eur)::numeric, 2) AS total_eur
+FROM inv
+  LEFT JOIN api.partner_company p ON p.id = inv.partner_company_id
+GROUP BY p.name
+ORDER BY total_eur DESC NULLS LAST
+LIMIT 10
+```
+
+No single filter tool can answer this:
+
+- `list_invoices` has no direction field, so incoming and outgoing invoices
+  come back mixed (160 rows for 2025, 15 of them outgoing).
+- `list_documents` filters by `document_types: ["INCOMING_INVOICE"]` but
+  returns no amounts, currencies or partners (145 rows).
+- Neither list tool returns the conversion rate. The 2025 incoming invoices
+  include 6 in USD or GBP, and only `get_invoice` returns their EUR amounts.
+
+The cheapest route is therefore `list_invoices` for 2025 (98,178 bytes),
+`list_documents` for the incoming IDs (85,178 bytes), and one `get_invoice` per
+foreign-currency invoice (6 calls, 42,955 bytes). The agent then intersects 145
+IDs with 160 rows, subtracts credit memos, divides the foreign totals by their
+rates and sums by partner, all in its context. Done with `jq` for the
+measurement, the route returned the same total as the query (12,682.85 EUR). An
+LLM doing the same arithmetic over 145 rows by hand is the error-prone part
+that the query removes.
+
+#### Example 2: outgoing payments with neither a receipt nor a payment category
+
+*"Which outgoing payments in 2025 have no receipt, per month?"* This is the
+monthly closing question: a bank debit that is matched to no document and has
+no payment category (`money_category`, such as bank fees or salaries) is a
+missing receipt.
+
+```sql
+SELECT
+  to_char(mt.booking_date, 'YYYY-MM') AS month,
+  count(*) AS payments,
+  round(sum(abs(mt.amount))::numeric, 2) AS amount
+FROM api.money_transaction mt
+WHERE mt.type = 'OUTGOING'
+  AND mt.booking_date >= '2025-01-01' AND mt.booking_date < '2026-01-01'
+  AND mt.money_category_id IS NULL
+  AND NOT EXISTS (
+    SELECT FROM api.document_money_transaction dmt
+    WHERE dmt.money_transaction_id = mt.id
+  )
+GROUP BY 1
+ORDER BY 1
+```
+
+The filter tools cannot answer this at all:
+
+- **The category condition cannot be evaluated.** No tool returns
+  `money_category_id`; `list_money_transactions` omits it and has no filter
+  for it.
+- **The match condition is only visible from the invoice side.**
+  `list_money_transactions` has no "matched" flag. The matches show up only in
+  `get_invoice_payments`, one invoice per call, so the agent must call it for
+  every invoice of the tenant: a 2025 payment can settle an invoice from any
+  earlier year. Matches to documents that are not invoices are not reachable
+  through any tool.
+
+The closest the filter tools get is `list_invoices` for all invoice IDs
+(575,179 bytes), `list_money_transactions` for the 828 outgoing 2025
+transactions (476,405 bytes), and `get_invoice_payments` for all 967 invoices
+(601,299 bytes, 194 s), followed by an anti-join of 828 transaction IDs against
+356 matched ones in the agent's context. At 1.65 MB that is more than a
+200k-token context window holds, so in practice an agent cannot even load it.
+On this tenant the route found the same 775 unmatched payments as the query,
+but only because the tenant uses no payment categories and has no
+non-invoice matches. On a tenant that books bank fees and salaries through
+payment categories, the result would list every one of them as a missing
+receipt.
 
 ## Resources
 
