@@ -20,6 +20,7 @@ The trailing slash is optional — both `/api/mcp/` and `/api/mcp` work.
 ## Table of Contents
 
 - [Quick start](#quick-start)
+- [Protocol versions](#protocol-versions)
 - [Authentication](#authentication)
   - [OAuth flow](#oauth-flow)
     - [Public endpoints](#public-endpoints)
@@ -46,6 +47,44 @@ signing in via OAuth. Then jump to the guide for your client:
 - **[Claude Desktop, Cowork & claude.ai](./claude-desktop/)** — Custom Connector UI
 - **[ChatGPT & OpenAI API](./chatgpt/)** — custom MCP plugin + Responses API
 - **[OpenClaw](./openclaw/)** — OpenClaw skill and MCP connection
+
+## Protocol versions
+
+The same endpoint serves the current stateless MCP revision and the older
+revisions with an `initialize` handshake. The server picks the revision per
+request, so clients of either kind connect without any configuration:
+
+| Revision | How a client talks to the server |
+|----------|----------------------------------|
+| **2026-07-28** (stateless) | No handshake and no session. The client calls `server/discover` to learn the supported versions and capabilities, then sends every request on its own, with the protocol version, client info and client capabilities in the request's `_meta`. |
+| **2025-11-25, 2025-06-18, 2025-03-26, 2024-11-05** | The client sends `initialize`, receives an `Mcp-Session-Id` header and passes it on later requests. `GET` on the endpoint opens the server-to-client stream. |
+| Plain JSON-RPC | A request with neither `_meta` nor a session ID (the [curl examples](#curl-examples)) is accepted as well, so scripts using an API key can call a tool in a single request. |
+
+Over HTTP, a 2026-07-28 request repeats its protocol version in the
+`Mcp-Protocol-Version` header and its JSON-RPC method in the `Mcp-Method`
+header; a `tools/call` also names the tool, and a `resources/read` the
+resource URI, in `Mcp-Name`. A request whose headers are missing or do not
+match the body gets `400`. MCP client libraries set these headers themselves;
+see the [curl example](#curl-examples) for a hand-written request. A plain
+JSON-RPC call must not send `Mcp-Protocol-Version: 2026-07-28`: the header
+alone marks a request as 2026-07-28, and without the matching `_meta` it gets
+`400`.
+
+For 2026-07-28 requests, errors also set the HTTP status: an unknown method
+gets `404` and an invalid request or invalid parameters get `400`. Older
+clients receive the same errors with status `200`, as JSON-RPC over HTTP
+always did.
+
+Authentication is the same for every revision.
+
+**Cache hints.** For 2026-07-28 clients, the results of `server/discover`,
+`tools/list`, `resources/list` and `resources/templates/list` carry
+`"ttlMs": 300000` and `"cacheScope": "private"`: a client may reuse them for
+5 minutes instead of asking again before every tool call. The lists only change
+when Domonda deploys a new server version, which therefore reaches clients
+within 5 minutes. `resources/read` returns document contents and carries
+`"ttlMs": 0`, so clients fetch a document again on every read. The `private`
+scope keeps shared caches from serving one caller's response to another.
 
 ## Authentication
 
@@ -134,6 +173,11 @@ curl -H 'Accept: text/html' https://domonda.app/api/mcp/
 The stream is long-lived and kept alive with a 30-second heartbeat, so a
 client that disappears without closing its connection is noticed and cleaned
 up.
+
+Only clients of protocol 2025-11-25 and earlier open this stream. An
+authenticated `GET` that declares protocol 2026-07-28 in its
+`Mcp-Protocol-Version` header gets `405`, because that revision has no
+standing stream (see [Protocol versions](#protocol-versions)).
 
 #### Token endpoint (`/token`)
 
@@ -255,7 +299,7 @@ Step-by-step instructions, a tool reference (`SKILL.md`), and a
 - **`download_document_pdf`** — Download a document PDF (optional audit trail)
 - **`get_document_thumbnail`** — Default JPEG thumbnail (256-wide)
 - **`get_document_preview`** — Preview image (964×1364 JPEG)
-- **`add_document`** — *(write)* Upload a document into the authenticated company
+- **`add_document`** — *(write)* Upload a document of up to 64 MiB into the authenticated company
 
 ### Invoices
 - **`list_invoices`** — List invoices of non-archived documents with filtering (date range, partner, exact invoice number of at least 3 characters, amounts)
@@ -451,7 +495,9 @@ ownership check as the tools.
 ## curl examples
 
 The MCP server uses Streamable HTTP: all calls are `POST /api/mcp/` with a
-JSON-RPC body. Set your API key first:
+JSON-RPC body. Most examples below are plain JSON-RPC calls without `_meta` or
+a session ID, which the server accepts without a handshake (see
+[Protocol versions](#protocol-versions)). Set your API key first:
 
 ```bash
  export DOMONDA_API_KEY="eyJhbGciOiJIUzI1NiIs..."   # leading space keeps this out of shell history
@@ -477,6 +523,20 @@ curl -s -X POST "https://domonda.app/api/mcp/" \
   -H "Authorization: Bearer $DOMONDA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}' | jq .
+```
+
+Discover the server the 2026-07-28 way, with the protocol version, client info
+and capabilities in `_meta` and the matching `Mcp-Protocol-Version` and
+`Mcp-Method` headers. The result lists `supportedVersions` and carries the
+cache hints `ttlMs` and `cacheScope`:
+
+```bash
+curl -s -X POST "https://domonda.app/api/mcp/" \
+  -H "Authorization: Bearer $DOMONDA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Mcp-Protocol-Version: 2026-07-28" \
+  -H "Mcp-Method: server/discover" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientInfo":{"name":"curl","version":"1.0"},"io.modelcontextprotocol/clientCapabilities":{}}}}' | jq .
 ```
 
 List the available tools:
@@ -515,6 +575,23 @@ curl -s -X POST "https://domonda.app/api/mcp/" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"list_invoices","arguments":{"from_date":"2025-01-01","until_date":"2025-12-31","limit":10}}}' | jq .
 ```
 
+Upload a document (up to 64 MiB). `jq` builds the request body and pipes it to
+curl, because a base64-encoded file on the command line exceeds the argument
+size limit for all but small files; `tr` removes the line breaks GNU `base64`
+inserts. Use `list_document_categories` to find a `category_id`:
+
+```bash
+base64 < invoice.pdf | tr -d '\n' |
+  jq -Rs '{jsonrpc:"2.0",id:1,method:"tools/call",params:{name:"add_document",arguments:{filename:"invoice.pdf",file_data:.,category_id:"CATEGORY_UUID"}}}' |
+  curl -s -X POST "https://domonda.app/api/mcp/" \
+    -H "Authorization: Bearer $DOMONDA_API_KEY" \
+    -H "Content-Type: application/json" \
+    --data-binary @- | jq .
+```
+
+A request body larger than a 64 MiB file in base64 plus 1 MiB (about 86 MiB)
+gets `413`.
+
 Read a document PDF as an MCP resource:
 
 ```bash
@@ -546,4 +623,5 @@ to make the API harder to use.
   for at most **30 seconds**, accepts up to **10,000 characters** of SQL, and
   returns up to **10 MiB**. These bounds stop one broad question from slowing
   things down for you or anyone else — narrow with filters (date range, partner,
-  status) and paginate when you need more.
+  status) and paginate when you need more. A document upload through
+  `add_document` can be up to **64 MiB**.

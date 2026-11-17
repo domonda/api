@@ -322,7 +322,7 @@ Returns the new document UUID on success.
 
 | Parameter                 | Type    | Required | Description                                                                                |
 |---------------------------|---------|----------|--------------------------------------------------------------------------------------------|
-| `file_data`               | string  | yes      | Base64-encoded file content (no URL, no path — the raw bytes base64-encoded)                |
+| `file_data`               | string  | yes      | Base64-encoded file content (no URL, no path — the raw bytes base64-encoded), file at most 64 MiB |
 | `filename`                | string  | yes      | Original filename including extension (e.g. `invoice_2026_04.pdf`)                         |
 | `category_id`             | string  | yes      | Document category UUID (use `list_document_categories` to find valid IDs)                  |
 | `tags`                    | string[]| no       | Optional document tags                                                                     |
